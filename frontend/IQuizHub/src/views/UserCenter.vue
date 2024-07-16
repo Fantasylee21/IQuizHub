@@ -3,33 +3,46 @@ import UserIntroduction from '@/components/userCenter/UserIntroduction.vue'
 import ExerciseRecord from '@/components/userCenter/ExerciseRecord.vue'
 import ExerciseContent from '@/components/userCenter/ExerciseContent.vue'
 import { ref } from 'vue';
+import UserInfo from '@/components/userCenter/UserInfo.vue'
+import ActivityRecord from '@/components/userCenter/ActivityRecord.vue'
 const tabPosition = ref('top');
 </script>
 
 <template>
-
   <el-tabs :tab-position="tabPosition" style="height: 200px;">
-    <el-tab-pane label="自我评价">
-      <div class="block">
-        <UserIntroduction />
-      </div>
+    <el-tab-pane label="个人信息" class="tab-pane">
+        <div class="block">
+          <UserInfo />
+        </div>
+        <div class="block">
+          <UserIntroduction />
+        </div>
+        <div class="block">
+          <ActivityRecord />
+        </div>
     </el-tab-pane>
-    <el-tab-pane label="题目记录">
-    <div class="block">
-        <ExerciseRecord />
-    </div>
+    <el-tab-pane label="题目记录" class="tab-pane">
+        <div class="block">
+          <ExerciseRecord />
+        </div>
     </el-tab-pane>
-
   </el-tabs>
-
-
 </template>
 
 <style scoped>
+
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+}
+
 .block {
-  margin: 20px;
-  max-width: 800px;
+  width: 96%;
   background: #dee8f3;
   padding: 20px;
+  margin: 20px 0 20px 5px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
 </style>

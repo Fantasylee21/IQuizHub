@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ElButton, ElIcon, ElLoading } from 'element-plus'
-import { Delete, Edit, Finished } from '@element-plus/icons'
+import { Comment, Delete, Edit, Finished, UserFilled } from '@element-plus/icons'
 
 const inputText = ref('这个人很懒，什么都没写');
 const isEditing = ref(false);
@@ -56,7 +56,7 @@ function cancelEdit() {
 
 <template>
       <div v-if="isEditing" class="content">
-        <h2>编辑个人简介</h2>
+        <h2>编辑个人简介 <el-icon :size="22"><Comment /></el-icon></h2>
         <textarea v-model="inputText" @input="updateText" ></textarea>
         <p>字数限制：200字</p>
         <el-button type="success" @click="saveEdit">保存<el-icon :size="20"><Finished /></el-icon></el-button>
@@ -74,7 +74,7 @@ function cancelEdit() {
 
 
 .content {
-  max-width: 600px;
+  max-width: 100%;
 }
 
 
@@ -86,6 +86,18 @@ textarea {
   border-radius: 4px;
   font-size: 18px;
   padding: 10px;
+}
+
+p{
+  font-size: 16px;
+  color: #666;
+  margin: 10px;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 24px;
+  margin: 10px;
 }
 
 </style>
