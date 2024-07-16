@@ -20,32 +20,35 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue';
-import 'element-plus/dist/index.css';
 
 const documents = ref([
-    {title: 'Alipay', description: '这是题单的描述', image: 'path/to/alipay-image.png'},
+    {title: 'Alipay', description: '这是题单的描述', image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'},
     {
         title: 'Angular',
         description: '这是题单的描述，这是题单的描述，这是题单的描述，这是题单的描述',
-        image: 'path/to/angular-image.png'
+        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
     },
     {
         title: 'Ant Design',
         description: '这是题单的描述，这是题单的描述',
-        image: 'path/to/ant-design-image.png'
+        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
     },
     {
         title: 'Ant Design Pro',
         description: '这是题单的描述，这是题单的描述',
-        image: 'path/to/ant-design-pro-image.png'
+        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
     },
-    {title: 'Bootstrap', description: '这是题单的描述，这是题单的描述', image: 'path/to/bootstrap-image.png'},
+    {
+        title: 'Bootstrap',
+        description: '这是题单的描述，这是题单的描述',
+        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
+    },
     {
         title: 'React',
         description: '这是题单的描述',
-        image: 'path/to/react-image.png'
+        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
     },
 ]);
 

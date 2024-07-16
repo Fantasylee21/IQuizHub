@@ -7,7 +7,10 @@
             <div class="staging-left">
                 <CollectList/>
             </div>
-            <div class="staging-right"></div>
+            <div class="staging-right">
+                <TrendsList/>
+                <StagingChart/>
+            </div>
         </div>
     </div>
 </template>
@@ -15,6 +18,8 @@
 <script setup lang="ts">
 import StagingInformation from "@/components/Staging/StagingInformation.vue";
 import CollectList from "@/components/Staging/CollectList.vue";
+import TrendsList from "@/components/Staging/TrendsList.vue";
+import StagingChart from "@/components/Staging/StagingChart.vue";
 </script>
 
 <style scoped>
@@ -31,7 +36,6 @@ import CollectList from "@/components/Staging/CollectList.vue";
 
 .staging-body {
     width: 100%;
-    height: 400px;
     display: flex;
     margin-top: 10px;
 }
@@ -45,7 +49,7 @@ import CollectList from "@/components/Staging/CollectList.vue";
 
 .staging-right {
     width: 30%;
-    padding-right: 40px;
+    padding: 20px 100px 20px 20px;
     display: flex;
     flex-direction: column;
 }

@@ -33,10 +33,6 @@ const toggleCollapse = () => {
     border-bottom: 1px solid var(--el-menu-border-color);
 }
 
-.common-layout {
-    height: 100vh;
-}
-
 .el-container {
     height: 100%;
 }
@@ -48,6 +44,5 @@ const toggleCollapse = () => {
 .main-content {
     flex: 1;
     padding: 20px;
-    overflow: hidden;
 }
 </style>

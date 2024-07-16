@@ -54,7 +54,7 @@ const statisticVal = ref(10000);
     margin-left: 100px;
     flex-wrap: wrap;
     justify-content: center;
-    width: 100%;
+    width: 1200px;
 
     .header-info {
         padding: 16px 24px;
