@@ -8,7 +8,7 @@
                 @select="handleSelect"
         >
             <img
-                    style="width: 120px"
+                    style="width: 120px; margin-left: 60px"
                     src="@/assets/logo.png"
                     alt="Element logo"
             />
