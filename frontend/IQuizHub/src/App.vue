@@ -5,13 +5,11 @@
                 <GlobalMenu/>
             </el-header>
             <el-container>
-                <el-aside :width="!isCollapse ? '64px' : '200px'">
+                <el-aside :width="isCollapse ? '200px' : '64px'">
                     <GlobalSidebar @toggleCollapse="toggleCollapse"/>
                 </el-aside>
                 <el-main class="main-content">
-                  <div class="page">
-                    <UserCenter></UserCenter>
-                  </div>
+                    <router-view/>
                 </el-main>
             </el-container>
         </el-container>
@@ -35,11 +33,6 @@ const toggleCollapse = () => {
 <style scoped>
 .header {
     border-bottom: 1px solid var(--el-menu-border-color);
-}
-
-.common-layout {
-    height: 100vh;
-    margin: 0 0 0 0 !important;
 }
 
 .el-container {
