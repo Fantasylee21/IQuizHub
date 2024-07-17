@@ -5,14 +5,15 @@
             :collapse="isCollapse"
             @open="handleOpen"
             @close="handleClose"
+            :router="true"
     >
-        <el-menu-item @click="toggleCollapse" index="1">
+        <el-menu-item @click="toggleCollapse">
             <el-icon>
                 <component :is="isCollapse ? ArrowRight : ArrowLeft"/>
             </el-icon>
             <template #title>Toggle Collapse</template>
         </el-menu-item>
-        <el-sub-menu index="2">
+        <el-sub-menu index="1">
             <template #title>
                 <el-icon>
                     <location/>
@@ -38,13 +39,13 @@
             </el-icon>
             <template #title>Navigator Two</template>
         </el-menu-item>
-        <el-menu-item index="4" disabled>
+        <el-menu-item index="/staging">
             <el-icon>
                 <document/>
             </el-icon>
             <template #title>Navigator Three</template>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/staging">
             <el-icon>
                 <setting/>
             </el-icon>
