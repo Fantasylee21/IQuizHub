@@ -10,7 +10,7 @@ const tabPosition = ref('top');
 
 <template>
   <div id="us">
-  <el-tabs :tab-position="tabPosition" style="height: 200px;">
+  <el-tabs :tab-position="tabPosition">
     <el-tab-pane label="个人信息" class="tab-pane">
         <div class="block">
           <UserInfo />
