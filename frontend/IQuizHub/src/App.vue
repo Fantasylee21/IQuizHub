@@ -14,12 +14,14 @@
             </el-container>
         </el-container>
     </div>
+
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue';
 import GlobalSidebar from "@/components/GlobalComponents/GlobalSidebar.vue";
 import GlobalMenu from "@/components/GlobalComponents/GlobalMenu.vue";
+import UserCenter from '@/views/UserCenter.vue'
 
 const isCollapse = ref(false);
 
@@ -45,4 +47,12 @@ const toggleCollapse = () => {
     flex: 1;
     padding: 20px;
 }
+
+.page {
+  margin: 0 auto;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+
 </style>
