@@ -1,37 +1,59 @@
 <template>
-    <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-        <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
-    </ul>
+    <el-scrollbar
+            height="400px"
+    >
+        <ul class="custom-scrollbar"
+            v-infinite-scroll="load"
+            :infinite-scroll-disabled="disabled"
+            :infinite-scroll-distance="20"
+        >
+            <li v-for="i in count" :key="i" class="scrollbar-demo-item">{{ i }}</li>
+        </ul>
+        <p v-if="loading" class="loading">Loading...</p>
+        <p v-if="noMore" class="noMore">No more</p>
+    </el-scrollbar>
 </template>
 
-<script lang="ts" setup>
-import {ref} from 'vue'
+<script setup lang="ts">
+import {computed, ref} from 'vue';
 
-const count = ref(0)
+const count = ref(10)
+const loading = ref(false)
+const noMore = computed(() => count.value >= 20)
+const disabled = computed(() => loading.value || noMore.value)
 const load = () => {
-    count.value += 2
+    loading.value = true
+    setTimeout(() => {
+        count.value += 2
+        loading.value = false
+    }, 1000)
 }
 </script>
 
-<style>
-.infinite-list {
-    height: 300px;
+<style scoped>
+.custom-scrollbar {
+    list-style: none;
     padding: 0;
     margin: 0;
-    list-style: none;
 }
 
-.infinite-list .infinite-list-item {
+.scrollbar-demo-item {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 50px;
-    background: var(--el-color-primary-light-9);
     margin: 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: var(--el-color-primary-light-9);
     color: var(--el-color-primary);
 }
 
-.infinite-list .infinite-list-item + .list-item {
-    margin-top: 10px;
+.loading, .noMore {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    align-items: center;
+    line-height: 50px;
 }
 </style>
