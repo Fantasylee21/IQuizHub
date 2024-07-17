@@ -9,6 +9,7 @@ const tabPosition = ref('top');
 </script>
 
 <template>
+  <div id="us">
   <el-tabs :tab-position="tabPosition" style="height: 200px;">
     <el-tab-pane label="个人信息" class="tab-pane">
         <div class="block">
@@ -27,6 +28,7 @@ const tabPosition = ref('top');
         </div>
     </el-tab-pane>
   </el-tabs>
+  </div>
 </template>
 
 <style scoped>
@@ -38,11 +40,18 @@ const tabPosition = ref('top');
 
 .block {
   width: 96%;
-  background: #dee8f3;
+  background: #ECF5FF;
   padding: 20px;
   margin: 20px 0 20px 5px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.block:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#us {
+  width: 1200px;
+}
 </style>
