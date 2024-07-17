@@ -33,7 +33,7 @@
                 <el-menu-item index="1-4-1">item one</el-menu-item>
             </el-sub-menu>
         </el-sub-menu>
-        <el-menu-item index="3">
+        <el-menu-item index="/loginRegister">
             <el-icon>
                 <icon-menu/>
             </el-icon>
@@ -45,7 +45,7 @@
             </el-icon>
             <template #title>Navigator Three</template>
         </el-menu-item>
-        <el-menu-item index="/staging">
+        <el-menu-item index="/question-sheet">
             <el-icon>
                 <setting/>
             </el-icon>
