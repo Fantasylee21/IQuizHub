@@ -63,6 +63,12 @@
             </el-icon>
             <template #title>个人中心</template>
         </el-menu-item>
+        <el-menu-item index="/test">
+            <el-icon>
+                <setting/>
+            </el-icon>
+            <template #title>Navigator Four</template>
+        </el-menu-item>
     </el-menu>
 </template>
 

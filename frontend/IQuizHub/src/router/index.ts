@@ -3,8 +3,12 @@ import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router'
 const MainStaging = () => import('@/views/MainStaging.vue')
 const QuestionSheet = () => import('@/views/QuestionSheet.vue')
 const LoginRegister = () => import('@/views/LoginRegister.vue')
+
 const UserCenter = () => import('@/views/UserCenter.vue')
 const QuestionBank = () => import('@/views/QuestionBank.vue')
+
+const MyTest = () => import('@/views/MyTest.vue')
+
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -28,9 +32,16 @@ const routes: Array<RouteRecordRaw> = [
 		component: LoginRegister,
 	},
 	{
+
 		path: '/questionBank',
 		name: 'QuestionBank',
 		component: QuestionBank,
+  },
+  {
+		path: '/test',
+		name: 'test',
+		component: MyTest,
+
 	}
 ]
 
