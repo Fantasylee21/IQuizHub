@@ -47,9 +47,21 @@
         </el-menu-item>
         <el-menu-item index="/question-sheet">
             <el-icon>
+                <icon-menu/>
+            </el-icon>
+            <template #title>题单广场</template>
+        </el-menu-item>
+        <el-menu-item index="/questionBank">
+            <el-icon>
+                <Grid/>
+            </el-icon>
+            <template #title>题库</template>
+        </el-menu-item>
+        <el-menu-item index="/userCenter">
+            <el-icon>
                 <setting/>
             </el-icon>
-            <template #title>Navigator Four</template>
+            <template #title>个人中心</template>
         </el-menu-item>
         <el-menu-item index="/test">
             <el-icon>
@@ -69,6 +81,7 @@ import {
     Setting,
 } from '@element-plus/icons-vue';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue';
+import {Grid} from '@element-plus/icons-vue';
 
 const isCollapse = ref(true);
 const handleOpen = (key: string, keyPath: string[]) => {
