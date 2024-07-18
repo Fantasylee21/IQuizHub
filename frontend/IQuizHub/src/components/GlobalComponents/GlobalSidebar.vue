@@ -51,6 +51,12 @@
             </el-icon>
             <template #title>Navigator Four</template>
         </el-menu-item>
+        <el-menu-item index="/userCenter">
+            <el-icon>
+                <setting/>
+            </el-icon>
+            <template #title>Navigator Five</template>
+        </el-menu-item>
     </el-menu>
 </template>
 
