@@ -4,7 +4,6 @@ const MainStaging = () => import('@/views/MainStaging.vue')
 const QuestionSheet = () => import('@/views/QuestionSheet.vue')
 const LoginRegister = () => import('@/views/LoginRegister.vue')
 const UserCenter = () => import('@/views/UserCenter.vue')
-const Questionnaire = () => import('@/views/Questionnaire.vue')
 const QuestionBank = () => import('@/views/QuestionBank.vue')
 
 const routes: Array<RouteRecordRaw> = [
@@ -27,11 +26,6 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/loginRegister',
 		name: 'LoginRegister',
 		component: LoginRegister,
-	},
-	{
-		path: '/questionnaire',
-		name: 'Questionnaire',
-		component: Questionnaire,
 	},
 	{
 		path: '/questionBank',

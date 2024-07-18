@@ -47,19 +47,13 @@
         </el-menu-item>
         <el-menu-item index="/question-sheet">
             <el-icon>
-                <setting/>
-            </el-icon>
-            <template #title>Navigator Four</template>
-        </el-menu-item>
-        <el-menu-item index="/questionnaire">
-            <el-icon>
-                <Grid />
+                <icon-menu/>
             </el-icon>
             <template #title>题单广场</template>
         </el-menu-item>
         <el-menu-item index="/questionBank">
             <el-icon>
-                <Document/>
+                <Grid/>
             </el-icon>
             <template #title>题库</template>
         </el-menu-item>

@@ -3,7 +3,13 @@
         <el-header class="header">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <el-input v-model="searchQuery" placeholder="查找题单"/>
+                    <el-input v-model="searchQuery" placeholder="查找题单">
+                      <template #prepend >
+                        <div class="search-icon-container">
+                          <el-icon size="20px"><Search /></el-icon>
+                        </div>
+                      </template>
+                    </el-input>
                 </el-col>
                 <el-col :span="4">
                     <el-button type="primary" @click="search">搜索</el-button>
@@ -36,6 +42,7 @@
 <script setup>
 import {ref} from 'vue';
 import {ElMessage} from 'element-plus';
+import { Search } from '@element-plus/icons'
 
 const searchQuery = ref('');
 const selectedType = ref('official');
@@ -65,4 +72,12 @@ const selectType = (type) => {
     height: 100%;
     box-sizing: border-box;
 }
+
+.search-icon-container {
+  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 </style>
