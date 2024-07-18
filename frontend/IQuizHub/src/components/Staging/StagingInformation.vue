@@ -50,7 +50,6 @@ const statisticVal = ref(10000);
 
 .header {
     display: flex;
-    margin-top: 20px;
     margin-left: 100px;
     flex-wrap: wrap;
     justify-content: center;
