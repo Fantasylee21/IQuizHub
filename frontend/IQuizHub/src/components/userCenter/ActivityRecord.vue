@@ -62,4 +62,8 @@ h2 {
   font-size: 18px;
 }
 
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
 </style>
