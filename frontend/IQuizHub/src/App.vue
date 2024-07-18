@@ -1,11 +1,11 @@
 <template>
     <div class="common-layout">
         <el-container>
-            <el-header class="header">
+            <el-header class="header" v-show="showNav">
                 <GlobalMenu/>
             </el-header>
             <el-container>
-                <el-aside :width="isCollapse ? '200px' : '64px'">
+                <el-aside :width="isCollapse ? '200px' : '64px'" v-show="showNav">
                     <GlobalSidebar @toggleCollapse="toggleCollapse"/>
                 </el-aside>
                 <el-main class="main-content">
@@ -14,16 +14,20 @@
             </el-container>
         </el-container>
     </div>
-
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
+import {useRoute} from 'vue-router'
+
 import GlobalSidebar from "@/components/GlobalComponents/GlobalSidebar.vue";
 import GlobalMenu from "@/components/GlobalComponents/GlobalMenu.vue";
-import UserCenter from '@/views/UserCenter.vue'
 
 const isCollapse = ref(false);
+const route = useRoute();
+const showNav = computed(() => {
+    return route.path !== '/loginRegister'
+});
 
 const toggleCollapse = () => {
     isCollapse.value = !isCollapse.value;
@@ -31,6 +35,10 @@ const toggleCollapse = () => {
 </script>
 
 <style scoped>
+.common-layout {
+
+}
+
 .header {
     border-bottom: 1px solid var(--el-menu-border-color);
 }
@@ -45,14 +53,8 @@ const toggleCollapse = () => {
 
 .main-content {
     flex: 1;
-    padding: 20px;
-}
-
-.page {
-  margin: 0 auto;
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
+    padding: 0;
+    /*padding: 20px;*/
 }
 
 </style>

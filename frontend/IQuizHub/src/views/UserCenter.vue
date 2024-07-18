@@ -2,9 +2,10 @@
 import UserIntroduction from '@/components/userCenter/UserIntroduction.vue'
 import ExerciseRecord from '@/components/userCenter/ExerciseRecord.vue'
 import ExerciseContent from '@/components/userCenter/ExerciseContent.vue'
-import { ref } from 'vue';
+import {ref} from 'vue';
 import UserInfo from '@/components/userCenter/UserInfo.vue'
 import ActivityRecord from '@/components/userCenter/ActivityRecord.vue'
+
 const tabPosition = ref('top');
 </script>
 
@@ -34,8 +35,8 @@ const tabPosition = ref('top');
 <style scoped>
 
 .tab-pane {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .block {

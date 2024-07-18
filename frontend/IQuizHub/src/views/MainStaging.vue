@@ -28,6 +28,7 @@ import StagingChart from "@/components/Staging/StagingChart.vue";
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 .staging-header {

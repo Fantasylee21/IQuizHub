@@ -1,12 +1,24 @@
 import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router'
 
 const MainStaging = () => import('@/views/MainStaging.vue')
+const QuestionSheet = () => import('@/views/QuestionSheet.vue')
+const LoginRegister = () => import('@/views/LoginRegister.vue')
 
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/staging',
 		name: 'MainStaging',
 		component: MainStaging,
+	},
+	{
+		path: '/question-sheet',
+		name: 'QuestionSheet',
+		component: QuestionSheet,
+	},
+	{
+		path: '/loginRegister',
+		name: 'LoginRegister',
+		component: LoginRegister,
 	}
 ]
 
