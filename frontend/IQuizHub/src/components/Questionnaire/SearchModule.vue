@@ -63,13 +63,11 @@ function handleClick(tab: any) {
 h2 {
   font-size: 25px;
   margin-top: 20px;
-  font-weight: bold;
 }
 
 h3 {
   font-size: 20px;
   margin-top: 20px;
-  font-weight: bold;
 }
 
 h4 {

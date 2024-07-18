@@ -57,6 +57,12 @@
             </el-icon>
             <template #title>题单广场</template>
         </el-menu-item>
+        <el-menu-item index="/questionBank">
+            <el-icon>
+                <Document/>
+            </el-icon>
+            <template #title>题库</template>
+        </el-menu-item>
         <el-menu-item index="/userCenter">
             <el-icon>
                 <setting/>
