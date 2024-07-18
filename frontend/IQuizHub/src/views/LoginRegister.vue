@@ -108,11 +108,11 @@ const loginForm = ref({
 
 const handleSignup = () => {
     if (!validateSignupForm()) return
-    UtilMethods.jump('/mainPage')
+    UtilMethods.jump('/staging')
 }
 
 const handleLogin = async () => {
-    UtilMethods.jump('/mainPage')
+    UtilMethods.jump('/staging')
 }
 
 const validateSignupForm = () => {
