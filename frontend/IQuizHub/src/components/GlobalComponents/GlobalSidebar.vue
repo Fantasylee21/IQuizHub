@@ -45,6 +45,12 @@
             </el-icon>
             <template #title>Navigator Three</template>
         </el-menu-item>
+        <el-menu-item index="/groupPage">
+            <el-icon>
+                <Share />
+            </el-icon>
+            <template #title>群组界面</template>
+        </el-menu-item>
         <el-menu-item index="/question-sheet">
             <el-icon>
                 <icon-menu/>
@@ -73,6 +79,7 @@ import {
     Menu as IconMenu,
     Location,
     Setting,
+    Share
 } from '@element-plus/icons-vue';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue';
 import {Grid} from '@element-plus/icons-vue';

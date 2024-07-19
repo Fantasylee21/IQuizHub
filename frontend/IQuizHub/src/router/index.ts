@@ -5,6 +5,7 @@ const QuestionSheet = () => import('@/views/QuestionSheet.vue')
 const LoginRegister = () => import('@/views/LoginRegister.vue')
 const UserCenter = () => import('@/views/UserCenter.vue')
 const QuestionBank = () => import('@/views/QuestionBank.vue')
+const GroupPage = () => import('@/views/GroupPage.vue')
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -31,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/questionBank',
 		name: 'QuestionBank',
 		component: QuestionBank,
+	},
+	{
+		path: '/groupPage',
+		name: 'GroupPage',
+		component: GroupPage,
 	}
 ]
 
