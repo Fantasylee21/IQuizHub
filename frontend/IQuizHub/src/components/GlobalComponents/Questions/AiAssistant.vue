@@ -9,8 +9,7 @@
         >
             {{ loading ? '正在加载...' : '向AI提问' }}
         </el-button>
-        <el-card class="box-card" v-if="loading">
-        </el-card>
+        <el-card class="box-card" v-if="loading"></el-card>
         <el-card class="box-card custom-scrollbar" v-else-if="data">
             <div class="text">
                 <p v-html="renderedData"></p>
@@ -20,42 +19,50 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref} from 'vue'
+import api from '@/api'
 
-const loading = ref(false);
-const data = ref('');
-const renderedData = ref('');
-let interval = null;
-const isClicked = ref(false);
+const props = defineProps({
+    message: {
+        type: String,
+        required: true
+    }
+})
 
-const fetchAiAnswer = () => {
+const loading = ref(false)
+const data = ref('')
+const renderedData = ref('')
+let interval = null
+const isClicked = ref(false)
+
+const fetchAiAnswer = async (content) => {
     isClicked.value = true;
     loading.value = true;
     data.value = '';
     renderedData.value = '';
 
-    // 模拟请求
-    setTimeout(() => {
-        // 假设从后端返回的数据
-        data.value = '这是从AI返回的数据，逐字渲染。\n\n\n划线部分的句子成分为：D. 定语。\n' +
-                '\n' +
-                '在这个句子“I shall answer your question after class”中，“after class”是介词短语作状语，用于修饰动词“shall answer”，但考虑到问题的选项设置，我们需要从更宽泛的“句子成分”角度来分析。若从“your question”这个名词短语内部来看，“after class”实际上是对“question”的进一步描述，即“课后的问题”，因此它在这里起到了定语的作用，尽管它并不直接紧挨着“question”。但在这个选择题的语境下，我们可以将其理解为对“question”的修饰，即定语成分。所以正确答案是D。注意，这种分析方式可能略显灵活，因为“after class”通常被视为状语，但从“your question”这个名词短语的角度来看，它确实起到了定语的作用。不过，根据选项的严格性和问题的设定，D选项“定语”是最接近的。';
+    try {
+        console.log('message>>>>>', props.message)
+        data.value = await api.ask({content: props.message}); // 使用传递的content
         renderData();
+    } catch (error) {
+        console.error('Error fetching AI answer:', error);
+    } finally {
         loading.value = false;
-    }, 5000);
+    }
 };
 
 const renderData = () => {
-    let index = 0;
+    let index = 0
     interval = setInterval(() => {
         if (index < data.value.length) {
-            renderedData.value += data.value[index];
-            index++;
+            renderedData.value += data.value[index]
+            index++
         } else {
-            clearInterval(interval);
+            clearInterval(interval)
         }
-    }, 20); // 调整时间间隔以控制渲染速度
-};
+    }, 20) // 调整时间间隔以控制渲染速度
+}
 </script>
 
 <style scoped>
