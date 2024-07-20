@@ -14,16 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include, re_path
-from rest_framework_simplejwt.views import TokenRefreshView
+from django.urls import path
 
-from users.views import FileView
+from ai.views import AiViewSet
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("users/", include('users.urls')),
-    path('ai/', include('ai.urls')),
-    re_path(r'file/image/avatar/(.+?)/', FileView.as_view(), name='图像获取'),
-    path("api/question/", include('questions.urls')),
+    path('ask/', AiViewSet.as_view({'post': 'ask'})),
 ]
