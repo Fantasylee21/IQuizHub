@@ -71,6 +71,7 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
     serializer_class = QuestionGroupSerializer
     permission_classes = [IsAuthenticated, QuestionGroupPermission]
 
+
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
