@@ -1,10 +1,7 @@
-from _ast import pattern
 
 from django.urls import path
-from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
 
 from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadView, TagView
-from users.views import LoginView, RigisterView, UserView
 
 urlpatterns = [
     path('upload/', QuestionWriteView.as_view({'post': 'post'}), name='上传题目'),
