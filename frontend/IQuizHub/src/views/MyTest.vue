@@ -1,34 +1,42 @@
 <template>
-    <div style="width: 1200px; margin: 0 auto; padding-top: 25px;">
-        <h2>单选题展示</h2>
-        <SingleChoiceQuestion :question="question"/>
-        <SingleChoiceQuestion :question="question"/>
-        <SingleChoiceQuestion :question="question"/>
-
-    </div>
+    <el-tiptap v-model:content="content" :extensions="extensions"/>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {ref} from 'vue';
-import SingleChoiceQuestion from '@/components/GlobalComponents/Questions/SingleChoice.vue';
+import {
+    // necessary extensions
+    Doc,
+    Text,
+    Paragraph,
+    //________________________
+    Heading,
+    Bold,
+    Underline,
+    Italic,
+    Strike,
+    BulletList,
+    OrderedList,
+} from 'element-tiptap-vue3-fixed';
 
-const question = ref({
-    pattern: "single_choice",
-    description: "<p>I <span style='text-decoration: underline;'>shall answer</span> your question after class. 划线部分的句子成分为:</p>",
-    id: 1,
-    choices: [
-        "<p>主语</p>",
-        "<p>宾语</p>",
-        "<p>谓语</p>",
-        "<p>定语</p>"
-    ],
-    storeId: 568252,
-    bigQuestionId: 568252
-});
+// editor extensions
+// they will be added to menubar and bubble menu by the order you declare.
+const extensions = [
+    Doc,
+    Text,
+    Paragraph,
+    Heading.configure({level: 5}),
+    Bold.configure({bubble: true}), // render command-button in bubble menu.
+    Underline.configure({bubble: true, menubar: false}), // render command-button in bubble menu but not in menubar.
+    Italic,
+    Strike,
+    BulletList,
+    OrderedList,
+];
+
+// editor's content
+const content = ref(`
+  <h1>Heading</h1>
+  <p>This Editor is awesome!</p>
+`);
 </script>
-
-<style scoped>
-h2 {
-    margin-bottom: 20px;
-}
-</style>
