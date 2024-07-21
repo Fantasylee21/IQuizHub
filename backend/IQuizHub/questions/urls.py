@@ -6,8 +6,8 @@ from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadVi
 urlpatterns = [
     path('upload/', QuestionWriteView.as_view({'post': 'post'}), name='上传题目'),
     path('detail/<int:pk>/', QuestionReadView.as_view({'get': 'retrieve'}), name='题目详情'),
-    path('update/<int:pk>/', QuestionWriteView.as_view({'put': 'update'}), name='题目修改'),
-    path('questiongroup/content/upload/<int:pk>/', QuestionGroupView.as_view({'post': 'upload_content'}),
+    path('update/<int:pk>/', QuestionWriteView.as_view({'put': 'update_content'}), name='题目修改'),
+    path('questiongroup/content/update/<int:pk>/', QuestionGroupView.as_view({'post': 'upload_content'}),
          name='上传题目组信息'),
     path('delete/<int:pk>/', QuestionWriteView.as_view({'delete': 'destroy'}), name='题目删除'),
     path('questiongroup/upload/', QuestionGroupView.as_view({'post': 'upload_questionGroup'}),
@@ -21,6 +21,7 @@ urlpatterns = [
     path('tag/upload/', TagView.as_view({'put': 'upload_tag'}), name='上传标签'),
     path('tag/delete/<int:pk>/', TagView.as_view({'delete': 'destroy'}), name='删除标签'),
     path('modifytag/<int:pk>/',
-         QuestionWriteView.as_view({'post': 'add_tag_to_question', 'delete': 'delete_tag_from_question'}),
+         QuestionWriteView.as_view({'put': 'add_tag_to_question', 'delete': 'delete_tag_from_question'}),
          name='给题目添加标签'),
+    path('query/question/', QuestionReadView.as_view({'get': 'query_question'}), name='查询题目'),
 ]

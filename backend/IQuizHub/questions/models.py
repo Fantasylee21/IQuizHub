@@ -15,7 +15,7 @@ class Question(models.Model):
         ('fill_in_the_blank', 'Fill in the Blank'),
     ]
     type = models.CharField(max_length=20, choices=CONTENT_CHOICES, default='multiple_choice', verbose_name='问题类型')
-    ans = models.CharField(max_length=100, verbose_name='答案', blank=True, null=True)
+    ans = models.TextField(verbose_name='问题答案', default=None)
     is_all = models.BooleanField(default=True, verbose_name='是否为全部题目')
     tags = models.ManyToManyField('Tag', related_name='questionsTags', verbose_name='标签')
 

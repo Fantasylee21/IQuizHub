@@ -5,7 +5,7 @@ from .models import Question, QuestionGroup, Tag
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'create_time', 'update_time', 'title', 'content', 'author', 'type']
+        fields = '__all__'
 
     def create(self, validated_data):
         """保存问题时，确保作者是请求的用户"""

@@ -10,6 +10,7 @@ from common.permissions import QuestionWritePermission, QuestionGroupPermission,
     QuestionGroupDeletePermission, Issuperuser
 from questions.models import Question, QuestionGroup, Tag
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer
+from rest_framework import serializers
 
 
 # Create your views here.
@@ -25,13 +26,36 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionWritePermission]
 
+    def update_content(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        serializer = QuestionSerializer(obj, data=request.data, partial=True)
+
+        # 检查请求中的数据并更新序列化器数据
+        data = {}
+        if 'title' in request.data:
+            data['title'] = request.data.get('title')
+        if 'content' in request.data:
+            data['content'] = request.data.get('content')
+        if 'answer' in request.data:
+            data['ans'] = request.data.get('answer')
+        if 'type' in request.data:
+            data['type'] = request.data.get('type')
+
+        # 如果没有要更新的字段，则返回错误
+        if not data:
+            return Response({"error": "没有传入要更新的参数"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(obj, data)
+        return Response({"msg": "成功修改"}, status=status.HTTP_200_OK)
+
     def post(self, request):
         title = request.data.get('title')
         author = request.user
         content = request.data.get('content')
         answer = request.data.get('answer')
         type = request.data.get('type')
-        print(title, author, content, answer, type)
+        # print(title, author, content, answer, type)
         if not all([title, author, content, answer, type]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         question = Question.objects.create(title=title, author=author, content=content, ans=answer, type=type)
@@ -63,14 +87,13 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             obj.tags.remove(tag)
         except Exception as e:
             return Response({"error": f"删除标签失败{e}"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": "删除标签成功"}, status=status.HTTP_200_OK)
+        return Response({"message": f"删除标签成功{tag}"}, status=status.HTTP_200_OK)
 
 
 class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
     queryset = QuestionGroup.objects.all()
     serializer_class = QuestionGroupSerializer
     permission_classes = [IsAuthenticated, QuestionGroupPermission]
-
 
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
@@ -80,10 +103,11 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         questions = request.data.get('questions')
         users = request.data.get('users')
         title = request.data.get('title')
+        content = request.data.get('content')
         author = request.user
         if not all([questions, title, author]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-        question_group = QuestionGroup.objects.create(title=title, author=author)
+        question_group = QuestionGroup.objects.create(title=title, author=author,content = content)
         for question in questions:
             question_group.questions.add(question)
             q = Question.objects.get(id=question)
@@ -160,6 +184,23 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionReadPermission]
 
+    #通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
+    #要包含所有的提供的tags的id
+    def query_question(self, request, *args, **kwargs):
+        title = request.data.get('title')
+        tags = request.data.get('tags')
+        if not title:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if not tags:
+            questions = Question.objects.filter(title__contains=title)
+            serializer = self.get_serializer(questions, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            questions = Question.objects.filter(title__contains=title)
+            for tag in tags:
+                questions = questions.filter(tags=tag)
+            serializer = self.get_serializer(questions, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin):
     queryset = Tag.objects.all()
