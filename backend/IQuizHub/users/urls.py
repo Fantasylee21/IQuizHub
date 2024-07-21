@@ -20,6 +20,7 @@ from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
 
 from users.views import LoginView, RigisterView, UserView, CaptchaView, CommentView
 
+
 urlpatterns = [
     path('login/', LoginView.as_view(), name='登录'),
     path("register/", RigisterView.as_view(), name='注册'),
