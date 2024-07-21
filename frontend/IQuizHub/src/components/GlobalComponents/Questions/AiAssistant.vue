@@ -42,7 +42,6 @@ const fetchAiAnswer = async (content) => {
     renderedData.value = '';
 
     try {
-        console.log('message>>>>>', props.message)
         data.value = await api.ask({content: props.message}); // 使用传递的content
         renderData();
     } catch (error) {
