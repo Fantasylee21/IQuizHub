@@ -217,6 +217,15 @@ p {
 .top {
   display: flex;
   justify-content: space-between;
+  background: linear-gradient(to right, #d7e9ff, #b3d1ff);
+  padding: 20px;
+  margin: 20px 0 20px 5px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.top:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .elb {
