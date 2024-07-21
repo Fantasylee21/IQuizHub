@@ -6,6 +6,7 @@ const LoginRegister = () => import('@/views/LoginRegister.vue')
 
 const UserCenter = () => import('@/views/UserCenter.vue')
 const QuestionBank = () => import('@/views/QuestionBank.vue')
+const GroupPage = () => import('@/views/GroupPage.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 
@@ -41,7 +42,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/test',
 		name: 'test',
 		component: MyTest,
-
+	},
+	{
+		path: '/groupPage',
+		name: 'GroupPage',
+		component: GroupPage,
 	}
 ]
 
