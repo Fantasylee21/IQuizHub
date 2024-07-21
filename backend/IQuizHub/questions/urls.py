@@ -24,4 +24,5 @@ urlpatterns = [
          QuestionWriteView.as_view({'put': 'add_tag_to_question', 'delete': 'delete_tag_from_question'}),
          name='给题目添加标签'),
     path('query/question/', QuestionReadView.as_view({'get': 'query_question'}), name='查询题目'),
+    path('get/questions/', QuestionReadView.as_view({'get': 'get_all_questions'}), name='获取题目'),#返回所有题目
 ]

@@ -156,11 +156,13 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '1/minute',
         'user': '1000/day',
-        },
+    },
     'DEFAULT_THROTTLE_CLASSES': [
         # 'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
 }
 
 # 配置token的过期时间
@@ -184,12 +186,9 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-
 MEDIA_ROOT = BASE_DIR / 'file/media/avatar'
 MEDIA_URL = 'file/image/'
-
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
 ]
-
