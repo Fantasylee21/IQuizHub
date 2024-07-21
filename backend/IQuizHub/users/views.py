@@ -4,6 +4,7 @@ import re
 from django.core.mail import send_mail
 from django.http import FileResponse
 from rest_framework import status, mixins
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
@@ -11,11 +12,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, CommentSerializer
 from IQuizHub.settings import MEDIA_ROOT
-from users.models import User, Captcha
-from common.permissions import UserPermission
+from users.models import User, Captcha, Comment
+from common.permissions import UserPermission, CommentDeletePermission
 from common.aliyunapi import AliyunSMS
+from questions.models import Question
 
 
 class LoginView(TokenObtainPairView):
@@ -149,3 +151,76 @@ class CaptchaView(APIView):
             captcha = Captcha.objects.create(mobile=mobile, captcha=code)
             res['codeID'] = captcha.id
             return Response(res, status=status.HTTP_200_OK)
+
+
+class CommentView(GenericViewSet, mixins.DestroyModelMixin):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    serializer = CommentSerializer
+
+    def upload_comment(self, request, *args, **kwargs):
+        comment = request.data.get('comment')
+        question = request.data.get('question')
+        if not all([comment, question]):
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if not User.objects.filter(id=request.user.id).exists():
+            return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
+        if not Question.objects.filter(id=question).exists():
+            return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
+        Comment.objects.create(comment=comment, author=request.user, question_id=question)
+        return Response({"comment": comment}, status=status.HTTP_201_CREATED)
+
+    def get_comment(self, request, *args, **kwargs):
+        question = request.data.get('question')
+        user = request.data.get('user')
+        if question and user:
+            # print(question, user)
+            if not Question.objects.filter(id=question).exists():
+                return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            if not User.objects.filter(id=user).exists():
+                return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            comments = Comment.objects.filter(question_id=question, author_id=user)
+            result = []
+            for comment in comments:
+                result.append({
+                    "comment": comment.comment,
+                    "create_time": comment.create_time,
+                    "update_time": comment.update_time,
+                    "author": comment.author.username,
+                })
+            return Response(result, status=status.HTTP_200_OK)
+
+        if question:
+            if not Question.objects.filter(id=question).exists():
+                return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            comments = Comment.objects.filter(question_id=question)
+            result = []
+            for comment in comments:
+                result.append({
+                    "comment": comment.comment,
+                    "create_time": comment.create_time,
+                    "update_time": comment.update_time,
+                    "author": comment.author.username,
+                })
+            return Response(result, status=status.HTTP_200_OK)
+
+        if user:
+            if not User.objects.filter(id=user).exists():
+                return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            comments = Comment.objects.filter(author_id=user)
+            result = []
+            for comment in comments:
+                result.append({
+                    "comment": comment.comment,
+                    "create_time": comment.create_time,
+                    "update_time": comment.update_time,
+                    "author": comment.author.username,
+                })
+            return Response(result, status=status.HTTP_200_OK)
+
+        return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, permission_classes=[CommentDeletePermission], methods=['delete'])
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+

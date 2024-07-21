@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
 
-from users.views import LoginView, RigisterView, UserView, CaptchaView
+from users.views import LoginView, RigisterView, UserView, CaptchaView, CommentView
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='登录'),
@@ -29,4 +29,7 @@ urlpatterns = [
     path("users/<int:pk>/", UserView.as_view({'get': 'retrieve'}), name='用户详情'),
     path("<int:pk>/avatar/upload/", UserView.as_view({'post': 'avatar_upload'}), name='头像上传'),
     path("<int:pk>/introduction/", UserView.as_view({'post': 'upload_introduction'}), name='个人简介'),
+    path("comment/upload/", CommentView.as_view({'post': 'upload_comment'}), name='评论'),
+    path("comment/query/", CommentView.as_view({'get': 'get_comment'}), name='获取评论'),
+    path("comment/delete/<int:pk>/", CommentView.as_view({'delete': 'delete'}), name='删除评论'),
 ]
