@@ -6,7 +6,7 @@
             </el-header>
         </transition>
         <el-container class="main-container">
-            <el-aside :width="isCollapse ? '200px' : '64px'" v-show="showNav">
+            <el-aside :width="isCollapse ? '200px' : '64px'" v-show="showNav" style="margin-top: 50px">
                 <GlobalSidebar @toggleCollapse="toggleCollapse"/>
             </el-aside>
             <el-main class="main-content">
@@ -74,7 +74,6 @@ router.push('/loginRegister');
     flex: 1;
     display: flex;
     height: 100%;
-    margin-top: 25px;
 }
 
 .el-aside {

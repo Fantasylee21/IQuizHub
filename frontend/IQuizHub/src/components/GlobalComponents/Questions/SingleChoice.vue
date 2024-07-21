@@ -1,27 +1,33 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import AiAssistant from "./AiAssistant.vue";
+import {computed, onMounted, ref} from 'vue'
+import AiAssistant from './AiAssistant.vue'
 
 interface QuestionData {
-    pattern: string;
-    description: string;
-    id: number;
-    choices: string[];
-    storeId: number;
-    bigQuestionId: number;
+    pattern: string
+    description: string
+    id: number
+    choices: string[]
+    storeId: number
+    bigQuestionId: number
 }
 
-const props = defineProps<{ question: QuestionData }>();
-const selectedChoice = ref<string | null>(null);
+const props = defineProps<{ question: QuestionData }>()
+const selectedChoice = ref<string | null>(null)
 
 const selectChoice = (choice: string) => {
-    selectedChoice.value = choice;
-};
+    selectedChoice.value = choice
+}
+
+const questionContent = ref<HTMLElement | null>(null);
+
+const message = computed(() => {
+    return questionContent.value?.textContent?.trim() || '';
+});
 </script>
 
 <template>
     <div class="single-question-container">
-        <div class="single-question-left">
+        <div class="single-question-left" ref="questionContent">
             <h3>单选题</h3>
             <div class="question-header">
                 <p>{{ question.id }}.</p>
@@ -42,7 +48,7 @@ const selectChoice = (choice: string) => {
             </ul>
         </div>
         <div class="single-question-right">
-            <AiAssistant></AiAssistant>
+            <AiAssistant :message="message"></AiAssistant>
         </div>
     </div>
 </template>
@@ -69,7 +75,7 @@ h3 {
 .question-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;;
+    margin-bottom: 20px;
 }
 
 .question-header p {
