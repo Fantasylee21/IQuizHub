@@ -18,6 +18,7 @@ urlpatterns = [
          name='向题组添加题目'),
     path('questiongroup/deletequestion/<int:pk>/', QuestionGroupView.as_view({'delete': 'delete_question'}),
          name='删除题目组'),
+    path('questiongroup/all/', QuestionGroupView.as_view({'get': 'get_all_question_groups'}), name='获取所有题目组'),
     path('tag/upload/', TagView.as_view({'put': 'upload_tag'}), name='上传标签'),
     path('tag/delete/<int:pk>/', TagView.as_view({'delete': 'destroy'}), name='删除标签'),
     path('modifytag/<int:pk>/',
@@ -27,5 +28,4 @@ urlpatterns = [
     path('get/questions/', QuestionReadView.as_view({'get': 'get_all_questions'}), name='获取题目'),
     path('check/question/', QuestionReadView.as_view({'post': 'check_question'}), name='检查题目'),
     path('get/selfquestions/', QuestionReadView.as_view({'get': 'get_recommend_questions'}), name='获取自己推荐的题目'),
-
 ]
