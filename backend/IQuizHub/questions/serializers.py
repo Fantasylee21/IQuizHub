@@ -33,7 +33,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         # fields = '__all__'
-        exclude = ['is_all', 'ans']
+        exclude = ['is_all']
 
     def create(self, validated_data):
         """保存问题时，确保作者是请求的用户"""
