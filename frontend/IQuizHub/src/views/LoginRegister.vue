@@ -92,7 +92,7 @@ import {ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import UtilMethods from '@/utils/UtilMethod'
 import api from "@/api";
-import {useProfileStore} from "@/store/profile";
+import {useProfileStore} from "@/stores/profile";
 
 const isSignInVisible = ref(true)
 const profile = useProfileStore()

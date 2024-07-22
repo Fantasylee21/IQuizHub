@@ -2,7 +2,7 @@ import axios from 'axios'
 import env from '@/utils/env'
 import {ElMessage} from "element-plus";
 import router from "@/router";
-import {useProfileStore} from "@/store/profile";
+import {useProfileStore} from "@/stores/profile";
 
 const profile = useProfileStore();
 
