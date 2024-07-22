@@ -91,8 +91,11 @@
 import {ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import UtilMethods from '@/utils/UtilMethod'
+import api from "@/api";
+import {useProfileStore} from "@/stores/profile";
 
 const isSignInVisible = ref(true)
+const profile = useProfileStore()
 
 const signupForm = ref({
     username: '',
@@ -106,13 +109,17 @@ const loginForm = ref({
     password: ''
 })
 
-const handleSignup = () => {
-    if (!validateSignupForm()) return
-    UtilMethods.jump('/staging')
+const handleSignup = async () => {
+    await api.register(signupForm.value)
 }
 
 const handleLogin = async () => {
-    UtilMethods.jump('/staging')
+    const ret = await api.login(loginForm.value)
+    if (ret) {
+        ElMessage.success('登录成功')
+        profile.updateProfile(ret)
+        UtilMethods.jump('/staging')
+    }
 }
 
 const validateSignupForm = () => {

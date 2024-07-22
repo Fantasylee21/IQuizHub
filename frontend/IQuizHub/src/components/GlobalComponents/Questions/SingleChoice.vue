@@ -1,21 +1,47 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue'
+import {computed, ref} from 'vue'
 import AiAssistant from './AiAssistant.vue'
+import api from "@/api";
 
 interface QuestionData {
-    pattern: string
-    description: string
+    type: string
+    content: string
     id: number
     choices: string[]
-    storeId: number
-    bigQuestionId: number
+    tags: string[]
+    title: string
+    answer: string
 }
 
-const props = defineProps<{ question: QuestionData }>()
-const selectedChoice = ref<string | null>(null)
+const props = defineProps<{
+    question: QuestionData,
+}>()
 
-const selectChoice = (choice: string) => {
-    selectedChoice.value = choice
+const selectedChoice = ref<string | null>(null);
+const choiceResults = ref<Record<string, 'correct' | 'incorrect'>>({});
+const is_read = ref(false);
+
+async function selectChoice(choice: string) {
+    if (is_read.value) return;
+
+    try {
+        const res = await api.checkQuestion({
+            'question_id': props.question.id,
+            'ans': choice
+        });
+        is_read.value = true;
+
+        selectedChoice.value = choice;
+        if (res.message) {
+            // 答案正确, 渲染成绿色并出现对钩
+            choiceResults.value[choice] = 'correct';
+        } else {
+            // 答案错误, 渲染成红色并出现叉
+            choiceResults.value[choice] = 'incorrect';
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 const questionContent = ref<HTMLElement | null>(null);
@@ -28,17 +54,23 @@ const message = computed(() => {
 <template>
     <div class="single-question-container">
         <div class="single-question-left" ref="questionContent">
-            <h3>单选题</h3>
+            <el-tag type="info">单选题</el-tag>
+            <el-tag v-for="tag in question.tags" :key="tag" style="margin: 15px 5px;">{{ tag }}</el-tag>
+            <h3>{{ question.title }}</h3>
             <div class="question-header">
                 <p>{{ question.id }}.</p>
-                <div v-html="question.description"></div>
+                <div v-html="question.content"></div>
             </div>
             <ul class="choices">
                 <li
                         v-for="(choice, index) in question.choices"
                         :key="index"
-                        :class="{ selected: selectedChoice === choice }"
-                        @click="selectChoice(choice)"
+                        :class="{
+                        selected: selectedChoice === String.fromCharCode(65 + index),
+                        correct: choiceResults[String.fromCharCode(65 + index)] === 'correct',
+                        incorrect: choiceResults[String.fromCharCode(65 + index)] === 'incorrect'
+                    }"
+                        @click="!is_read && selectChoice(String.fromCharCode(65 + index))"
                 >
                     <div class="choice-content">
                         <div class="choice-label">{{ String.fromCharCode(65 + index) }}.</div>
@@ -48,7 +80,12 @@ const message = computed(() => {
             </ul>
         </div>
         <div class="single-question-right">
-            <AiAssistant :message="message"></AiAssistant>
+            <el-collapse v-if="is_read">
+                <el-collapse-item title="答案">
+                    <div v-html="question.answer"></div>
+                </el-collapse-item>
+            </el-collapse>
+            <AiAssistant v-show="is_read" :message="message"></AiAssistant>
         </div>
     </div>
 </template>
@@ -104,14 +141,30 @@ ul.choices li:hover {
     background-color: #f5f5f5;
 }
 
-ul.choices li.selected {
-    background-color: #fcebea;
+ul.choices li.selected.correct {
+    background-color: #e1f3d8;
+    border-color: #67c23a;
+    color: #67c23a;
+}
+
+ul.choices li.selected.correct .choice-label::after {
+    content: '✔';
+    color: #67c23a;
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+ul.choices li.selected.incorrect {
+    background-color: #fde2e2;
     border-color: #f56c6c;
     color: #f56c6c;
 }
 
-ul.choices li.selected .choice-label {
+ul.choices li.selected.incorrect .choice-label::after {
+    content: '✘';
     color: #f56c6c;
+    font-size: 18px;
+    margin-left: 5px;
 }
 
 .choice-content {
@@ -127,12 +180,5 @@ ul.choices li.selected .choice-label {
 
 .choice-text {
     flex-grow: 1;
-}
-
-ul.choices li.selected .choice-label::after {
-    content: '✔';
-    color: #f56c6c;
-    font-size: 18px;
-    margin-left: 5px;
 }
 </style>

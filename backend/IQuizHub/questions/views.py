@@ -18,6 +18,8 @@ from questions.models import Question, QuestionGroup, Tag, Choice
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer
 from rest_framework import serializers
 
+from utils.yichat import ask
+
 
 # Create your views here.
 
@@ -59,9 +61,12 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         answer = request.data.get('answer')
         type = request.data.get('type')
         choices = request.data.get('choices')
-        # print(title, author, content, answer, type)
         if not all([title, author, content, answer, type]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        res = ask(
+            "我的以下信息中是否包含敏感词，如果有敏感词你应该说”是的“，如果没有敏感词你应该说”不是“\n" + content + " " + title + " " + answer + " " + type)
+        if "是的" in res['result']:
+            return Response({"error": "题目中包含敏感词"}, status=status.HTTP_400_BAD_REQUEST)
         question = Question.objects.create(title=title, author=author, content=content, ans=answer, type=type)
         if type == 'multiple_choice' or type == 'single_choice':
             if not choices:
@@ -212,12 +217,12 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             his = History.objects.create(question=question, correct=True)
             his.save()
             user.historys.add(his)
-            return Response({"message": "回答正确"}, status=status.HTTP_200_OK)
+            return Response({"message": True}, status=status.HTTP_200_OK)
         else:
             his = History.objects.create(question=question, correct=False)
             his.save()
             user.historys.add(his)
-            return Response({"message": "回答错误"}, status=status.HTTP_200_OK)
+            return Response({"message": False}, status=status.HTTP_200_OK)
 
     # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
     # 要包含所有的提供的tags的id
