@@ -91,29 +91,46 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}
 		})).data;
+	},
+
+	getAllQuestions: async function (params : {pageNumber: number}) {
+  try {
+    const url = `api/question/get/questions/?page=${params.pageNumber}`;
+    const response = await api.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+    return response.data;
+  } catch (e) {
+    return null;
+  }
+},
+
+	search: async function (params: {keyword: string, Tags: string[]}) {
+    try {
+        const res = (await api.get(`api/question/query/question/`, {
+            params: params,
+            headers: {
+                'Content-Type' : 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        })).data;
+        return res;
+    } catch (e) {
+        return null;
+    }
+},
+
+	getQuestionDetail: async function (id: string) {
+		return (await api.get(`api/question/detail/${id}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
 	}
-
-	getAllQuestions: async function () {
-		try {
-			const res = (await api.get(`api/question/get/questions/`)).data;
-			return res;
-		} catch (e) {
-			return null;
-		}
-	},
-
-	search: async function (keyword: string, Tags: string[]) {
-		try {
-			const res = (await api.get(`api/question/search/${keyword}`, {
-				headers: {
-					'Content-Type' : 'application/json',
-				}
-			})).data;
-			return res;
-		} catch (e) {
-			return null;
-		}
-	},
 
 
 }

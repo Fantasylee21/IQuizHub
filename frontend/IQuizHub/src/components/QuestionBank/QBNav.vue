@@ -95,22 +95,12 @@
 import { Search } from '@element-plus/icons'
 import { nextTick, ref } from 'vue'
 import { ElInput ,ElMessage} from 'element-plus'
-import api from '@/api'
 
 const searchQuery = ref('');
 const totalResults = ref(55);
-const data = ref([]);
 
 const search = async () => {
-    try {
-        const response = await api.search(searchQuery.value, dynamicTags.value);
-        data.value = response.data.length;
-        updateTableValue(data.value)
-        ElMessage.success(`搜索关键词: ${searchQuery.value}`);
-    } catch (error) {
-        console.error(error);
-        ElMessage.error('出问题啦！！！');
-    }
+    ElMessage.success(`搜索关键词: ${searchQuery.value}`);
 };
 
 
