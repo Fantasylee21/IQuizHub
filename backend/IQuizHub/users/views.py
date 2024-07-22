@@ -12,9 +12,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 
-from users.serializers import UserSerializer, CommentSerializer
+from users.serializers import UserSerializer, CommentSerializer, HistorySerializer
 from IQuizHub.settings import MEDIA_ROOT
-from users.models import User, Captcha, Comment
+from users.models import User, Captcha, Comment, History
 from common.permissions import UserPermission, CommentDeletePermission
 from common.aliyunapi import AliyunSMS
 from questions.models import Question
@@ -87,7 +87,7 @@ class RigisterView(APIView):
         return Response(result, status=status.HTTP_201_CREATED)
 
 
-class UserView(GenericViewSet, mixins.RetrieveModelMixin):
+class UserView(GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, UserPermission]
@@ -117,6 +117,22 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         serializer.save()
 
         return Response({"introduction": serializer.data['introduction']}, status=status.HTTP_200_OK)
+
+
+class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_history(self, request, *args, **kwargs):
+        user = self.get_object()
+        historys = user.historys.all()
+        print (historys)
+        page = self.paginate_queryset(historys)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "无历史记录"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class FileView(APIView):
@@ -167,8 +183,9 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
             return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
         if not Question.objects.filter(id=question).exists():
             return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
-        Comment.objects.create(comment=comment, author=request.user, question_id=question)
-        return Response({"comment": comment}, status=status.HTTP_201_CREATED)
+        comment = Comment.objects.create(comment=comment, question_id=question, author_id=request.user.id)
+        serializers = self.serializer(comment)
+        return Response(serializers.data, status=status.HTTP_201_CREATED)
 
     def get_comment(self, request, *args, **kwargs):
         question = request.data.get('question')
@@ -180,47 +197,30 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
             if not User.objects.filter(id=user).exists():
                 return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
             comments = Comment.objects.filter(question_id=question, author_id=user)
-            result = []
-            for comment in comments:
-                result.append({
-                    "comment": comment.comment,
-                    "create_time": comment.create_time,
-                    "update_time": comment.update_time,
-                    "author": comment.author.username,
-                })
-            return Response(result, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(comments)
+            if page is not None:
+                serializer = self.serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
 
         if question:
             if not Question.objects.filter(id=question).exists():
                 return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
             comments = Comment.objects.filter(question_id=question)
-            result = []
-            for comment in comments:
-                result.append({
-                    "comment": comment.comment,
-                    "create_time": comment.create_time,
-                    "update_time": comment.update_time,
-                    "author": comment.author.username,
-                })
-            return Response(result, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(comments)
+            if page is not None:
+                serializer = self.serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
 
         if user:
             if not User.objects.filter(id=user).exists():
                 return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
             comments = Comment.objects.filter(author_id=user)
-            result = []
-            for comment in comments:
-                result.append({
-                    "comment": comment.comment,
-                    "create_time": comment.create_time,
-                    "update_time": comment.update_time,
-                    "author": comment.author.username,
-                })
-            return Response(result, status=status.HTTP_200_OK)
-
+            page = self.paginate_queryset(comments)
+            if page is not None:
+                serializer = self.serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
         return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, permission_classes=[CommentDeletePermission], methods=['delete'])
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-

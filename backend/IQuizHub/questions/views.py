@@ -1,6 +1,11 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
-from rest_framework import mixins, status
+from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+# from rest_framework.mixins.RetrieveModelMixin import retrieve
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,8 +13,9 @@ from rest_framework.viewsets import GenericViewSet
 
 from common.permissions import QuestionWritePermission, QuestionGroupPermission, QuestionReadPermission, \
     QuestionGroupDeletePermission, Issuperuser
-from questions.models import Question, QuestionGroup, Tag
-from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer
+from users.models import History
+from questions.models import Question, QuestionGroup, Tag, Choice
+from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer
 from rest_framework import serializers
 
 
@@ -28,9 +34,7 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
     def update_content(self, request, *args, **kwargs):
         obj = self.get_object()
-
         serializer = QuestionSerializer(obj, data=request.data, partial=True)
-
         # 检查请求中的数据并更新序列化器数据
         data = {}
         if 'title' in request.data:
@@ -41,7 +45,6 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             data['ans'] = request.data.get('answer')
         if 'type' in request.data:
             data['type'] = request.data.get('type')
-
         # 如果没有要更新的字段，则返回错误
         if not data:
             return Response({"error": "没有传入要更新的参数"}, status=status.HTTP_400_BAD_REQUEST)
@@ -55,10 +58,21 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         content = request.data.get('content')
         answer = request.data.get('answer')
         type = request.data.get('type')
+        choices = request.data.get('choices')
         # print(title, author, content, answer, type)
         if not all([title, author, content, answer, type]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         question = Question.objects.create(title=title, author=author, content=content, ans=answer, type=type)
+        if type == 'multiple_choice' or type == 'single_choice':
+            if not choices:
+                return Response({"error": "选择题选项不能为空"}, status=status.HTTP_400_BAD_REQUEST)
+            for choice in choices:
+                if not all([choice.get("content"), choice.get("option")]):
+                    return Response({"error": "选项参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+                ch = Choice.objects.create(content=choice.get("content"),
+                                           option=choice.get("option"))
+                question.choices.add(ch)
+                question.save()
         result = {
             "id": question.id,
             "title": question.title,
@@ -107,7 +121,7 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         author = request.user
         if not all([questions, title, author]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-        question_group = QuestionGroup.objects.create(title=title, author=author,content = content)
+        question_group = QuestionGroup.objects.create(title=title, author=author, content=content)
         for question in questions:
             question_group.questions.add(question)
             q = Question.objects.get(id=question)
@@ -183,9 +197,30 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionReadPermission]
+    pagination_class = PageNumberPagination
 
-    #通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
-    #要包含所有的提供的tags的id
+    def check_question(self, request, *args, **kwargs):
+        question_id = request.data.get("question_id")
+        ans = request.data.get("ans")
+        user = request.user
+        if not all([question_id, ans]):
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if not Question.objects.filter(id=question_id).exists():
+            return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
+        question = Question.objects.get(id=question_id)
+        if question.ans == ans:
+            his = History.objects.create(question=question, correct=True)
+            his.save()
+            user.historys.add(his)
+            return Response({"message": "回答正确"}, status=status.HTTP_200_OK)
+        else:
+            his = History.objects.create(question=question, correct=False)
+            his.save()
+            user.historys.add(his)
+            return Response({"message": "回答错误"}, status=status.HTTP_200_OK)
+
+    # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
+    # 要包含所有的提供的tags的id
     def query_question(self, request, *args, **kwargs):
         title = request.data.get('title')
         tags = request.data.get('tags')
@@ -193,19 +228,35 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         if not tags:
             questions = Question.objects.filter(title__contains=title)
-            serializer = self.get_serializer(questions, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(questions)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             questions = Question.objects.filter(title__contains=title)
             for tag in tags:
                 questions = questions.filter(tags=tag)
-            serializer = self.get_serializer(questions, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(questions)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
-class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin):
+    def get_all_questions(self, request, *args, **kwargs):
+        questions = Question.objects.all()
+        page = self.paginate_queryset(questions)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [IsAuthenticated, Issuperuser]
+    pagination_class = PageNumberPagination
 
     def upload_tag(self, request, *args, **kwargs):
         name = request.data.get('name')
