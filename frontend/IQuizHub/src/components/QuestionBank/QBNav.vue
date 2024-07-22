@@ -102,15 +102,7 @@ const totalResults = ref(55);
 const data = ref([]);
 
 const search = async () => {
-    try {
-        const response = await api.search(searchQuery.value, dynamicTags.value);
-        data.value = response.data.length;
-        updateTableValue(data.value)
-        ElMessage.success(`搜索关键词: ${searchQuery.value}`);
-    } catch (error) {
-        console.error(error);
-        ElMessage.error('出问题啦！！！');
-    }
+    ElMessage.success(`搜索关键词: ${searchQuery.value}`);
 };
 
 

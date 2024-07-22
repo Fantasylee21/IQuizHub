@@ -91,7 +91,7 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}
 		})).data;
-	}
+	},
 
 	getAllQuestions: async function () {
 		try {
