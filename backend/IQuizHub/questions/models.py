@@ -1,5 +1,6 @@
 from django.db import models
 
+from users.models import User
 
 # Create your models here.
 class Question(models.Model):
@@ -13,11 +14,13 @@ class Question(models.Model):
         ('multiple_choice', 'Multiple Choice'),
         ('true_false', 'True/False'),
         ('fill_in_the_blank', 'Fill in the Blank'),
+        ('single_choice', 'Single Choice'),
     ]
-    type = models.CharField(max_length=20, choices=CONTENT_CHOICES, default='multiple_choice', verbose_name='问题类型')
+    type = models.CharField(max_length=20, choices=CONTENT_CHOICES, default='single_choice', verbose_name='问题类型')
     ans = models.TextField(verbose_name='问题答案', default=None)
     is_all = models.BooleanField(default=True, verbose_name='是否为全部题目')
     tags = models.ManyToManyField('Tag', related_name='questionsTags', verbose_name='标签')
+    choices = models.ManyToManyField('Choice', related_name='questionsChoices', verbose_name='选项')
 
     class Meta:
         db_table = 'questions'
@@ -27,10 +30,6 @@ class Question(models.Model):
 
     def __str__(self):
         return self.title
-
-
-from django.db import models
-from users.models import User
 
 
 class QuestionGroup(models.Model):
@@ -70,6 +69,7 @@ class Tag(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     name = models.CharField(max_length=20, verbose_name='标签名称', unique=True)
+
     # questions = models.ManyToManyField('Question', related_name='tagsQuestions', verbose_name='问题')
 
     class Meta:
@@ -80,6 +80,25 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Choice(models.Model):
+    """选项模型类"""
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    option = models.CharField(max_length=5, verbose_name='选项类型', default='multiple_choice')
+    content = models.TextField(verbose_name='选项内容')
+
+    class Meta:
+        db_table = 'choices'
+        verbose_name = '选项表'
+        verbose_name_plural = verbose_name
+        ordering = ['-create_time']
+
+    def __str__(self):
+        return self.content
+
+
 
 
 if __name__ == '__main__':
