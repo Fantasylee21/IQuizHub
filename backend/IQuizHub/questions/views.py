@@ -13,6 +13,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from common.permissions import QuestionWritePermission, QuestionGroupPermission, QuestionReadPermission, \
     QuestionGroupDeletePermission, Issuperuser
+from users.models import History
 from questions.models import Question, QuestionGroup, Tag, Choice
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer
 from rest_framework import serializers
@@ -197,9 +198,26 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionReadPermission]
     pagination_class = PageNumberPagination
-    # page_size = 10  # 你可以根据需要设置每页的项目数
 
-    # pagination_class = LimitOffsetPagination
+    def check_question(self, request, *args, **kwargs):
+        question_id = request.data.get("question_id")
+        ans = request.data.get("ans")
+        user = request.user
+        if not all([question_id, ans]):
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if not Question.objects.filter(id=question_id).exists():
+            return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
+        question = Question.objects.get(id=question_id)
+        if question.ans == ans:
+            his = History.objects.create(question=question, correct=True)
+            his.save()
+            user.historys.add(his)
+            return Response({"message": "回答正确"}, status=status.HTTP_200_OK)
+        else:
+            his = History.objects.create(question=question, correct=False)
+            his.save()
+            user.historys.add(his)
+            return Response({"message": "回答错误"}, status=status.HTTP_200_OK)
 
     # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
     # 要包含所有的提供的tags的id
@@ -224,7 +242,6 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
             return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
-
 
     def get_all_questions(self, request, *args, **kwargs):
         questions = Question.objects.all()

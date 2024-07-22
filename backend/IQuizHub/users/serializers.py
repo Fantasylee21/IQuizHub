@@ -1,14 +1,24 @@
 from rest_framework import serializers
 
 from questions.serializers import QuestionSerializer
-from users.models import User, Comment
+from users.models import User, Comment, History
+
+
+class HistorySerializer(serializers.ModelSerializer):
+    # question = QuestionSerializer()
+
+    class Meta:
+        model = History
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
+    historys = HistorySerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['id', 'username', 'email', 'mobile', 'avatar', 'introduction', 'historys', 'create_time',
+                  'update_time', ]
 
 
 class CommentSerializer(serializers.Serializer):
@@ -23,3 +33,5 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+

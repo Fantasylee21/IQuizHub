@@ -12,9 +12,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 
-from users.serializers import UserSerializer, CommentSerializer
+from users.serializers import UserSerializer, CommentSerializer, HistorySerializer
 from IQuizHub.settings import MEDIA_ROOT
-from users.models import User, Captcha, Comment
+from users.models import User, Captcha, Comment, History
 from common.permissions import UserPermission, CommentDeletePermission
 from common.aliyunapi import AliyunSMS
 from questions.models import Question
@@ -87,7 +87,7 @@ class RigisterView(APIView):
         return Response(result, status=status.HTTP_201_CREATED)
 
 
-class UserView(GenericViewSet, mixins.RetrieveModelMixin):
+class UserView(GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, UserPermission]
@@ -117,6 +117,22 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         serializer.save()
 
         return Response({"introduction": serializer.data['introduction']}, status=status.HTTP_200_OK)
+
+
+class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_history(self, request, *args, **kwargs):
+        user = self.get_object()
+        historys = user.historys.all()
+        print (historys)
+        page = self.paginate_queryset(historys)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "无历史记录"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class FileView(APIView):
