@@ -37,10 +37,6 @@ export default {
             {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
             {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
         ]);
-        const updateTableData = (newData) => {
-            tableData.value = newData;
-        }
-        provide('updateTableData', updateTableData);
 
         const currentPage = ref(1);
         const pageSize = ref(20);
@@ -54,19 +50,6 @@ export default {
         const handlePageChange = (page) => {
             currentPage.value = page;
         };
-
-        const getAllQuestions = async () => {
-          try {
-            const response = await api.getAllQuestions();
-            tableData.value = response.data;
-          } catch (error) {
-            console.error(error);
-          }
-        };
-
-        onMounted(() => {
-            getAllQuestions();
-        });
 
         return {
             tableData,
