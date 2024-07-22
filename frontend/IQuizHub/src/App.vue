@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
     window.removeEventListener('mousemove', handleMouseMove);
 });
 
-router.push('/question-detail/42');
+router.push('/loginRegister');
 </script>
 
 <style scoped>

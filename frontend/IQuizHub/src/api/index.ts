@@ -110,8 +110,8 @@ export default {
 
 	search: async function (params: {keyword: string, Tags: string[]}) {
     try {
-        const res = (await api.get(`api/question/query/question/`, {
-            params: params,
+        const res = (await api.get(`api/question/query/question/`,  {
+						params: params,
             headers: {
                 'Content-Type' : 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,

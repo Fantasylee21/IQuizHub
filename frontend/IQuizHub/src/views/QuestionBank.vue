@@ -22,6 +22,17 @@ const getAllQuestion = async (pageNumber: number) => {
     }
 }
 
+const search = async (keyword: string, Tags: string[]) => {
+    try {
+        const res = await api.search({keyword, Tags});
+        tableData.value = res.results;
+        console.log(res.results);
+    } catch (e) {
+        console.error('Error searching questions:', e);
+    }
+
+}
+
 const currentPage = ref(1);
 
 const pageChange = (pageNew: number) => {
@@ -36,6 +47,27 @@ const loadPage = (currentPage: number) => {
 onMounted(() => {
     loadPage(1);
 })
+
+const searchStatus = ref(false);
+const searchQuery = ref('');
+const dynamicTags = ref([]);
+
+const updateSearchQuery = (query) => {
+  searchQuery.value = query;
+};
+
+const updateSearchTags = (dynamicTags) => {
+  dynamicTags.value = dynamicTags;
+};
+
+const handleSearchStatus = (status) => {
+  searchStatus.value = status;
+  if (status) {
+    search(searchQuery.value, dynamicTags.value);
+  } else {
+    loadPage(1);
+  }
+};
 
 function formatDate(time: string) {
     const date = new Date(time);
@@ -53,7 +85,7 @@ function formatDate(time: string) {
 <template>
   <QBHeader />
     <div class="question-bank-container">
-      <QBNav></QBNav>
+      <QBNav @updateSearchStatus="handleSearchStatus"></QBNav>
       <QBList :tableData="tableData" @page-change="pageChange" :total="total"></QBList>
   </div>
 </template>

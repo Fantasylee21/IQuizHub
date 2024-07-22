@@ -93,14 +93,19 @@
 
 <script setup>
 import { Search } from '@element-plus/icons'
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, defineEmits} from 'vue'
 import { ElInput ,ElMessage} from 'element-plus'
 
 const searchQuery = ref('');
 const totalResults = ref(55);
-
+const isSearch = ref(false);
+const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags']);
 const search = async () => {
     ElMessage.success(`搜索关键词: ${searchQuery.value}`);
+    isSearch.value = true;
+    emit('updateSearchStatus', isSearch);
+    emit('updateSearchQuery', searchQuery);
+    emit('updateSearchTags', dynamicTags);
 };
 
 
