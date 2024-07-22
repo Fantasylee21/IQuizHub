@@ -217,12 +217,12 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             his = History.objects.create(question=question, correct=True)
             his.save()
             user.historys.add(his)
-            return Response({"message": "回答正确"}, status=status.HTTP_200_OK)
+            return Response({"message": True}, status=status.HTTP_200_OK)
         else:
             his = History.objects.create(question=question, correct=False)
             his.save()
             user.historys.add(his)
-            return Response({"message": "回答错误"}, status=status.HTTP_200_OK)
+            return Response({"message": False}, status=status.HTTP_200_OK)
 
     # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
     # 要包含所有的提供的tags的id

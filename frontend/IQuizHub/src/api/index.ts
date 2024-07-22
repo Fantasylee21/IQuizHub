@@ -82,4 +82,13 @@ export default {
 			return null
 		}
 	},
+
+	checkQuestion: async function (params: object) {
+		return (await api.post(`api/question/check/question/`, params, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data;
+	}
 }
