@@ -88,8 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
-import {ElMessage} from 'element-plus'
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import UtilMethods from '@/utils/UtilMethod'
 
 const isSignInVisible = ref(true)
@@ -106,13 +106,34 @@ const loginForm = ref({
     password: ''
 })
 
-const handleSignup = () => {
+const handleSignup = async () => {
     if (!validateSignupForm()) return
-    UtilMethods.jump('/staging')
+
+    try {
+        const res = await api.register(signupForm.value)
+        if (res) {
+            ElMessage.success('注册成功')
+            UtilMethods.jump('/staging')
+        } else {
+            ElMessage.error('注册失败')
+        }
+    } catch (error) {
+        ElMessage.error('注册失败')
+    }
 }
 
 const handleLogin = async () => {
-    UtilMethods.jump('/staging')
+    try {
+        const res = await api.login(loginForm.value)
+        if (res) {
+            ElMessage.success('登录成功')
+            UtilMethods.jump('/staging')
+        } else {
+            ElMessage.error('登录失败')
+        }
+    } catch (error) {
+        ElMessage.error('登录失败')
+    }
 }
 
 const validateSignupForm = () => {

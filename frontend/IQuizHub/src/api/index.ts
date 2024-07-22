@@ -31,4 +31,24 @@ export default {
 		}
 
 	},
+
+	login: async function (params: object) {
+        try {
+            const res = (await api.post(`login/`, params)).data;
+            localStorage.setItem('token', res.token);
+            return res;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    register: async function (params: object) {
+        try {
+            const res = (await api.post(`register/`, params)).data;
+            localStorage.setItem('token', res.token);
+            return res;
+        } catch (e) {
+            return null;
+        }
+    },
 }
