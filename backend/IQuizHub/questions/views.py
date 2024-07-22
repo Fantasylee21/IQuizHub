@@ -18,6 +18,8 @@ from questions.models import Question, QuestionGroup, Tag, Choice
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer
 from rest_framework import serializers
 
+from utils.yichat import ask
+
 
 # Create your views here.
 
@@ -59,9 +61,12 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         answer = request.data.get('answer')
         type = request.data.get('type')
         choices = request.data.get('choices')
-        # print(title, author, content, answer, type)
         if not all([title, author, content, answer, type]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        res = ask(
+            "我的以下信息中是否包含敏感词，如果有敏感词你应该说”是的“，如果没有敏感词你应该说”不是“\n" + content + " " + title + " " + answer + " " + type)
+        if "是的" in res['result']:
+            return Response({"error": "题目中包含敏感词"}, status=status.HTTP_400_BAD_REQUEST)
         question = Question.objects.create(title=title, author=author, content=content, ans=answer, type=type)
         if type == 'multiple_choice' or type == 'single_choice':
             if not choices:
