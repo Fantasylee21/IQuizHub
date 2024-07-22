@@ -7,7 +7,6 @@ from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
-# from rest_framework.mixins.RetrieveModelMixin import retrieve
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -116,6 +115,14 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
     queryset = QuestionGroup.objects.all()
     serializer_class = QuestionGroupSerializer
     permission_classes = [IsAuthenticated, QuestionGroupPermission]
+
+    def get_all_question_groups(self, request, *args, **kwargs):
+        question_groups = QuestionGroup.objects.all()
+        page = self.paginate_queryset(question_groups)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
@@ -261,7 +268,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
 
     def get_recommend_questions(self, request, *args, **kwargs):
         user = request.user
-    # 收集用户历史中所有问题的所有标签
+        # 收集用户历史中所有问题的所有标签
         tags = set()
         for history in user.historys.all():
             for tag in history.question.tags.all():

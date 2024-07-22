@@ -3,13 +3,13 @@
         <div class="header-info">
             <div class="header-content">
                 <div class="avatar">
-                    <img src="@/assets/avatar.jpg" alt="avatar">
+                    <img :src="avatar" alt="avatar">
                 </div>
                 <div class="content">
                     <div class="content-title">
                         <span>早安</span>
                         <span>，</span>
-                        <span class="text-red">Poseidon</span>
+                        <span class="text-red">{{ name }}</span>
                         <span>，</span>
                         <span class="welcome-text">祝你开心每一天</span>
                         <span>！</span>
@@ -41,6 +41,10 @@ import {ref} from "vue";
 
 const statisticVal = ref(10000);
 
+const props = defineProps({
+    name: String,
+    avatar: String
+});
 </script>
 
 <style scoped>
