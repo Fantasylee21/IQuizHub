@@ -46,6 +46,7 @@ export default {
 
 	},
 
+
 	register: async function (params: { username: string; email: string; password: string }) {
 		try {
 			const isSuccess = (await api.post(`users/register/`, params)).status == 201
@@ -91,4 +92,28 @@ export default {
 			}
 		})).data;
 	}
+
+	getAllQuestions: async function () {
+		try {
+			const res = (await api.get(`api/question/get/questions/`)).data;
+			return res;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	search: async function (keyword: string, Tags: string[]) {
+		try {
+			const res = (await api.get(`api/question/search/${keyword}`, {
+				headers: {
+					'Content-Type' : 'application/json',
+				}
+			})).data;
+			return res;
+		} catch (e) {
+			return null;
+		}
+	},
+
+
 }
