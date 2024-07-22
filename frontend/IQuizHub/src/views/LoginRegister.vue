@@ -88,11 +88,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import {ref} from 'vue'
+import {ElMessage} from 'element-plus'
 import UtilMethods from '@/utils/UtilMethod'
+import api from "@/api";
+import {useProfileStore} from "@/store/profile";
 
 const isSignInVisible = ref(true)
+const profile = useProfileStore()
 
 const signupForm = ref({
     username: '',
@@ -107,32 +110,15 @@ const loginForm = ref({
 })
 
 const handleSignup = async () => {
-    if (!validateSignupForm()) return
-
-    try {
-        const res = await api.register(signupForm.value)
-        if (res) {
-            ElMessage.success('注册成功')
-            UtilMethods.jump('/staging')
-        } else {
-            ElMessage.error('注册失败')
-        }
-    } catch (error) {
-        ElMessage.error('注册失败')
-    }
+    await api.register(signupForm.value)
 }
 
 const handleLogin = async () => {
-    try {
-        const res = await api.login(loginForm.value)
-        if (res) {
-            ElMessage.success('登录成功')
-            UtilMethods.jump('/staging')
-        } else {
-            ElMessage.error('登录失败')
-        }
-    } catch (error) {
-        ElMessage.error('登录失败')
+    const ret = await api.login(loginForm.value)
+    if (ret) {
+        ElMessage.success('登录成功')
+        profile.updateProfile(ret)
+        UtilMethods.jump('/staging')
     }
 }
 
