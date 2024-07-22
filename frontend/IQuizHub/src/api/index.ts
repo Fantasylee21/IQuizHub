@@ -123,5 +123,14 @@ export default {
     }
 },
 
+	getQuestionDetail: async function (id: string) {
+		return (await api.get(`api/question/detail/${id}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
+	}
+
 
 }
