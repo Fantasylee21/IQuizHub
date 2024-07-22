@@ -24,10 +24,12 @@ import StagingChart from "@/components/Staging/StagingChart.vue";
 
 <style scoped>
 .staging-container {
-    margin: 0 auto;
+    margin: 25px auto 0;
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .staging-header {

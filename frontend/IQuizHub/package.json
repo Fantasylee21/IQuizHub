@@ -13,10 +13,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "echarts": "^5.5.1",
     "@element-plus/icons": "^0.0.11",
+    "@tiptap/core": "^2.5.4",
+    "@tiptap/vue-3": "^2.5.4",
     "axios": "^1.7.2",
+    "echarts": "^5.5.1",
     "element-plus": "^2.7.7",
+    "element-tiptap": "^2.2.1",
+    "element-tiptap-vue3-fixed": "^1.2.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
