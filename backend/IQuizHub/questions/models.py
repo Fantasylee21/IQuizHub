@@ -86,7 +86,6 @@ class Choice(models.Model):
     """选项模型类"""
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-    option = models.CharField(max_length=5, verbose_name='选项类型', default='multiple_choice')
     content = models.TextField(verbose_name='选项内容')
 
     class Meta:

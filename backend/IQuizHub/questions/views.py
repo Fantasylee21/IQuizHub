@@ -74,10 +74,7 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             if not choices:
                 return Response({"error": "选择题选项不能为空"}, status=status.HTTP_400_BAD_REQUEST)
             for choice in choices:
-                if not all([choice.get("content"), choice.get("option")]):
-                    return Response({"error": "选项参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-                ch = Choice.objects.create(content=choice.get("content"),
-                                           option=choice.get("option"))
+                ch = Choice.objects.create(content=choice)
                 question.choices.add(ch)
                 question.save()
         result = {
