@@ -210,39 +210,28 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         if not tags:
             questions = Question.objects.filter(title__contains=title)
-            serializer = self.get_serializer(questions, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(questions)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             questions = Question.objects.filter(title__contains=title)
             for tag in tags:
                 questions = questions.filter(tags=tag)
-            serializer = self.get_serializer(questions, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(questions)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     def get_all_questions(self, request, *args, **kwargs):
-        # page = request.data.get('page')
-        # questions = Question.objects.all()
-        # pagtor = Paginator(questions, 3)
-        # page_obj = pagtor.get_page(page)
-        # serializer = self.get_serializer(page_obj, many=True)
-        # return Response(serializer.data, status=status.HTTP_200_OK)
         questions = Question.objects.all()
-        # serializer = self.get_serializer(questions, many=True)
         page = self.paginate_queryset(questions)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
 
