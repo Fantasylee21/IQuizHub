@@ -1,65 +1,61 @@
 <template>
     <div class="table-container">
-        <el-table :data="paginatedData" style="width: 100%">
-            <el-table-column prop="编号" label="编号">
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="id" label="编号">
             </el-table-column>
-            <el-table-column label="名称">
+            <el-table-column prop="create_time" label="创建时间">
+            </el-table-column>
+            <el-table-column label="题目名称">
                 <template v-slot="scope">
-                    <el-link :href="scope.row.url" type="primary" underline>{{ scope.row.名称 }}</el-link>
+                    <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{ scope.row.title }}</el-link>
                 </template>
             </el-table-column>
-            <el-table-column prop="收藏数" label="收藏数">
+            <el-table-column label="题目作者">
+                <template v-slot="scope">
+                    <el-link :href="scope.row.url" type="info" underline>{{ scope.row.author }}</el-link>
+                </template>
+            </el-table-column>
+            <el-table-column label="题目类型">
+                <template v-slot="scope">
+                    <el-tag v-if="scope.row.type =='True/False' ">判断题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='single_choice' ">单选题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='multiple_choice' ">多选题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='fill_blanks' ">填空题</el-tag>
+                </template>
             </el-table-column>
         </el-table>
         <el-pagination
-                v-model:current-page="currentPage"
+                @current-change="pageChange"
+                :current-page="currentPage"
                 :page-size="pageSize"
-                :total="tableData.length"
-                layout="prev, pager, next"
-                @current-change="handlePageChange"
-        >
+                :total="total"
+                layout="prev, pager, next">
         </el-pagination>
     </div>
 </template>
 
-<script>
-import api from '@/api';
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import { defineProps, ref,defineEmits } from 'vue'
+import router from '@/router'
+const emit = defineEmits(['pageChange']);
+const props = defineProps({
+  tableData: Array,
+  total: Number
+});
 
-export default {
-    name: 'TableComponent',
-    setup() {
-        const tableData = ref([
-            {编号: 100, 名称: '【入门1】顺序结构', 题目数: 15, 收藏数: 22779, url: '#'},
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-        ]);
+const currentPage = ref(1);
+const pageSize = ref(20);
 
-        const currentPage = ref(1);
-        const pageSize = ref(20);
 
-        const paginatedData = computed(() => {
-            const start = (currentPage.value - 1) * pageSize.value;
-            const end = start + pageSize.value;
-            return tableData.value.slice(start, end);
-        });
-
-        const handlePageChange = (page) => {
-            currentPage.value = page;
-        };
-
-        return {
-            tableData,
-            currentPage,
-            pageSize,
-            paginatedData,
-            handlePageChange,
-        };
-    },
+const pageChange = (pageNew: number) => {
+     emit('pageChange', pageNew);
+     currentPage.value = pageNew;
 };
+
+const navigateToDetail = (id: number) => {
+  router.push(`/question-detail/${id}`);
+};
+
 </script>
 
 <style scoped>
