@@ -7,6 +7,7 @@ const LoginRegister = () => import('@/views/LoginRegister.vue')
 const UserCenter = () => import('@/views/UserCenter.vue')
 const QuestionBank = () => import('@/views/QuestionBank.vue')
 const GroupPage = () => import('@/views/GroupPage.vue')
+const QuestionDetail = () => import('@/views/QuestionDetail.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 
@@ -22,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'QuestionSheet',
 		component: QuestionSheet,
 	},
-		{
+	{
 		path: '/userCenter',
 		name: 'UserCenter',
 		component: UserCenter,
@@ -37,8 +38,8 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/questionBank',
 		name: 'QuestionBank',
 		component: QuestionBank,
-  },
-  {
+	},
+	{
 		path: '/test',
 		name: 'test',
 		component: MyTest,
@@ -47,6 +48,12 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/groupPage',
 		name: 'GroupPage',
 		component: GroupPage,
+	},
+	{
+		path: '/question-detail/:id',
+		name: 'QuestionDetail',
+		component: QuestionDetail,
+		props: true
 	}
 ]
 

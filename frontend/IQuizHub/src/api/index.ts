@@ -91,7 +91,7 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}
 		})).data;
-	}
+	},
 
 	getAllQuestions: async function () {
 		try {
@@ -104,9 +104,9 @@ export default {
 
 	search: async function (keyword: string, Tags: string[]) {
 		try {
-			const res = (await api.get(`api/question/search/${keyword}`, {
+			const res = (await api.get(`api/question/search/${keyword}/`, {
 				headers: {
-					'Content-Type' : 'application/json',
+					'Content-Type': 'application/json',
 				}
 			})).data;
 			return res;
@@ -114,6 +114,15 @@ export default {
 			return null;
 		}
 	},
+
+	getQuestionDetail: async function (id: string) {
+		return (await api.get(`api/question/detail/${id}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
+	}
 
 
 }
