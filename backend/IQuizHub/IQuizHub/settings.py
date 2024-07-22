@@ -167,7 +167,8 @@ REST_FRAMEWORK = {
 
 # 配置token的过期时间
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=14),  # 更改token过期时间，方便debug
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 
     "ROTATE_REFRESH_TOKENS": False,
