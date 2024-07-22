@@ -8,8 +8,6 @@
                     <el-link :href="scope.row.url" type="primary" underline>{{ scope.row.名称 }}</el-link>
                 </template>
             </el-table-column>
-            <el-table-column prop="题目数" label="题目数">
-            </el-table-column>
             <el-table-column prop="收藏数" label="收藏数">
             </el-table-column>
         </el-table>
@@ -25,7 +23,8 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue';
+import api from '@/api';
+import { ref, computed, onMounted } from 'vue'
 
 export default {
     name: 'TableComponent',
@@ -37,41 +36,11 @@ export default {
             {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
             {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
             {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'}, {
-                编号: 100,
-                名称: '【入门1】顺序结构',
-                题目数: 15,
-                收藏数: 22779,
-                url: '#'
-            },
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'}, {
-                编号: 100,
-                名称: '【入门1】顺序结构',
-                题目数: 15,
-                收藏数: 22779,
-                url: '#'
-            },
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'},
         ]);
+        const updateTableData = (newData) => {
+            tableData.value = newData;
+        }
+        provide('updateTableData', updateTableData);
 
         const currentPage = ref(1);
         const pageSize = ref(20);
@@ -85,6 +54,19 @@ export default {
         const handlePageChange = (page) => {
             currentPage.value = page;
         };
+
+        const getAllQuestions = async () => {
+          try {
+            const response = await api.getAllQuestions();
+            tableData.value = response.data;
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        onMounted(() => {
+            getAllQuestions();
+        });
 
         return {
             tableData,
