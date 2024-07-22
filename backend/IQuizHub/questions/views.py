@@ -1,4 +1,7 @@
+from collections import Counter
+
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.shortcuts import render
 from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
@@ -13,7 +16,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from common.permissions import QuestionWritePermission, QuestionGroupPermission, QuestionReadPermission, \
     QuestionGroupDeletePermission, Issuperuser
-from users.models import History
+from users.models import History, User
 from questions.models import Question, QuestionGroup, Tag, Choice
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer
 from rest_framework import serializers
@@ -255,6 +258,39 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_recommend_questions(self, request, *args, **kwargs):
+        user = request.user
+    # 收集用户历史中所有问题的所有标签
+        tags = set()
+        for history in user.historys.all():
+            for tag in history.question.tags.all():
+                tags.add(tag.name)  # 确保添加的是标签的名称
+
+        # 如果没有标签，返回所有问题的响应
+        if not tags:
+            return self.get_all_questions(request, *args, **kwargs)  # 注意这里self应该传给get_all_questions方法
+
+        # 统计标签频率
+        tag_counts = Counter(tags)
+
+        # 选择出现频率最高的标签，这里选择前5个最高频的标签
+        top_tags = tag_counts.most_common(5)  # 这里假设选择前5个标签
+
+        # 根据标签推荐问题
+        recommended_questions = Question.objects.filter(
+            tags__name__in=[tag_name for tag_name, count in top_tags]  # 使用标签名称进行过滤
+        ).distinct()
+
+        # 分页处理
+        page = self.paginate_queryset(recommended_questions)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # 如果没有推荐的问题，返回错误信息
+        serializer = self.get_serializer(recommended_questions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.ListCreateAPIView):
