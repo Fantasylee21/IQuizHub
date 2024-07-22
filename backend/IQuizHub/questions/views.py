@@ -288,9 +288,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        # 如果没有推荐的问题，返回错误信息
-        serializer = self.get_serializer(recommended_questions, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.ListCreateAPIView):
