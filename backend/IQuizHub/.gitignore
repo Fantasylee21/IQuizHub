@@ -7,5 +7,7 @@
 ./questions/__pycache__/
 ./users/__pycache__/
 ./utils/__pycache__/
+./backend/IQuizHub/questions/migrations/
+./backend/IQuizHub/users/migrations/
 
 

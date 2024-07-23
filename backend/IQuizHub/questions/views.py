@@ -234,8 +234,8 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
     # 要包含所有的提供的tags的id
     def query_question(self, request, *args, **kwargs):
-        title = request.data.get('title')
-        tags = request.data.get('tags')
+        title = request.GET.get('title')
+        tags = request.GET.get('tags')
         if not title:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         if not tags:
