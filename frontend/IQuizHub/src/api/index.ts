@@ -155,7 +155,7 @@ export default {
 
 	searchQuestionSheet: async function (params: {pageNumber: number, keyword: string, type: number}) {
 		try {
-			const url = `api/question/questiongroup/query/?page=${params.pageNumber}&title=${params.keyword}&type=${params.type}`;
+			const url = `api/question/guestiongroup/query/?page=${params.pageNumber}&title=${params.keyword}&type=${params.type}`;
 			const response = await api.get(url, {
 				headers: {
 					'Content-Type': 'application/json',
