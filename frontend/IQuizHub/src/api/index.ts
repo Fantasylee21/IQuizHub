@@ -108,15 +108,21 @@ export default {
   }
 },
 
-	search: async function (params: {keyword: string, Tags: string[]}) {
+	search: async function (params: {pageNumber : number, Tags: string[], keyword: string}) {
     try {
+				console.log('tags----------------', params.Tags)
         const res = (await api.get(`api/question/query/question/`, {
-            params: params,
+						params: {
+							'page': params.pageNumber,
+							'tags': params.Tags,
+							'title': params.keyword,
+						},
             headers: {
                 'Content-Type' : 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             }
         })).data;
+				console.log(`output->res`, res)
         return res;
     } catch (e) {
         return null;

@@ -1,5 +1,5 @@
 <template>
-    <QuestionEditor/>
+    <QuestionEditor type="single_choice"/>
 </template>
 
 <script setup lang="ts">
