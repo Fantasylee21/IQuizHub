@@ -28,4 +28,5 @@ urlpatterns = [
     path('get/questions/', QuestionReadView.as_view({'get': 'get_all_questions'}), name='获取题目'),
     path('check/question/', QuestionReadView.as_view({'post': 'check_question'}), name='检查题目'),
     path('get/selfquestions/', QuestionReadView.as_view({'get': 'get_recommend_questions'}), name='获取自己推荐的题目'),
+    path('guestiongroup/query/', QuestionGroupView.as_view({'get': 'query_questiongroup'}), name='查询题目组'),
 ]

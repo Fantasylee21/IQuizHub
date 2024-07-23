@@ -121,6 +121,17 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
+    def query_questiongroup(self, request, *args, **kwargs):
+        title = request.GET.get('title')
+        if not title:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        question_groups = QuestionGroup.objects.filter(title__contains=title)
+        page = self.paginate_queryset(question_groups)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
