@@ -26,9 +26,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     # tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     # choices = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     # tags = serializers.StringRelatedField(many=True)
-    # choices = serializers.SlugRelatedField(many=True, read_only=True, slug_field='content')
+    choices = serializers.SlugRelatedField(many=True, read_only=True, slug_field='content')
     tags = TagSerializer(many=True, read_only=True)
-    choices = ChoiceSerializer(many=True, read_only=True)
+    # choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question

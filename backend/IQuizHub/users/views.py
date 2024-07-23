@@ -188,8 +188,8 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
     def get_comment(self, request, *args, **kwargs):
-        question = request.data.get('question')
-        user = request.data.get('user')
+        question = request.GET.get('question')
+        user = request.GET.get('user')
         if question and user:
             # print(question, user)
             if not Question.objects.filter(id=question).exists():

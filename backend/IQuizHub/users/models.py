@@ -33,7 +33,7 @@ class Captcha(models.Model):
         db_table = 'captcha'
         verbose_name = '验证码表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.mobile
@@ -50,7 +50,7 @@ class Comment(models.Model):
         db_table = 'comments'
         verbose_name = '评论表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.comment
@@ -67,4 +67,4 @@ class History(models.Model):
         db_table = 'history'
         verbose_name = '历史记录表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
