@@ -22,17 +22,6 @@ const getAllQuestion = async (pageNumber: number) => {
     }
 }
 
-const search = async (keyword: string, Tags: string[]) => {
-    try {
-        const res = await api.search({keyword, Tags});
-        tableData.value = res.results;
-        console.log(res.results);
-    } catch (e) {
-        console.error('Error searching questions:', e);
-    }
-
-}
-
 const currentPage = ref(1);
 
 const pageChange = (pageNew: number) => {
@@ -41,32 +30,52 @@ const pageChange = (pageNew: number) => {
 };
 
 const loadPage = (currentPage: number) => {
-    getAllQuestion(currentPage);
+    console.log('----->isSearching:', isSearching.value, currentPage)
+    if (isSearching.value.value == true) {
+        search(currentPage, tags.value, query.value);
+    } else {
+        getAllQuestion(currentPage);
+    }
 }
 
 onMounted(() => {
     loadPage(1);
 })
 
-const searchStatus = ref(false);
-const searchQuery = ref('');
-const dynamicTags = ref([]);
+const search = async (pageNumber: number, Tags: string[], keyword: string) => {
+    try {
+        const res = await api.search({
+            'pageNumber': pageNumber,
+            'Tags': Tags.value,
+            'keyword': keyword.value
+        });
+        tableData.value = res.results;
+        total.value = res.count;
+        console.log('search result:', tableData.value)
+        tableData.value.forEach((item) => {
+            item.create_time = formatDate(item.create_time);
+        });
+    } catch (e) {
+        console.error('Error searching questions:', e);
+    }
+}
 
-const updateSearchQuery = (query) => {
-  searchQuery.value = query;
+const query = ref('');
+const tags = ref<string[]>([]);
+const isSearching = ref(false);
+
+const onUpdateSearchStatus = (isSearch : boolean) => {
+    isSearching.value = isSearch;
+    console.log('isSearching:', isSearching.value, currentPage.value);
+    loadPage(currentPage.value);
 };
 
-const updateSearchTags = (dynamicTags) => {
-  dynamicTags.value = dynamicTags;
+const onUpdateSearchQuery = (searchQuery : string) => {
+    query.value = searchQuery;
 };
 
-const handleSearchStatus = (status) => {
-  searchStatus.value = status;
-  if (status) {
-    search(searchQuery.value, dynamicTags.value);
-  } else {
-    loadPage(1);
-  }
+const onUpdateSearchTags = (dynamicTags : []) => {
+    tags.value = dynamicTags;
 };
 
 function formatDate(time: string) {
@@ -85,7 +94,7 @@ function formatDate(time: string) {
 <template>
   <QBHeader />
     <div class="question-bank-container">
-      <QBNav @updateSearchStatus="handleSearchStatus"></QBNav>
+      <QBNav @updateSearchStatus="onUpdateSearchStatus" @updateSearchQuery="onUpdateSearchQuery" @updateSearchTags="onUpdateSearchTags" :total="total"></QBNav>
       <QBList :tableData="tableData" @page-change="pageChange" :total="total"></QBList>
   </div>
 </template>

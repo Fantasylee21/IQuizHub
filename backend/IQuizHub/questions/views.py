@@ -7,7 +7,6 @@ from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
-# from rest_framework.mixins.RetrieveModelMixin import retrieve
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -75,10 +74,7 @@ class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             if not choices:
                 return Response({"error": "选择题选项不能为空"}, status=status.HTTP_400_BAD_REQUEST)
             for choice in choices:
-                if not all([choice.get("content"), choice.get("option")]):
-                    return Response({"error": "选项参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-                ch = Choice.objects.create(content=choice.get("content"),
-                                           option=choice.get("option"))
+                ch = Choice.objects.create(content=choice)
                 question.choices.add(ch)
                 question.save()
         result = {
@@ -116,6 +112,14 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
     queryset = QuestionGroup.objects.all()
     serializer_class = QuestionGroupSerializer
     permission_classes = [IsAuthenticated, QuestionGroupPermission]
+
+    def get_all_question_groups(self, request, *args, **kwargs):
+        question_groups = QuestionGroup.objects.all()
+        page = self.paginate_queryset(question_groups)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
@@ -230,8 +234,8 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     # 通过题目的title模糊查询含有相关词语的题目，返回所有相关的题目,其中tag为一个列表，包含所有要查询的标签,返回的所有题目必须=
     # 要包含所有的提供的tags的id
     def query_question(self, request, *args, **kwargs):
-        title = request.data.get('title')
-        tags = request.data.get('tags')
+        title = request.GET.get('title')
+        tags = request.GET.get('tags')
         if not title:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -263,7 +267,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
 
     def get_recommend_questions(self, request, *args, **kwargs):
         user = request.user
-    # 收集用户历史中所有问题的所有标签
+        # 收集用户历史中所有问题的所有标签
         tags = set()
         for history in user.historys.all():
             for tag in history.question.tags.all():

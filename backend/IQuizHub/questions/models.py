@@ -26,7 +26,7 @@ class Question(models.Model):
         db_table = 'questions'
         verbose_name = '问题表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.title
@@ -58,7 +58,7 @@ class QuestionGroup(models.Model):
         db_table = 'question_groups'
         verbose_name = '问题组表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.title
@@ -76,7 +76,7 @@ class Tag(models.Model):
         db_table = 'tags'
         verbose_name = '标签表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.name
@@ -86,14 +86,13 @@ class Choice(models.Model):
     """选项模型类"""
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-    option = models.CharField(max_length=5, verbose_name='选项类型', default='multiple_choice')
     content = models.TextField(verbose_name='选项内容')
 
     class Meta:
         db_table = 'choices'
         verbose_name = '选项表'
         verbose_name_plural = verbose_name
-        ordering = ['-create_time']
+        # ordering = ['-create_time']
 
     def __str__(self):
         return self.content

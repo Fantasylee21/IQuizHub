@@ -33,7 +33,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                    <el-input v-model="searchQuery" placeholder="请输入您想查找的内容或关键词">
+                    <el-input v-model="searchQuery" placeholder="请输入您想查找的内容或关键词" @keyup.enter="search">
                       <template #prepend >
                         <div class="search-icon-container">
                           <el-icon size="20px"><Search /></el-icon>
@@ -79,7 +79,7 @@
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="24">
-                    <span>共计 {{ totalResults }} 条结果</span>
+                    <span>共计 {{ total }} 条结果</span>
                 </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
@@ -97,15 +97,17 @@ import { nextTick, ref, defineEmits} from 'vue'
 import { ElInput ,ElMessage} from 'element-plus'
 
 const searchQuery = ref('');
-const totalResults = ref(55);
 const isSearch = ref(false);
 const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags']);
+const props = defineProps({
+    total: Number
+});
 const search = async () => {
     ElMessage.success(`搜索关键词: ${searchQuery.value}`);
     isSearch.value = true;
-    emit('updateSearchStatus', isSearch);
     emit('updateSearchQuery', searchQuery);
     emit('updateSearchTags', dynamicTags);
+    emit('updateSearchStatus', isSearch);
 };
 
 
@@ -180,6 +182,12 @@ function cleanAll() {
   typeValue.value = ''
   searchQuery.value = ''
   dynamicTags.value = []
+  isSearch.value = false
+  ElMessage.success(`清除关键词和Tag`);
+  emit('updateSearchStatus', isSearch);
+  emit('updateSearchQuery', searchQuery);
+  emit('updateSearchTags', dynamicTags);
+
 }
 
 </script>
