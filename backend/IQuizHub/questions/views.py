@@ -123,10 +123,19 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
     def query_questiongroup(self, request, *args, **kwargs):
         title = request.GET.get('title')
+        type = request.GET.get('type')
+
         if not title:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-        question_groups = QuestionGroup.objects.annotate(question_count=Count('questions'))
-        question_groups = question_groups.filter(title__contains=title)
+        question_groups = QuestionGroup.objects.filter(title__contains=title)
+        if type == "0":
+            pass
+        elif type == "1":#
+            question_groups = question_groups.filter(author__is_superuser=True)
+        elif type == "2":
+            question_groups = question_groups.filter(author__is_superuser=False)
+        else:
+            return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
         page = self.paginate_queryset(question_groups)
 
         if page is not None:
