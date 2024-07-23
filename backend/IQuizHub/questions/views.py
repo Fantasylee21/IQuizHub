@@ -252,8 +252,6 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
         questions = Question.objects.all()
         if title:
             questions = questions.filter(title__contains=title)
-
-
         if tags:
             for tag in tags:
                 questions = questions.filter(tags__name=tag)
