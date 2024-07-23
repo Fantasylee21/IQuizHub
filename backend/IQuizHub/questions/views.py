@@ -246,6 +246,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
             return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+
         else:
             questions = Question.objects.filter(title__contains=title)
             for tag in tags:
