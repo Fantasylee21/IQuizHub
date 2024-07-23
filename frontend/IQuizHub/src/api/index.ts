@@ -110,6 +110,7 @@ export default {
 
 	search: async function (params: {pageNumber : number, Tags: string[], keyword: string}) {
     try {
+				console.log('tags----------------', params.Tags)
         const res = (await api.get(`api/question/query/question/`, {
 						params: {
 							'page': params.pageNumber,

@@ -46,8 +46,8 @@ const search = async (pageNumber: number, Tags: string[], keyword: string) => {
     try {
         const res = await api.search({
             'pageNumber': pageNumber,
-            'Tags': Tags.value,
-            'keyword': keyword.value
+            'Tags': Tags,
+            'keyword': keyword
         });
         tableData.value = res.results;
         total.value = res.count;
@@ -71,11 +71,13 @@ const onUpdateSearchStatus = (isSearch : boolean) => {
 };
 
 const onUpdateSearchQuery = (searchQuery : string) => {
-    query.value = searchQuery;
+    query.value = searchQuery.value;
 };
 
 const onUpdateSearchTags = (dynamicTags : []) => {
-    tags.value = dynamicTags;
+    tags.value = dynamicTags.value.map((tag: { name: string; }) => tag.name);
+    console.log('dynamicTags:', dynamicTags.value)
+    console.log('tags:', tags.value);
 };
 
 function formatDate(time: string) {
