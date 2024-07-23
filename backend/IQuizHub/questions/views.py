@@ -1,7 +1,7 @@
 from collections import Counter
 
 from django.core.paginator import Paginator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render
 from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
@@ -121,6 +121,20 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
+    def query_questiongroup(self, request, *args, **kwargs):
+        title = request.GET.get('title')
+        if not title:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        question_groups = QuestionGroup.objects.annotate(question_count=Count('questions'))
+        question_groups = question_groups.filter(title__contains=title)
+        page = self.paginate_queryset(question_groups)
+
+        if page is not None:
+            # 序列化数据，包括 question_count 字段
+            serializer = QuestionGroupSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
@@ -235,27 +249,21 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     # 要包含所有的提供的tags的id
     def query_question(self, request, *args, **kwargs):
         title = request.GET.get('title')
-        tags = request.GET.get('tags')
-        if not title:
+        tags = request.GET.getlist('tags')
+        if not title and not tags:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-
-        if not tags:
-            questions = Question.objects.filter(title__contains=title)
-            page = self.paginate_queryset(questions)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            questions = Question.objects.filter(title__contains=title)
+        questions = Question.objects.all()
+        if title:
+            questions = questions.filter(title__contains=title)
+        if tags:
             for tag in tags:
-                questions = questions.filter(tags=tag)
-            page = self.paginate_queryset(questions)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+                questions = questions.filter(tags__name=tag)
+        page = self.paginate_queryset(questions)
+        if page is not None:
+            serializer = QuestionSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_all_questions(self, request, *args, **kwargs):
         questions = Question.objects.all()
