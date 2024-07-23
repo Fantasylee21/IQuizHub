@@ -63,7 +63,12 @@ class QuestionSerializer(serializers.ModelSerializer):
 class QuestionGroupSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    questionCnt = serializers.SerializerMethodField()  # 添加这个方法字段
 
     class Meta:
         model = QuestionGroup
         fields = "__all__"
+
+    def get_questionCnt(self, obj):
+        # 计算与问题组关联的题目数量
+        return Question.objects.filter(question_groups=obj).count()

@@ -125,10 +125,13 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         title = request.GET.get('title')
         if not title:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-        question_groups = QuestionGroup.objects.filter(title__contains=title)
+        question_groups = QuestionGroup.objects.annotate(question_count=Count('questions'))
+        question_groups = question_groups.filter(title__contains=title)
         page = self.paginate_queryset(question_groups)
+
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            # 序列化数据，包括 question_count 字段
+            serializer = QuestionGroupSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
