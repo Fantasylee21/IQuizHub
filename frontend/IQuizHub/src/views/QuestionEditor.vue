@@ -131,6 +131,8 @@ const addOption = () => {
 const inputAnswer = ref('');
 const inputTitle = ref('');
 
+const props = defineProps<{ type: string }>();
+
 const type = ref('');
 
 const upload = async () => {

@@ -30,12 +30,53 @@ const pageChange = (pageNew: number) => {
 };
 
 const loadPage = (currentPage: number) => {
-    getAllQuestion(currentPage);
+    console.log('----->isSearching:', isSearching.value, currentPage)
+    if (isSearching.value.value == true) {
+        search(currentPage, tags.value, query.value);
+    } else {
+        getAllQuestion(currentPage);
+    }
 }
 
 onMounted(() => {
     loadPage(1);
 })
+
+const search = async (pageNumber: number, Tags: string[], keyword: string) => {
+    try {
+        const res = await api.search({
+            'pageNumber': pageNumber,
+            'Tags': Tags.value,
+            'keyword': keyword.value
+        });
+        tableData.value = res.results;
+        total.value = res.count;
+        console.log('search result:', tableData.value)
+        tableData.value.forEach((item) => {
+            item.create_time = formatDate(item.create_time);
+        });
+    } catch (e) {
+        console.error('Error searching questions:', e);
+    }
+}
+
+const query = ref('');
+const tags = ref<string[]>([]);
+const isSearching = ref(false);
+
+const onUpdateSearchStatus = (isSearch : boolean) => {
+    isSearching.value = isSearch;
+    console.log('isSearching:', isSearching.value, currentPage.value);
+    loadPage(currentPage.value);
+};
+
+const onUpdateSearchQuery = (searchQuery : string) => {
+    query.value = searchQuery;
+};
+
+const onUpdateSearchTags = (dynamicTags : []) => {
+    tags.value = dynamicTags;
+};
 
 function formatDate(time: string) {
     const date = new Date(time);
@@ -53,7 +94,7 @@ function formatDate(time: string) {
 <template>
   <QBHeader />
     <div class="question-bank-container">
-      <QBNav></QBNav>
+      <QBNav @updateSearchStatus="onUpdateSearchStatus" @updateSearchQuery="onUpdateSearchQuery" @updateSearchTags="onUpdateSearchTags" :total="total"></QBNav>
       <QBList :tableData="tableData" @page-change="pageChange" :total="total"></QBList>
   </div>
 </template>
