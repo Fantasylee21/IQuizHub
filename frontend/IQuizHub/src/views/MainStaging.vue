@@ -1,7 +1,7 @@
 <template>
     <div class="staging-container">
         <div class="staging-header">
-            <StagingInformation/>
+            <StagingInformation :name="profile.username" :avatar="profile.avatar"/>
         </div>
         <div class="staging-body">
             <div class="staging-left">
@@ -20,6 +20,10 @@ import StagingInformation from "@/components/Staging/StagingInformation.vue";
 import CollectList from "@/components/Staging/CollectList.vue";
 import TrendsList from "@/components/Staging/TrendsList.vue";
 import StagingChart from "@/components/Staging/StagingChart.vue";
+import {useProfileStore} from "@/stores/profile";
+
+const profile = useProfileStore()
+
 </script>
 
 <style scoped>
