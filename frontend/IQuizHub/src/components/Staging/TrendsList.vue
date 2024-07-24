@@ -7,7 +7,10 @@
             :infinite-scroll-disabled="disabled"
             :infinite-scroll-distance="20"
         >
-            <li v-for="i in count" :key="i" class="scrollbar-demo-item">{{ i }}</li>
+            <li v-for="i in count" :key="i" class="scrollbar-demo-item">
+                {{formatDate(history[i].create_time)}}
+                {{getContent(i)}}
+            </li>
         </ul>
         <p v-if="loading" class="loading">Loading...</p>
         <p v-if="noMore" class="noMore">No more</p>
@@ -16,11 +19,31 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
+import { useProfileStore } from '@/stores/profile'
 
 const count = ref(10)
 const loading = ref(false)
 const noMore = computed(() => count.value >= 20)
 const disabled = computed(() => loading.value || noMore.value)
+const profile = useProfileStore()
+const history = profile.historys;
+function formatDate(time: string) {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+}
+
+function getContent(i : number) {
+    if (history[i].correct === true) {
+        return '你做对了题目 '+ history[i].question
+    } else {
+        return '你做错了题目 '+ history[i].question + '，看仔细了！！！'
+    }
+}
+
+
 const load = () => {
     loading.value = true
     setTimeout(() => {

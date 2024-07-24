@@ -2,13 +2,46 @@
 import { ref } from 'vue';
 import { ElButton, ElIcon } from 'element-plus'
 import { Connection, Edit, HelpFilled, UserFilled } from '@element-plus/icons'
+import { useProfileStore } from '@/stores/profile'
+import api from '@/api'
 
-const username = ref('admin');
-const email = ref('22371147@buaa.edu.cn');
-const imgPath = ref('src/assets/avatar.png');
-function changeAvatar() {
-  console.log('change avatar');
-}
+const profile = useProfileStore()
+const username = ref(profile.username);
+const email = ref(profile.email);
+const imgPath = ref(profile.avatar);
+
+// let selectedFile = ref(null);
+//
+// function onFileChange(e) {
+//     selectedFile.value = e.target.files[0];
+// }
+//
+// const uploadAvatar = async (id :number, avatar: File) => {
+//   try {
+//     const res = await api.uploadAvatar({id, avatar});
+//     profile.updateProfile({avatar: res.avatar})
+//   } catch (e) {
+//     console.error('Error uploading avatar:', e);
+//   }
+// }
+//
+// const changeAvatar = async () => {
+//   const input = document.createElement('input');
+//   input.type = 'file';
+//   input.onchange = onFileChange;
+//   input.click();
+//
+//   await new Promise<void>((resolve) => {
+//     input.onchange = () => {
+//       resolve();
+//     };
+//   });
+//
+//   console.log('selectedFile:', selectedFile.value);
+//   if (selectedFile.value) {
+//     await uploadAvatar(Number(profile.id), selectedFile.value);
+//   }
+// };
 
 function myCreateGroup() {
   console.log('my create group');
