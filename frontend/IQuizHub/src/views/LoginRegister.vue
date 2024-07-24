@@ -118,6 +118,10 @@ const handleLogin = async () => {
     if (ret) {
         ElMessage.success('登录成功')
         profile.updateProfile(ret)
+        console.log('profile:', profile)
+        console.log('ret:', ret)
+        console.log('profile.historys:', profile.historys)
+        console.log('ret.historys:', ret.historys)
         UtilMethods.jump('/staging')
     }
 }

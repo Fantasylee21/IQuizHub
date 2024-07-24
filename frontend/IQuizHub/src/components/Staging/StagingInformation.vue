@@ -3,31 +3,31 @@
         <div class="header-info">
             <div class="header-content">
                 <div class="avatar">
-                    <img src="@/assets/avatar.jpg" alt="avatar">
+                    <img :src="avatar" alt="avatar">
                 </div>
                 <div class="content">
                     <div class="content-title">
                         <span>早安</span>
                         <span>，</span>
-                        <span class="text-red">Poseidon</span>
+                        <span class="text-red">{{username}}</span>
                         <span>，</span>
                         <span class="welcome-text">祝你开心每一天</span>
                         <span>！</span>
                     </div>
                     <div class="content-bottom text-self-gray">
-                        这里写点啥捏？？？
+                        {{introduction}}
                     </div>
                 </div>
                 <div class="stats">
                     <el-row style="width: 100%">
                         <el-col :span="8">
-                            <el-statistic title="统计数据一" :value="statisticVal"/>
+                            <el-statistic title="做对题目数" :value="correctCnt"/>
                         </el-col>
                         <el-col :span="8">
-                            <el-statistic title="统计数据二" :value="statisticVal"/>
+                            <el-statistic title="做错题目数" :value="wrongCnt"/>
                         </el-col>
                         <el-col :span="8">
-                            <el-statistic title="统计数据三" :value="statisticVal"/>
+                            <el-statistic title="统计数据三" :value="correctCnt"/>
                         </el-col>
                     </el-row>
                 </div>
@@ -38,8 +38,22 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
+import { useProfileStore } from '@/stores/profile'
 
-const statisticVal = ref(10000);
+const profile = useProfileStore()
+const username = ref(profile.username);
+const avatar = ref(profile.avatar);
+const introduction = ref(profile.introduction);
+const history = profile.historys;
+const correctCnt = ref(0);
+const wrongCnt = ref(0);
+for (let i = 0; i < history.length; i++) {
+    if (history[i].correct) {
+        correctCnt.value++;
+    } else {
+        wrongCnt.value++;
+    }
+}
 
 </script>
 
