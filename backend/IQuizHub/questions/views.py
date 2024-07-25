@@ -272,6 +272,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             for tag in tags:
                 if tag:
                     questions = questions.filter(tags__name=tag)
+
         if type:
             questions = questions.filter(type=type)
         page = self.paginate_queryset(questions)
