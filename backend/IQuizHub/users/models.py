@@ -20,6 +20,9 @@ class User(AbstractUser):
         db_table = 'users'
         verbose_name = '用户表'
 
+    def __str__(self):
+        return self.username
+
 
 class Captcha(models.Model):
     """验证码模型类"""
@@ -44,7 +47,8 @@ class Comment(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     author = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='作者')
-    question = models.ForeignKey('questions.Question', on_delete=models.CASCADE, verbose_name='问题')
+    question = models.ForeignKey('questions.Question', on_delete=models.CASCADE, verbose_name='问题', null=True, blank=True)
+    usergroup = models.ForeignKey('questions.UserGroup', on_delete=models.CASCADE, verbose_name='用户组', null=True, blank=True)
 
     class Meta:
         db_table = 'comments'
