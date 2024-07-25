@@ -39,7 +39,7 @@ class QuestionGroupPermission(permissions.BasePermission):
             return True
         if obj.author == request.user:
             return True
-        return request.user in obj.members.all()
+        return obj.is_all or request.user in obj.members.all()
 
 
 class QuestionReadPermission(permissions.BasePermission):
@@ -81,4 +81,3 @@ class CommentDeletePermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.user.is_superuser or obj.author == request.user
-

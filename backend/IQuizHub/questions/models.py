@@ -2,6 +2,7 @@ from django.db import models
 
 from users.models import User
 
+
 # Create your models here.
 class Question(models.Model):
     """问题模型类"""
@@ -39,12 +40,14 @@ class QuestionGroup(models.Model):
     questions = models.ManyToManyField(
         'Question',
         related_name='question_groups',
-        verbose_name='问题'
+        verbose_name='问题',
+        blank=True
     )
     members = models.ManyToManyField(
         'users.User',
         related_name='member_question_groups',
-        verbose_name='组员'
+        verbose_name='组员',
+        blank=True
     )
     author = models.ForeignKey(
         'users.User',
@@ -53,6 +56,7 @@ class QuestionGroup(models.Model):
         default=None
     )
     content = models.TextField(verbose_name='问题组内容', default="作者很懒，什么都没有留下")
+    is_all = models.BooleanField(verbose_name='是否所有人可见', default=False)
 
     class Meta:
         db_table = 'question_groups'
@@ -97,6 +101,7 @@ class Choice(models.Model):
     def __str__(self):
         return self.content
 
+
 class UserGroup(models.Model):
     """用户组模型类"""
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
@@ -121,7 +126,6 @@ class UserGroup(models.Model):
         ('other', '其他'),
     ]
     type = models.CharField(max_length=20, choices=CONTENT_CHOICES, default='person', verbose_name='群组类型')
-
 
     class Meta:
         db_table = 'user_groups'

@@ -15,6 +15,8 @@ urlpatterns = [
     path('questiongroup/detail/<int:pk>/', QuestionGroupView.as_view({'get': 'retrieve'}), name='返回题目列表'),
     path('questiongroup/addquestion/<int:pk>/', QuestionGroupView.as_view({'post': 'add_question'}),
          name='向题组添加题目'),
+    path('questiongroup/addperson/<int:pk>/', QuestionGroupView.as_view({'post': 'add_person'}),
+         name='向题组添加人物'),
     path('questiongroup/deletequestion/<int:pk>/', QuestionGroupView.as_view({'delete': 'delete_question'}),
          name='删除题目组'),
     path('questiongroup/all/', QuestionGroupView.as_view({'get': 'get_all_question_groups'}), name='获取所有题目组'),
