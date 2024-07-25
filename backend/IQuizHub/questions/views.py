@@ -260,6 +260,7 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     def query_question(self, request, *args, **kwargs):
         title = request.GET.get('title')
         tags = request.GET.getlist('tags')
+        type = request.GET.get('type')
         if not title and not tags:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         questions = Question.objects.all()
@@ -268,6 +269,8 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
         if tags:
             for tag in tags:
                 questions = questions.filter(tags__name=tag)
+        if type:
+            questions = questions.filter(type=type)
         page = self.paginate_queryset(questions)
         if page is not None:
             serializer = QuestionSerializer(page, many=True)
