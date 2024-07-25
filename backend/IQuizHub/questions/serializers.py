@@ -89,3 +89,4 @@ class UserGroupSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserGroup
         exclude = ['members']
+
