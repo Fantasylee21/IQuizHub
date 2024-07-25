@@ -94,18 +94,18 @@ export default {
 	},
 
 	getAllQuestions: async function (params : {pageNumber: number}) {
-  try {
-    const url = `api/question/get/questions/?page=${params.pageNumber}`;
-    const response = await api.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      }
-    });
-    return response.data;
-  } catch (e) {
-    return null;
-  }
+		try {
+			const url = `api/question/get/questions/?page=${params.pageNumber}`;
+			const response = await api.get(url, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
 },
 
 	search: async function (params: {pageNumber : number, Tags: string[], keyword: string}) {
@@ -136,7 +136,83 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}
 		})).data
+	},
+
+	getAllQuestionSheet: async function (params: {pageNumber: number}) {
+		try {
+			const url = `api/question/questiongroup/all/?page=${params.pageNumber}`;
+			const response = await api.get(url, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	searchQuestionSheet: async function (params: {pageNumber: number, keyword: string, type: number}) {
+		try {
+			const url = `api/question/guestiongroup/query/?page=${params.pageNumber}&title=${params.keyword}&type=${params.type}`;
+			const response = await api.get(url, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	getUserInformation: async function (params: { id: number }) {
+		try {
+			const response = await api.get(`users/users/${params.id}/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			console.log(`output->response`, response)
+			return response.data;
+		} catch (e) {
+			console.log(`output->e`, e)
+			return null;
+		}
+	},
+
+	uploadIntroduction: async function (params: { id: number, introduction: string }) {
+		try {
+			const response = await api.post(`users/${params.id}/introduction/`, {
+				introduction: params.introduction
+			}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	uploadAvatar: async function (params: { id: number, avatar: File }) {
+		try {
+			const response = await api.post(`users/${params.id}/avatar/upload/`, {
+				avatar: params.avatar
+			}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
 	}
-
-
 }

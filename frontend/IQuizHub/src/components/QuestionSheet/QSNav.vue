@@ -3,7 +3,7 @@
         <el-header class="header">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <el-input v-model="searchQuery" placeholder="查找题单">
+                    <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="search">
                       <template #prepend >
                         <div class="search-icon-container">
                           <el-icon size="20px"><Search /></el-icon>
@@ -21,6 +21,9 @@
                 </el-col>
                 <el-col :span="12">
                     <el-button-group>
+                        <el-button :type="selectedType === 'all' ? 'primary' : ''" @click="selectType('all')">
+                            全部题单
+                        </el-button>
                         <el-button :type="selectedType === 'official' ? 'primary' : ''" @click="selectType('official')">
                             官方精选
                         </el-button>
@@ -32,7 +35,7 @@
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="24">
-                    <span>共计 {{ totalResults }} 条结果</span>
+                    <span>共计 {{ total }} 条结果</span>
                 </el-col>
             </el-row>
         </el-header>
@@ -40,20 +43,29 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { defineEmits, ref } from 'vue'
 import {ElMessage} from 'element-plus';
 import { Search } from '@element-plus/icons'
 
 const searchQuery = ref('');
-const selectedType = ref('official');
-const totalResults = ref(55);
+const selectedType = ref('all');
+const isSearch = ref(false);
+const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags', 'updateSearchType']);
+const props = defineProps({
+    total: Number
+});
 
 const search = () => {
     ElMessage.success(`搜索关键词: ${searchQuery.value}`);
+    isSearch.value = true;
+    emit('updateSearchQuery', searchQuery);
+    emit('updateSearchStatus', isSearch);
 };
 
 const selectType = (type) => {
     selectedType.value = type;
+    console.log(selectedType.value);
+    emit('updateSearchType', selectedType);
 };
 </script>
 

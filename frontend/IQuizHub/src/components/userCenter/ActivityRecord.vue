@@ -1,11 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { List } from '@element-plus/icons'
+import { useProfileStore } from '@/stores/profile'
 
 const icon = ref({
   type: 'el-icon-chat-line-round',
   color: '#8eb0e4'
 });
+const profile = useProfileStore()
+const history = profile.historys;
+console.log('history:', history);
+
+for (let i = 0; i < history.length; i++) {
+  history[i].create_time = formatDate(history[i].create_time);
+}
+
+function formatDate(time: string) {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+}
+
 const tableData = ref([
   {
     date: '2021-09-01',
@@ -32,19 +51,18 @@ const tableData = ref([
     behavior: 'right'
   }
 ]);
-const username = ref('admin');
+const username = profile.username;
 
 </script>
 
 <template>
   <h2>活动记录 <el-icon size="22px"><List /></el-icon></h2>
-  <div class="block" v-for="item in tableData" :key="item.date">
+  <div class="block" v-for="item in history" :key="item.id">
     <el-timeline >
-        <el-timeline-item :timestamp="item.date" :color="icon.color" placement="top">
+        <el-timeline-item :timestamp="item.create_time" :color="icon.color" placement="top">
           <el-card shadow="always" class="card">
-            <p v-if="item.behavior ==='right'">{{username}} 做对了{{ item.name }}，这是一道{{ item.type }}</p>
-            <p v-if="item.behavior ==='wrong'">{{username}} 完成了{{ item.name }}，这是一道{{ item.type }}，但是答错了</p>
-            <p v-if="item.behavior ==='upload'">{{username}} 上传了{{ item.name }}，这是一道{{ item.type }}</p>
+            <p v-if="item.correct">{{username}} 做对了题目{{item.question}}</p>
+            <p v-else>{{username}} 做了题目{{item.question}},但是做错了</p>
           </el-card>
         </el-timeline-item>
     </el-timeline>
