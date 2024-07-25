@@ -265,10 +265,13 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         questions = Question.objects.all()
         if title:
+            print("title")
             questions = questions.filter(title__contains=title)
         if tags:
+            # print(tags)
             for tag in tags:
-                questions = questions.filter(tags__name=tag)
+                if tag:
+                    questions = questions.filter(tags__name=tag)
         if type:
             questions = questions.filter(type=type)
         page = self.paginate_queryset(questions)
