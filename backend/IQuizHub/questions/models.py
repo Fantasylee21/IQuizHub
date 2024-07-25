@@ -97,7 +97,40 @@ class Choice(models.Model):
     def __str__(self):
         return self.content
 
+class UserGroup(models.Model):
+    """用户组模型类"""
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    title = models.CharField(max_length=100, verbose_name='用户组标题')
+    members = models.ManyToManyField(
+        'users.User',
+        related_name='user_groups',
+        verbose_name='组员'
+    )
+    author = models.ForeignKey(
+        'users.User',
+        verbose_name='作者',
+        on_delete=models.CASCADE,
+        default=None
+    )
+    content = models.TextField(verbose_name='用户组内容', default="作者很懒，什么都没有留下")
+    CONTENT_CHOICES = [
+        ('academic', '学术版'),
+        ('enterprise', '企业版'),
+        ('person', '个人版'),
+        ('other', '其他'),
+    ]
+    type = models.CharField(max_length=20, choices=CONTENT_CHOICES, default='person', verbose_name='群组类型')
 
+
+    class Meta:
+        db_table = 'user_groups'
+        verbose_name = '用户组表'
+        verbose_name_plural = verbose_name
+        # ordering = ['-create_time']
+
+    def __str__(self):
+        return self.title
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from questions.models import Question, QuestionGroup, Tag, Choice
+from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -72,3 +72,21 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
     def get_questionCnt(self, obj):
         # 计算与问题组关联的题目数量
         return Question.objects.filter(question_groups=obj).count()
+
+
+class UserGroupSerializer(serializers.ModelSerializer):
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # author = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = UserGroup
+        fields = "__all__"
+
+
+class UserGroupSimpleSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = UserGroup
+        exclude = ['members']
+
