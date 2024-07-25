@@ -21,6 +21,14 @@ class UserSerializer(serializers.ModelSerializer):
                   'update_time', ]
 
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+    # historys = HistorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'avatar']
+
+
 class CommentSerializer(serializers.Serializer):
     # 返回发布者的id与名称与问题的id与名称
     author = serializers.CharField(max_length=100)
@@ -33,5 +41,3 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         model = Comment
         fields = '__all__'
-
-

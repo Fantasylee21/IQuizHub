@@ -18,7 +18,7 @@ from common.permissions import QuestionWritePermission, QuestionGroupPermission,
 from users.models import History, User, Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
-    UserGroupSerializer, UserGroupSimpleSerializer
+    UserGroupSerializer, UserGroupSimpleSerializer,QuestionGroupSimpleSerializer
 from rest_framework import serializers
 
 from utils.yichat import ask
@@ -116,11 +116,8 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
     def get_all_question_groups(self, request, *args, **kwargs):
         question_groups = QuestionGroup.objects.all()
-        page = self.paginate_queryset(question_groups)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = QuestionGroupSimpleSerializer(question_groups, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def query_questiongroup(self, request, *args, **kwargs):
         title = request.GET.get('title')
@@ -155,17 +152,19 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         title = request.data.get('title')
         content = request.data.get('content')
         author = request.user
-        if not all([questions, title, author]):
+        is_all = request.data.get('is_all')
+        if not all([title, author, content, is_all]):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
-        question_group = QuestionGroup.objects.create(title=title, author=author, content=content)
+        question_group = QuestionGroup.objects.create(title=title, author=author, content=content, is_all=is_all)
         for question in questions:
             question_group.questions.add(question)
             q = Question.objects.get(id=question)
             if q.is_all:
                 q.is_all = False
                 q.save()
-        for user in users:
-            question_group.members.add(user)
+        if not is_all:
+            for user in users:
+                question_group.members.add(user)
         result = {
             "id": question_group.id,
             "title": question_group.title,
@@ -173,6 +172,22 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         }
         question_group.save()
         return Response(result, status=status.HTTP_201_CREATED)
+
+    def add_person(self, request, *args, **kwargs):
+        question_group = self.get_object()
+        users = request.data.get('users')
+        if question_group.is_all:
+            return Response({"msg": "本题组对所有人可见"}, status=status.HTTP_400_BAD_REQUEST)
+        for user in users:#如果题组中本来就有这个人了那么报错
+            if not User.objects.filter(id=user).exists():
+                return Response({f"error": f"用户{user}不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            if question_group.members.filter(id=user).exists():
+                return Response({f"error": f"用户{user}在题组{question_group.id}已存在"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        for user in users:
+            question_group.members.add(user)
+        question_group.save()
+        return Response({"msg": "添加成功"}, status=status.HTTP_200_OK)
 
     def add_question(self, request, *args, **kwargs):
         question_group = self.get_object()
