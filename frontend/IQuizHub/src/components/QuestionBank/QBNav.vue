@@ -98,7 +98,7 @@ import { ElInput ,ElMessage} from 'element-plus'
 
 const searchQuery = ref('');
 const isSearch = ref(false);
-const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags']);
+const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags', 'updateSearchType']);
 const props = defineProps({
     total: Number
 });
@@ -111,6 +111,7 @@ const search = async () => {
     isSearch.value = true;
     emit('updateSearchQuery', searchQuery);
     emit('updateSearchTags', dynamicTags);
+    emit('updateSearchType', typeValue);
     emit('updateSearchStatus', isSearch);
 };
 
@@ -135,21 +136,25 @@ const difficulty = ref([
   ]);
 const type = ref([
     {
-      value: 'choice',
-      label: '选择题'
+      value: 'single_choice',
+      label: '单选题'
     },
     {
-      value: 'fill',
+      value: 'multiple_choice',
+      label: '多选题'
+    },
+    {
+      value: 'fill_in_the_blank',
       label: '填空题'
     },
     {
-      value: 'judge',
+      value: 'true_false',
       label: '判断题'
     },
     {
       value: 'all',
       label: '全部'
-    }
+    },
   ]);
 const difficultyValue = ref('');
 const typeValue = ref('');
@@ -191,7 +196,7 @@ function cleanAll() {
   emit('updateSearchStatus', isSearch);
   emit('updateSearchQuery', searchQuery);
   emit('updateSearchTags', dynamicTags);
-
+  emit('updateSearchType', typeValue);
 }
 
 </script>
