@@ -12,7 +12,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 
-from users.serializers import UserSerializer, CommentSerializer, HistorySerializer
+from users.serializers import UserSerializer, CommentSerializer, HistorySerializer, UserSimpleSerializer
 from IQuizHub.settings import MEDIA_ROOT
 from users.models import User, Captcha, Comment, History
 from common.permissions import UserPermission, CommentDeletePermission
@@ -127,12 +127,18 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
     def get_history(self, request, *args, **kwargs):
         user = self.get_object()
         historys = user.historys.all()
-        print (historys)
+        # print(historys)
         page = self.paginate_queryset(historys)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         return Response({"error": "无历史记录"}, status=status.HTTP_404_NOT_FOUND)
+
+    def get_all_user(self, request, *args, **kwargs):
+        users = User.objects.all()  # 这里需要添加圆括号
+        serializer = UserSimpleSerializer(users,many=True)
+        return Response(data = serializer.data,status = status.HTTP_200_OK)
+
 
 
 class FileView(APIView):

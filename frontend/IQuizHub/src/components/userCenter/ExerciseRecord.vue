@@ -62,7 +62,6 @@ function deleteExercise(row: any) {
             <el-table-column label="操作" width="180">
               <template #default="{ row }">
                 <el-button type="primary" size="small" @click="openExercise(row)">查看</el-button>
-                <el-button type="danger" size="small" @click="deleteExercise(row)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -73,7 +72,6 @@ function deleteExercise(row: any) {
             <el-table-column label="操作" width="180">
               <template #default="{ row }">
                 <el-button type="primary" size="small" @click="openExercise(row)">查看</el-button>
-                <el-button type="danger" size="small" @click="deleteExercise(row)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -84,7 +82,6 @@ function deleteExercise(row: any) {
             <el-table-column label="操作" width="180">
               <template #default="{ row }">
                 <el-button type="primary" size="small" @click="openExercise(row)">查看</el-button>
-                <el-button type="danger" size="small" @click="deleteExercise(row)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>

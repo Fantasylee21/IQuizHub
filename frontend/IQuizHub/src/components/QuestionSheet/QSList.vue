@@ -1,100 +1,64 @@
 <template>
     <div class="table-container">
-        <el-table :data="paginatedData" style="width: 100%">
-            <el-table-column prop="编号" label="编号">
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="id" label="编号">
             </el-table-column>
-            <el-table-column label="名称">
+            <el-table-column prop="create_time" label="创建时间">
+            </el-table-column>
+            <el-table-column label="题单名称">
                 <template v-slot="scope">
-                    <el-link :href="scope.row.url" type="primary" underline>{{ scope.row.名称 }}</el-link>
+                    <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{ scope.row.title }}</el-link>
                 </template>
             </el-table-column>
-            <el-table-column prop="题目数" label="题目数">
+            <el-table-column prop="questionCnt" label="题目数">
             </el-table-column>
-            <el-table-column prop="收藏数" label="收藏数">
+            <el-table-column prop="author" label="题单作者">
+            </el-table-column>
+            <el-table-column prop="content" label="简介">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template v-slot="scope">
+                    <el-button type="danger" @click="deleteRow(scope.row.id)" size="small">删除</el-button>
+                </template>
             </el-table-column>
         </el-table>
         <el-pagination
-                v-model:current-page="currentPage"
+                @current-change="pageChange"
+                :current-page="currentPage"
                 :page-size="pageSize"
-                :total="tableData.length"
-                layout="prev, pager, next"
-                @current-change="handlePageChange"
-        >
+                :total="total"
+                layout="prev, pager, next">
         </el-pagination>
     </div>
 </template>
 
-<script>
-import {ref, computed} from 'vue';
+<script setup lang="ts">
+import { defineProps, ref,defineEmits } from 'vue'
+import router from '@/router'
+const emit = defineEmits(['pageChange', 'deleteRow']);
+const props = defineProps({
+  tableData: Array,
+  total: Number
+});
 
-export default {
-    name: 'TableComponent',
-    setup() {
-        const tableData = ref([
-            {编号: 100, 名称: '【入门1】顺序结构', 题目数: 15, 收藏数: 22779, url: '#'},
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'}, {
-                编号: 100,
-                名称: '【入门1】顺序结构',
-                题目数: 15,
-                收藏数: 22779,
-                url: '#'
-            },
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'}, {
-                编号: 100,
-                名称: '【入门1】顺序结构',
-                题目数: 15,
-                收藏数: 22779,
-                url: '#'
-            },
-            {编号: 101, 名称: '【入门2】分支结构', 题目数: 18, 收藏数: 9119, url: '#'},
-            {编号: 102, 名称: '【入门3】循环结构', 题目数: 21, 收藏数: 7930, url: '#'},
-            {编号: 103, 名称: '【入门4】数组', 题目数: 20, 收藏数: 6635, url: '#'},
-            {编号: 104, 名称: '【入门5】字符串', 题目数: 15, 收藏数: 5097, url: '#'},
-            {编号: 105, 名称: '【入门6】函数与结构体', 题目数: 15, 收藏数: 4566, url: '#'},
-            {编号: 106, 名称: '【算法1-1】模拟与精度', 题目数: 16, 收藏数: 5094, url: '#'},
-            {编号: 107, 名称: '【算法1-2】排序', 题目数: 13, 收藏数: 4147, url: '#'},
-            {编号: 108, 名称: '【算法1-3】暴力枚举', 题目数: 14, 收藏数: 3422, url: '#'},
-            {编号: 109, 名称: '【算法1-4】递推与归', 题目数: 15, 收藏数: 4027, url: '#'},
-        ]);
+const currentPage = ref(1);
+const pageSize = ref(20);
 
-        const currentPage = ref(1);
-        const pageSize = ref(20);
 
-        const paginatedData = computed(() => {
-            const start = (currentPage.value - 1) * pageSize.value;
-            const end = start + pageSize.value;
-            return tableData.value.slice(start, end);
-        });
-
-        const handlePageChange = (page) => {
-            currentPage.value = page;
-        };
-
-        return {
-            tableData,
-            currentPage,
-            pageSize,
-            paginatedData,
-            handlePageChange,
-        };
-    },
+const pageChange = (pageNew: number) => {
+     emit('pageChange', pageNew);
+     currentPage.value = pageNew;
 };
+
+const navigateToDetail = (id: number) => {
+  router.push(`/question-detail/${id}`);
+};
+
+const deleteRow = (deleteId: number) => {
+  emit('deleteRow', deleteId);
+};
+
+
 </script>
 
 <style scoped>

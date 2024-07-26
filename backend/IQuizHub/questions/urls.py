@@ -1,7 +1,6 @@
-
 from django.urls import path
 
-from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadView, TagView
+from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadView, TagView, UserGroupView
 
 urlpatterns = [
     path('upload/', QuestionWriteView.as_view({'post': 'post'}), name='上传题目'),
@@ -16,6 +15,8 @@ urlpatterns = [
     path('questiongroup/detail/<int:pk>/', QuestionGroupView.as_view({'get': 'retrieve'}), name='返回题目列表'),
     path('questiongroup/addquestion/<int:pk>/', QuestionGroupView.as_view({'post': 'add_question'}),
          name='向题组添加题目'),
+    path('questiongroup/addperson/<int:pk>/', QuestionGroupView.as_view({'post': 'add_person'}),
+         name='向题组添加人物'),
     path('questiongroup/deletequestion/<int:pk>/', QuestionGroupView.as_view({'delete': 'delete_question'}),
          name='删除题目组'),
     path('questiongroup/all/', QuestionGroupView.as_view({'get': 'get_all_question_groups'}), name='获取所有题目组'),
@@ -28,4 +29,14 @@ urlpatterns = [
     path('get/questions/', QuestionReadView.as_view({'get': 'get_all_questions'}), name='获取题目'),
     path('check/question/', QuestionReadView.as_view({'post': 'check_question'}), name='检查题目'),
     path('get/selfquestions/', QuestionReadView.as_view({'get': 'get_recommend_questions'}), name='获取自己推荐的题目'),
+    path('guestiongroup/query/', QuestionGroupView.as_view({'get': 'query_questiongroup'}), name='查询题目组'),
+    path('usergroup/upload/', UserGroupView.as_view({'post':'upload_userGroup'}), name='上传用户组'),
+    path('usergroup/delete/<int:pk>/', UserGroupView.as_view({'delete': 'delete'}), name='删除用户组'),
+    path('usergroup/detail/', UserGroupView.as_view({'get': 'get_all_usergroups'}), name='返回用户组'),
+    path('usergroup/query/', UserGroupView.as_view({'get': 'query_usergroup'}), name='查询用户组'),
+    path('usergroup/addmember/<int:pk>/', UserGroupView.as_view({'post': 'add_member'}), name='添加成员'),
+    path('usergroup/deletemember/<int:pk>/', UserGroupView.as_view({'delete': 'delete_users'}), name='删除成员'),
+    path('usergroup/uploadcontent/<int:pk>/', UserGroupView.as_view({'put': 'upload_content'}), name='上传用户组内容'),
+    path('usergroup/uploadcomment/', UserGroupView.as_view({'put': 'upload_comment'}), name='上传用户组评论'),
+    path('usergroup/detail/<int:pk>/', UserGroupView.as_view({'get': 'get_usergroup'}), name='返回用户组详情'),
 ]

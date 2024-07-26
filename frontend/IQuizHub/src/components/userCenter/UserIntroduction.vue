@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ElButton, ElIcon, ElLoading } from 'element-plus'
-import { Comment, Delete, Edit, Finished, UserFilled } from '@element-plus/icons'
-
-const inputText = ref('这个人很懒，什么都没写');
+import { Comment, Delete, Edit, Finished } from '@element-plus/icons'
+import api from '@/api';
+import { useProfileStore } from '@/stores/profile'
+const profile = useProfileStore()
+const id = Number(profile.id);
+const inputText = ref(profile.introduction);
 const isEditing = ref(false);
 const isLoading = ref(false);
 
@@ -26,12 +29,24 @@ function inputAreaAppear() {
   }, 300)
 }
 
+const uploadIntroduction = async (id : number , introduction : string) => {
+    try {
+        const res = await api.uploadIntroduction({id, introduction});
+        console.log('uploadIntroduction:', res);
+    } catch (e) {
+        console.error('Error uploading introduction:', e);
+    }
+};
+
+
 function saveEdit() {
   const loading = ElLoading.service({
     lock: true,
     text: 'Loading',
     background: 'rgba(0, 0, 0, 0.7)',
   })
+  uploadIntroduction(id, inputText.value);
+  profile.updateProfile({introduction: inputText.value})
   setTimeout(() => {
     loading.close()
     isEditing.value = false;

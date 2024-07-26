@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UserIntroduction from '@/components/userCenter/UserIntroduction.vue'
 import ExerciseRecord from '@/components/userCenter/ExerciseRecord.vue'
-import ExerciseContent from '@/components/userCenter/ExerciseContent.vue'
 import {ref} from 'vue';
 import UserInfo from '@/components/userCenter/UserInfo.vue'
 import ActivityRecord from '@/components/userCenter/ActivityRecord.vue'

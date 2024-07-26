@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from questions.models import Question, QuestionGroup, Tag, Choice
+from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -28,6 +28,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     # tags = serializers.StringRelatedField(many=True)
     choices = serializers.SlugRelatedField(many=True, read_only=True, slug_field='content')
     tags = TagSerializer(many=True, read_only=True)
+
     # choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
@@ -63,7 +64,39 @@ class QuestionSerializer(serializers.ModelSerializer):
 class QuestionGroupSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    questionCnt = serializers.SerializerMethodField()  # 添加这个方法字段
 
     class Meta:
         model = QuestionGroup
         fields = "__all__"
+
+    def get_questionCnt(self, obj):
+        # 计算与问题组关联的题目数量
+        return Question.objects.filter(question_groups=obj).count()
+
+
+class UserGroupSerializer(serializers.ModelSerializer):
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    # author = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = UserGroup
+        fields = "__all__"
+
+
+class UserGroupSimpleSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = UserGroup
+        exclude = ['members']
+
+
+class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
+    # author = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = QuestionGroup
+        fields = [ 'id', 'title']

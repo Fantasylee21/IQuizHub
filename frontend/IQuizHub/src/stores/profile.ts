@@ -9,6 +9,15 @@ interface ProfileState {
 	companyIds: Array<number>
 	did: string
 	keywords: Array<Array<string>>
+	introduction: string
+	historys: Array<History>;
+}
+
+interface History {
+  id: number;
+  create_time: string;
+  correct: boolean;
+  question: number;
 }
 
 export const useProfileStore = defineStore('profile', {
@@ -21,6 +30,8 @@ export const useProfileStore = defineStore('profile', {
 		companyIds: [],
 		did: '0',
 		keywords: [],
+		introduction: '',
+		historys: [],
 	}),
 
 	actions: {
@@ -32,6 +43,8 @@ export const useProfileStore = defineStore('profile', {
 			avatar: string
 			company_ids: Array<number>
 			keywords: Array<Array<string>>
+			introduction: string
+			historys: Array<History>;
 		}) {
 			this.username = profile.username
 			this.id = profile.id
@@ -40,7 +53,13 @@ export const useProfileStore = defineStore('profile', {
 			this.avatar = profile.avatar
 			this.companyIds = profile['company_ids']
 			this.keywords = profile['keywords']
+			this.introduction = profile.introduction
+			this.historys = profile.historys
 		},
+	},
+
+	addHistory(history: History) {
+      this.historys.push(history);
 	},
 
 	persist: {

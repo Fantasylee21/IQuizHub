@@ -103,6 +103,10 @@ const props = defineProps({
     total: Number
 });
 const search = async () => {
+    if (searchQuery.value ==='') {
+        ElMessage.error('搜索关键词不能为空');
+        return;
+    }
     ElMessage.success(`搜索关键词: ${searchQuery.value}`);
     isSearch.value = true;
     emit('updateSearchQuery', searchQuery);
