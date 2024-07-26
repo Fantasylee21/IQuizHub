@@ -9,6 +9,7 @@ const QuestionBank = () => import('@/views/QuestionBank.vue')
 const GroupPage = () => import('@/views/GroupPage.vue')
 const QuestionDetail = () => import('@/views/QuestionDetail.vue')
 const QuestionEditor = () => import('@/views/QuestionEditor.vue')
+const SheetDetail = () => import('@/views/SheetDetail.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 
@@ -54,6 +55,12 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/question-detail/:id',
 		name: 'QuestionDetail',
 		component: QuestionDetail,
+		props: true
+	},
+	{
+		path: '/sheet-detail/:id',
+		name: 'SheetDetail',
+		component: SheetDetail,
 		props: true
 	},
 	{

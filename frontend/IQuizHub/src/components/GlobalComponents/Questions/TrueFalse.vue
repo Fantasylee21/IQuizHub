@@ -2,7 +2,7 @@
     <div class="single-question-container">
         <div class="single-question-left" ref="questionContent">
             <el-tag type="info" style="margin: 15px 5px;">判断题</el-tag>
-            <el-tag v-for="tag in question.tags" :key="tag">{{ tag }}</el-tag>
+            <el-tag v-for="tag in question.tags" :key="tag.id">{{ tag.id }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">
                 <p>{{ question.id }}.</p>
@@ -52,7 +52,7 @@ interface QuestionData {
     content: string
     id: number
     choices: string[]
-    tags: string[]
+    tags: any[]
     title: string
     ans: string
 }

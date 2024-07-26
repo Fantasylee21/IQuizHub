@@ -8,12 +8,13 @@
                     <a href="#">sheet-detail</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <h1>题单的名字</h1>
+            <h1>{{ sheetData?.title }}</h1>
             <div class="info-container">
                 <el-button type="primary" @click="collect">收藏题单</el-button>
                 <div class="info-statistic" style="display: flex">
-                    <el-statistic title="题目总数" :value="15" style="margin-right: 20px"></el-statistic>
-                    <el-statistic title="收藏数" :value="1000"></el-statistic>
+                    <el-statistic title="题目总数" :value="sheetData?.questionCnt"
+                                  style="margin-right: 20px"></el-statistic>
+                    <el-statistic title="收藏数" :value="77777"></el-statistic>
                 </div>
 
             </div>
@@ -25,31 +26,33 @@
                 <el-tab-pane label="题单简介" name="first">
                     <div class="sheet-description">
                         <div class="description-left">
-                            <h2>题单简介</h2>
-                            题单简介。。。。。。。。。。。。。。。。。。。。。。。。
+                            <el-card>
+                                <h2>题单简介</h2>
+                                <div v-html="sheetData?.content"></div>
+                            </el-card>
                         </div>
                         <div class="description-right">
                             <el-card class="detail-card">
                                 <div class="sheet-id">
                                     <p>题单编号</p>
-                                    <p style="padding-right: 15px">{{ questionId }}</p>
+                                    <p style="padding-right: 15px">{{ sheetData?.id }}</p>
                                 </div>
                                 <div class="sheet-creator">
                                     <p>创建者</p>
                                     <el-popover
                                             placement="top-start"
                                             width="300"
-                                            :title="creator"
+                                            :title="sheetData?.author.username"
                                             trigger="hover"
                                     >
                                         <template #reference>
-                                            <el-button>{{ creator }}</el-button>
+                                            <el-button>{{ sheetData?.author.username }}</el-button>
                                         </template>
                                         <div class="creator_profile">
                                             <div class="creator_avatar_description">
-                                                <el-avatar size="50" src="@/assets/avatar.jpg"
+                                                <el-avatar size="50" :src="sheetData?.author.avatar"
                                                            style="float: left"/>
-                                                <p>这个家伙很懒，什么也没有留下 </p>
+                                                <p>{{ sheetData?.author.introduction }}</p>
                                             </div>
                                             <div class="creator_details">
                                                 <p style="margin-bottom: 10px">
@@ -80,7 +83,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="题目列表" name="second">
                     <div class="sheet-list">
-                        <SDList/>
+                        <SDList :tableData="sheetData?.questions"/>
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -89,12 +92,59 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import SDList from "@/components/SheetDetail/SDList.vue"
+import api from "@/api";
 
 const collect = () => {
 
 }
+
+function formatDate(time: string) {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    //把时间格式定为2位不够补0
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+}
+
+const props = defineProps<{
+    id: string
+}>()
+
+const sheetData = ref<null | {
+    title: string,
+    content: string,
+    id: number,
+    questionCnt: number,
+    author: {
+        id: number,
+        username: string,
+        avatar: string,
+        introduction: string
+    },
+    questions: {
+        id: number,
+        title: string,
+        content: string,
+        type: string,
+        create_time: string
+    }[]
+}>(null)
+onBeforeMount(async () => {
+    try {
+        sheetData.value = await api.getSheetDetail(props.id);
+        sheetData.value?.questions.forEach((item) => {
+            item.create_time = formatDate(item.create_time);
+        });
+    } catch (error) {
+        console.error("Failed to fetch sheet detail:", error);
+    }
+})
 
 const activeName = ref('first')
 
@@ -186,7 +236,7 @@ h2 {
 }
 
 .sheet-id, .sheet-creator, .sheet-type {
-    margin: 10px 0 25px;
+    margin: 10px 0 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
