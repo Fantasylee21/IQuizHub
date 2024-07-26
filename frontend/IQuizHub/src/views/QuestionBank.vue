@@ -32,7 +32,7 @@ const pageChange = (pageNew: number) => {
 const loadPage = (currentPage: number) => {
     console.log('----->isSearching:', isSearching.value, currentPage)
     if (isSearching.value.value == true) {
-        search(currentPage, tags.value, query.value);
+        search(currentPage, tags.value, query.value, type.value);
     } else {
         getAllQuestion(currentPage);
     }
@@ -42,12 +42,14 @@ onMounted(() => {
     loadPage(1);
 })
 
-const search = async (pageNumber: number, Tags: string[], keyword: string) => {
+const search = async (pageNumber: number, Tags: string[], keyword: string, type : string) => {
     try {
+        console.log('searching:-----------', type);
         const res = await api.search({
             'pageNumber': pageNumber,
             'Tags': Tags,
-            'keyword': keyword
+            'keyword': keyword,
+            'type': type
         });
         tableData.value = res.results;
         total.value = res.count;
@@ -63,6 +65,7 @@ const search = async (pageNumber: number, Tags: string[], keyword: string) => {
 const query = ref('');
 const tags = ref<string[]>([]);
 const isSearching = ref(false);
+const type = ref('');
 
 const onUpdateSearchStatus = (isSearch : boolean) => {
     isSearching.value = isSearch;
@@ -72,6 +75,15 @@ const onUpdateSearchStatus = (isSearch : boolean) => {
 
 const onUpdateSearchQuery = (searchQuery : string) => {
     query.value = searchQuery.value;
+};
+
+const onUpdateSearchType = (typeValue : string) => {
+    console.log('typeValue:', typeValue.value);
+    if (typeValue.value === 'all') {
+        type.value = '';
+        return;
+    }
+    type.value = typeValue.value;
 };
 
 const onUpdateSearchTags = (dynamicTags : []) => {
@@ -106,7 +118,7 @@ const deleteRow = async (id: number) => {
 <template>
   <QBHeader />
     <div class="question-bank-container">
-      <QBNav @updateSearchStatus="onUpdateSearchStatus" @updateSearchQuery="onUpdateSearchQuery" @updateSearchTags="onUpdateSearchTags" :total="total"></QBNav>
+      <QBNav @updateSearchStatus="onUpdateSearchStatus" @updateSearchQuery="onUpdateSearchQuery" @updateSearchTags="onUpdateSearchTags" @updateSearchType="onUpdateSearchType" :total="total"></QBNav>
       <QBList :tableData="tableData" @page-change="pageChange" @delete-row="deleteRow" :total="total"></QBList>
   </div>
 </template>
