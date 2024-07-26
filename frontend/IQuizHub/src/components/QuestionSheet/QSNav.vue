@@ -11,9 +11,13 @@
                       </template>
                     </el-input>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="12">
                     <el-button type="primary" @click="search">搜索</el-button>
                 </el-col>
+                <el-col :span="2">
+                    <el-button type="success" @click="createQuestionSheet">创建题单</el-button>
+                </el-col>
+
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="6">
@@ -50,12 +54,17 @@ import { Search } from '@element-plus/icons'
 const searchQuery = ref('');
 const selectedType = ref('all');
 const isSearch = ref(false);
-const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchTags', 'updateSearchType']);
+const beginCreate = ref(false);
+const emit = defineEmits(['updateSearchStatus', 'updateSearchQuery', 'updateSearchType', 'createQuestionSheet']);
 const props = defineProps({
     total: Number
 });
 
 const search = () => {
+    if (searchQuery.value ==='') {
+        ElMessage.error('搜索关键词不能为空');
+        return;
+    }
     ElMessage.success(`搜索关键词: ${searchQuery.value}`);
     isSearch.value = true;
     emit('updateSearchQuery', searchQuery);
@@ -67,6 +76,12 @@ const selectType = (type) => {
     console.log(selectedType.value);
     emit('updateSearchType', selectedType);
 };
+
+const createQuestionSheet = () => {
+    beginCreate.value = true;
+    emit('createQuestionSheet', beginCreate);
+};
+
 </script>
 
 <style scoped>
