@@ -16,18 +16,13 @@
             <el-input v-model="form.content"></el-input>
           </el-form-item>
           <el-form-item label="可见用户">
-            <el-select v-model="form.users" multiple placeholder="请选择">
-              <el-option label="所有用户" value="0"></el-option>
-              <el-option label="仅自己" value="2"></el-option>
+            <el-select v-model="form.users" multiple placeholder="请选择" :disabled="form.is_all">
+              <el-option v-for="item in allUsers" :key="item.id" :label="item.username" :value="item.id"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="选择题目">
-            <el-select v-model="form.questions" multiple placeholder="请选择">
-                <el-option label="仅自己" value="2"></el-option>
-            </el-select>
+            <el-checkbox v-model="form.is_all">所有用户</el-checkbox>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer" class="dialog-footer" >
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="submit">提交</el-button>
         </span>
@@ -40,19 +35,28 @@
 import QSHeader from "@/components/QuestionSheet/QSHeader.vue";
 
 import api from '@/api'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import QSNav from '@/components/QuestionSheet/QSNav.vue'
 import QSList from '@/components/QuestionSheet/QSList.vue'
+import { ElLoading } from 'element-plus'
 
 const tableData = ref([]);
 const total = ref(0);
 
-const form = ref({
-  questions: [],
+
+interface Form {
+  users: number[];
+  title: string;
+  content: string;
+  is_all: boolean;
+}
+
+const form = ref<Form>({
   users: [],
   title: '',
   content: '',
+  is_all: false
 });
 
 const getAllQuestionSheet = async (pageNumber: number) => {
@@ -91,6 +95,7 @@ const currentPage = ref(1);
 const query = ref('');
 const isSearching = ref(false);
 const type = ref(0);
+
 const pageChange = (pageNew: number) => {
     loadPage(pageNew)
     currentPage.value = pageNew;
@@ -107,6 +112,7 @@ const loadPage = (currentPage: number) => {
 
 onMounted(() => {
     loadPage(1);
+    getAllUsers();
 })
 
 const onUpdateSearchStatus = (isSearch : boolean) => {
@@ -151,7 +157,7 @@ const deleteRow = async (id: number) => {
 
 
 const isCreate = ref(false);
-
+const allUsers = ref();
 const onCreateQuestionSheet = (beginCreate : boolean) => {
     console.log('beginCreate:', beginCreate)
     isCreate.value = beginCreate;
@@ -167,11 +173,35 @@ const submit = async () => {
     await api.uploadQuestionGroup(form.value);
     loadPage(currentPage.value);
     close();
+    const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+    })
+    setTimeout(() => {
+        loading.close()
+    }, 500)
   } catch (e) {
     console.error('Error creating question sheet:', e);
   }
 };
 
+const getAllUsers = async () => {
+    try {
+        const res = await api.getAllUsers();
+        allUsers.value = res;
+        console.log('allUsers:', allUsers.value)
+        return res;
+    } catch (e) {
+        console.error('Error fetching all users:', e);
+    }
+};
+
+watch(() => form.value.is_all, (newVal) => {
+  if (newVal) {
+    form.value.users = [];
+  }
+});
 
 </script>
 
@@ -182,5 +212,20 @@ const submit = async () => {
     margin: 0 auto;
 }
 
+.custom-dialog {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
 
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.el-checkbox {
+    margin-top: 5px;
+
+}
 </style>

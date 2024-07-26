@@ -116,8 +116,11 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
     def get_all_question_groups(self, request, *args, **kwargs):
         question_groups = QuestionGroup.objects.all()
-        serializer = QuestionGroupSimpleSerializer(question_groups, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(question_groups)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def query_questiongroup(self, request, *args, **kwargs):
         title = request.GET.get('title')
@@ -153,15 +156,16 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         content = request.data.get('content')
         author = request.user
         is_all = request.data.get('is_all')
-        if not all([title, author, content, is_all]):
+        if not all([title, author, content]) or is_all is None:
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         question_group = QuestionGroup.objects.create(title=title, author=author, content=content, is_all=is_all)
-        for question in questions:
-            question_group.questions.add(question)
-            q = Question.objects.get(id=question)
-            if q.is_all:
-                q.is_all = False
-                q.save()
+        if questions:
+            for question in questions:
+                question_group.questions.add(question)
+                q = Question.objects.get(id=question)
+                if q.is_all:
+                    q.is_all = False
+                    q.save()
         if not is_all:
             for user in users:
                 question_group.members.add(user)
