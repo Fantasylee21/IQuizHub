@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ChatDotRound , Menu } from '@element-plus/icons'
+import router from '@/router'
 const groupTable = ref([
   {
     id: 1,
@@ -71,7 +72,7 @@ function getTagColor (typeName : any) {
 }
 
 function openGroup() {
-  console.log('openGroup');
+
 }
 </script>
 
