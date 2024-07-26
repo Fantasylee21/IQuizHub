@@ -230,8 +230,9 @@ export default {
 		}
 	},
 
-	uploadQuestionGroup: async function (prams: {questions: Array<number>, users: Array<number> ,title: string, content: string}) {
+	uploadQuestionGroup: async function (prams: {questions: Array<number>, users: Array<number> ,title: string, content: string, is_all : boolean }) {
 		try {
+			console.log(`output->prams`, prams)
 			const response = await api.post(`api/question/questiongroup/upload/`, prams, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -257,5 +258,19 @@ export default {
 			return null;
 		}
 	},
+
+	getAllUsers : async function () {
+		try {
+			const response = await api.get(`users/detail/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	}
 
 }
