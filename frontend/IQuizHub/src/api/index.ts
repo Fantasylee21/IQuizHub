@@ -93,7 +93,7 @@ export default {
 		})).data;
 	},
 
-	getAllQuestions: async function (params: { pageNumber: number }) {
+	getAllQuestions: async function (params : {pageNumber: number}) {
 		try {
 			const url = `api/question/get/questions/?page=${params.pageNumber}`;
 			const response = await api.get(url, {
@@ -106,28 +106,29 @@ export default {
 		} catch (e) {
 			return null;
 		}
-	},
+},
 
-	search: async function (params: { pageNumber: number, Tags: string[], keyword: string }) {
-		try {
-			console.log('tags----------------', params.Tags)
-			const res = (await api.get(`api/question/query/question/`, {
-				params: {
-					'page': params.pageNumber,
-					'tags': params.Tags,
-					'title': params.keyword,
-				},
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				}
-			})).data;
-			console.log(`output->res`, res)
-			return res;
-		} catch (e) {
-			return null;
-		}
-	},
+	search: async function (params: {pageNumber : number, Tags: string[], keyword: string, type: string}) {
+    try {
+				console.log('tags----------------', params.Tags)
+        const res = (await api.get(`api/question/query/question/`, {
+						params: {
+							'page': params.pageNumber,
+							'tags': params.Tags,
+							'title': params.keyword,
+							'type': params.type
+						},
+            headers: {
+                'Content-Type' : 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        })).data;
+				console.log(`output->res`, res)
+        return res;
+    } catch (e) {
+        return null;
+    }
+},
 
 	getQuestionDetail: async function (id: string) {
 		return (await api.get(`api/question/detail/${id}/`, {
@@ -138,7 +139,7 @@ export default {
 		})).data
 	},
 
-	getAllQuestionSheet: async function (params: { pageNumber: number }) {
+	getAllQuestionSheet: async function (params: {pageNumber: number}) {
 		try {
 			const url = `api/question/questiongroup/all/?page=${params.pageNumber}`;
 			const response = await api.get(url, {
@@ -153,7 +154,7 @@ export default {
 		}
 	},
 
-	searchQuestionSheet: async function (params: { pageNumber: number, keyword: string, type: number }) {
+	searchQuestionSheet: async function (params: {pageNumber: number, keyword: string, type: number}) {
 		try {
 			const url = `api/question/guestiongroup/query/?page=${params.pageNumber}&title=${params.keyword}&type=${params.type}`;
 			const response = await api.get(url, {
@@ -230,13 +231,7 @@ export default {
 		}
 	},
 
-	uploadQuestionGroup: async function (prams: {
-		questions: Array<number>,
-		users: Array<number>,
-		title: string,
-		content: string,
-		is_all: boolean
-	}) {
+	uploadQuestionGroup: async function (prams: {questions: Array<number>, users: Array<number> ,title: string, content: string, is_all : boolean }) {
 		try {
 			console.log(`output->prams`, prams)
 			const response = await api.post(`api/question/questiongroup/upload/`, prams, {
@@ -251,7 +246,7 @@ export default {
 		}
 	},
 
-	deleteQuestion: async function (params: { id: number }) {
+	deleteQuestion : async function (params: { id: number }) {
 		try {
 			const response = await api.delete(`api/question/delete/${params.id}/`, {
 				headers: {
@@ -265,7 +260,7 @@ export default {
 		}
 	},
 
-	getAllUsers: async function () {
+	getAllUsers : async function () {
 		try {
 			const response = await api.get(`users/detail/`, {
 				headers: {
@@ -277,15 +272,6 @@ export default {
 		} catch (e) {
 			return null;
 		}
-	},
-
-	getSheetDetail: async function (id: string) {
-		return (await api.get(`api/question/questiongroup/detail/${id}/`, {
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			}
-		})).data
-	},
+	}
 
 }
