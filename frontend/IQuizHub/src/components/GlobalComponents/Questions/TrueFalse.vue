@@ -1,7 +1,7 @@
 <template>
     <div class="single-question-container">
-        <div class="single-question-left" ref="questionContent">
-            <el-tag type="info" style="margin: 15px 5px;">判断题</el-tag>
+        <div class="single-question-left" style="margin: 15px 5px;" ref="questionContent">
+            <el-tag type="info">判断题</el-tag>
             <el-tag v-for="tag in question.tags" :key="tag.id">{{ tag.id }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">

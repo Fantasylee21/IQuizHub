@@ -187,8 +187,10 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-MEDIA_ROOT = BASE_DIR / 'file/media/avatar'
-MEDIA_URL = 'file/image/'
+# 文件上传的保存路径
+MEDIA_ROOT = BASE_DIR / "files/"
+# 指定文件的获取url路径
+MEDIA_URL = "files/"
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',

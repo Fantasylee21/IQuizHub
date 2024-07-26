@@ -21,6 +21,7 @@ from questions.serializers import QuestionSerializer, QuestionGroupSerializer, T
     UserGroupSerializer, UserGroupSimpleSerializer,QuestionGroupSimpleSerializer
 from rest_framework import serializers
 
+from users.serializers import UserSerializer
 from utils.yichat import ask
 
 
@@ -247,6 +248,12 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
         return Response({"content": serializer.data['content']}, status=status.HTTP_200_OK)
 
+    def retrieve(self, request, *args, **kwargs):
+        serializer = self.get_serializer(instance=self.get_object())
+        data = serializer.data
+        userSerializer = UserSerializer(User.objects.filter(id=data['author']).first())
+        data['author'] = {key: userSerializer.data[key] for key in ['id', 'username', 'avatar', 'introduction']}
+        return Response(data, status=status.HTTP_200_OK)
 
 class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     queryset = Question.objects.all()
