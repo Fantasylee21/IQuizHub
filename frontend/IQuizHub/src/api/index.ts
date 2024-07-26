@@ -214,5 +214,48 @@ export default {
 		} catch (e) {
 			return null;
 		}
-	}
+	},
+
+	deleteQuestionGroup: async function (params: { id: number }) {
+		try {
+			const response = await api.delete(`api/question/questiongroup/delete/${params.id}/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	uploadQuestionGroup: async function (prams: {questions: Array<number>, users: Array<number> ,title: string, content: string}) {
+		try {
+			const response = await api.post(`api/question/questiongroup/upload/`, prams, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	deleteQuestion : async function (params: { id: number }) {
+		try {
+			const response = await api.delete(`api/question/delete/${params.id}/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
 }

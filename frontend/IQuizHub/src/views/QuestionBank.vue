@@ -83,13 +83,23 @@ const onUpdateSearchTags = (dynamicTags : []) => {
 function formatDate(time: string) {
     const date = new Date(time);
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hour = date.getHours();
-    const minute = date.getMinutes();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    //把时间格式定为2位不够补0
+
     return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
+const deleteRow = async (id: number) => {
+    try {
+        await api.deleteQuestion({id});
+        loadPage(currentPage.value);
+    } catch (e) {
+        console.error('Error deleting question sheet:', e);
+    }
+}
 
 </script>
 
@@ -97,7 +107,7 @@ function formatDate(time: string) {
   <QBHeader />
     <div class="question-bank-container">
       <QBNav @updateSearchStatus="onUpdateSearchStatus" @updateSearchQuery="onUpdateSearchQuery" @updateSearchTags="onUpdateSearchTags" :total="total"></QBNav>
-      <QBList :tableData="tableData" @page-change="pageChange" :total="total"></QBList>
+      <QBList :tableData="tableData" @page-change="pageChange" @delete-row="deleteRow" :total="total"></QBList>
   </div>
 </template>
 
