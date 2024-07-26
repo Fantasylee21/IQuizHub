@@ -1,26 +1,39 @@
 <template>
     <div class="sheet-detail-header">
-
         <div class="sd-header-container">
             <el-breadcrumb separator="/" class="breadcrumb">
                 <el-breadcrumb-item :to="{ path: '/staging' }">staging</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/question-sheet' }">question-sheet</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <a href="#">question-sheet</a>
+                    <a href="#">sheet-detail</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <h1>题单广场</h1>
+            <h1>题单的名字</h1>
+            <div class="info-container">
+                <el-button type="primary" @click="collect">收藏题单</el-button>
+                <div class="info-statistic" style="display: flex">
+                    <el-statistic title="题目总数" :value="15" style="margin-right: 20px"></el-statistic>
+                    <el-statistic title="收藏数" :value="1000"></el-statistic>
+                </div>
+
+            </div>
         </div>
+    </div>
+    <div class="sheet-detail-container">
+
     </div>
 </template>
 
 <script setup lang="ts">
+const collect = () => {
 
+}
 </script>
 
 <style scoped>
 .sheet-detail-header {
     background-color: #f5f7fa;
-    height: 100px;
+    height: 150px;
     margin: 70px 20px 20px;
     border-radius: 20px;
     box-shadow: #595959 0 0 2px;
@@ -48,5 +61,16 @@ h1 {
     line-height: 1.2;
     color: inherit;
     font-size: 1.75em;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sheet-detail-container {
+    width: 1200px;
+    margin: 0 auto;
 }
 </style>
