@@ -10,6 +10,7 @@ const GroupPage = () => import('@/views/GroupPage.vue')
 const QuestionDetail = () => import('@/views/QuestionDetail.vue')
 const QuestionEditor = () => import('@/views/QuestionEditor.vue')
 const SheetDetail = () => import('@/views/SheetDetail.vue')
+const GroupDetail = () => import('@/views/GroupDetail.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 
@@ -44,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/test',
 		name: 'test',
-		component: MyTest,
+		component: GroupDetail,
 	},
 	{
 		path: '/groupPage',
@@ -67,6 +68,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/question-editor',
 		name: 'QuestionEditor',
 		component: QuestionEditor,
+	},
+	{
+		path: '/groupDetail/:id',
+		name: 'GroupDetail',
+		component: GroupDetail,
 	}
 ]
 
