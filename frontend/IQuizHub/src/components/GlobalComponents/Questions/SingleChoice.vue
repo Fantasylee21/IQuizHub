@@ -8,9 +8,9 @@ interface QuestionData {
     content: string
     id: number
     choices: string[]
-    tags: string[]
+    tags: any[]
     title: string
-    answer: string
+    ans: string
 }
 
 const props = defineProps<{
@@ -55,7 +55,7 @@ const message = computed(() => {
     <div class="single-question-container">
         <div class="single-question-left" ref="questionContent">
             <el-tag type="info">单选题</el-tag>
-            <el-tag v-for="tag in question.tags" :key="tag" style="margin: 15px 5px;">{{ tag }}</el-tag>
+            <el-tag v-for="tag in question.tags" :key="tag.id" style="margin: 15px 5px;">{{ tag.name }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">
                 <p>{{ question.id }}.</p>
@@ -82,7 +82,7 @@ const message = computed(() => {
         <div class="single-question-right">
             <el-collapse v-if="is_read">
                 <el-collapse-item title="答案">
-                    <div v-html="question.answer"></div>
+                    <div v-html="question.ans"></div>
                 </el-collapse-item>
             </el-collapse>
             <AiAssistant v-show="is_read" :message="message"></AiAssistant>

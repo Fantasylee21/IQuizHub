@@ -26,47 +26,20 @@
                     <el-tag v-else-if="scope.row.type =='fill_blanks' ">填空题</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
-                <template v-slot="scope">
-                    <el-button type="danger" @click="deleteRow(scope.row.id)" size="small">删除</el-button>
-                </template>
-            </el-table-column>
         </el-table>
-        <el-pagination
-                @current-change="pageChange"
-                :current-page="currentPage"
-                :page-size="pageSize"
-                :total="total"
-                layout="prev, pager, next">
-        </el-pagination>
     </div>
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref, defineEmits} from 'vue'
+import {defineProps, ref, defineEmits, onMounted} from 'vue'
 import router from '@/router'
 
-const emit = defineEmits(['pageChange', 'deleteRow']);
 const props = defineProps({
-    tableData: Array,
-    total: Number
+    tableData: Array
 });
-
-const currentPage = ref(1);
-const pageSize = ref(20);
-
-
-const pageChange = (pageNew: number) => {
-    emit('pageChange', pageNew);
-    currentPage.value = pageNew;
-};
 
 const navigateToDetail = (id: number) => {
     router.push(`/question-detail/${id}`);
-};
-
-const deleteRow = (deleteId: number) => {
-    emit('deleteRow', deleteId);
 };
 
 
