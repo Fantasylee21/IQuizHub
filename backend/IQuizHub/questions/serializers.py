@@ -28,6 +28,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     # tags = serializers.StringRelatedField(many=True)
     choices = serializers.SlugRelatedField(many=True, read_only=True, slug_field='content')
     tags = TagSerializer(many=True, read_only=True)
+
     # choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
@@ -77,6 +78,7 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
 class UserGroupSerializer(serializers.ModelSerializer):
     members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     # author = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
@@ -86,7 +88,15 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
 class UserGroupSimpleSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = UserGroup
         exclude = ['members']
 
+
+class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
+    # author = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = QuestionGroup
+        fields = [ 'id', 'title']
