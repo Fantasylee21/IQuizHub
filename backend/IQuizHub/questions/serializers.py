@@ -103,7 +103,7 @@ class UserGroupSerializer(serializers.ModelSerializer):
     members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
-    # author = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # author = UserSimpleSerializer()
 
     class Meta:
         model = UserGroup
@@ -111,7 +111,7 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
 
 class UserGroupSimpleSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = UserSimpleSerializer()
 
     class Meta:
         model = UserGroup
