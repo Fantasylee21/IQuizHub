@@ -137,5 +137,18 @@ class UserGroup(models.Model):
         return self.title
 
 
-if __name__ == '__main__':
-    questionGroup = QuestionGroup.objects.create(title='test', author=User.objects.get(pk=6))
+class Favorite(models.Model):
+    question = models.ForeignKey('questions.Question', on_delete=models.CASCADE, verbose_name='问题', null=True)
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='用户')
+    questiongroup = models.ForeignKey('questions.QuestionGroup', on_delete=models.CASCADE, verbose_name='问题组',
+                                      null=True)
+
+    class Meta:
+        db_table = 'favorite'
+        verbose_name = '收藏表'
+        verbose_name_plural = verbose_name
+        # ordering = ['-create_time']
+
+    def __str__(self):
+        return self.question.title

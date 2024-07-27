@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
+from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
+from users.serializers import UserSimpleSerializer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -99,4 +100,12 @@ class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuestionGroup
-        fields = [ 'id', 'title']
+        fields = ['id', 'title']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    author = UserSimpleSerializer()
+
+    class Meta:
+        model = Favorite
+        fields = ['id', 'create_time',  'author', 'question', 'questiongroup']

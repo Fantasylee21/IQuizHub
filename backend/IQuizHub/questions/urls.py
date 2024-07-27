@@ -1,6 +1,6 @@
 from django.urls import path
 
-from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadView, TagView, UserGroupView
+from questions.views import QuestionWriteView, QuestionGroupView, QuestionReadView, TagView, UserGroupView,FavoriteView
 
 urlpatterns = [
     path('upload/', QuestionWriteView.as_view({'post': 'post'}), name='上传题目'),
@@ -20,6 +20,7 @@ urlpatterns = [
     path('questiongroup/deletequestion/<int:pk>/', QuestionGroupView.as_view({'delete': 'delete_question'}),
          name='删除题目组'),
     path('questiongroup/all/', QuestionGroupView.as_view({'get': 'get_all_question_groups'}), name='获取所有题目组'),
+    path('questiongroup/querypass/<int:pk>/', QuestionGroupView.as_view({'get': 'get_my_success_cnt'})),
     path('tag/upload/', TagView.as_view({'put': 'upload_tag'}), name='上传标签'),
     path('tag/delete/<int:pk>/', TagView.as_view({'delete': 'destroy'}), name='删除标签'),
     path('modifytag/<int:pk>/',
@@ -39,4 +40,7 @@ urlpatterns = [
     path('usergroup/uploadcontent/<int:pk>/', UserGroupView.as_view({'put': 'upload_content'}), name='上传用户组内容'),
     path('usergroup/uploadcomment/', UserGroupView.as_view({'put': 'upload_comment'}), name='上传用户组评论'),
     path('usergroup/detail/<int:pk>/', UserGroupView.as_view({'get': 'get_usergroup'}), name='返回用户组详情'),
+    path('favorite/', FavoriteView.as_view({'post': 'favorite'}), name='收藏题目'),
+    path('favorite/delete/', FavoriteView.as_view({'delete': 'delete'}), name='取消收藏'),
+    path('favorite/query/', FavoriteView.as_view({'get': 'get_favorite'}), name='查询收藏'),
 ]

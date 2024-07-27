@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from questions.serializers import QuestionSerializer
 from users.models import User, Comment, History
 
 

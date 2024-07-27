@@ -1,8 +1,5 @@
 from collections import Counter
 
-from django.core.paginator import Paginator
-from django.db.models import Count, Q
-from django.shortcuts import render
 from rest_framework import mixins, status, generics
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
@@ -16,21 +13,13 @@ from rest_framework.viewsets import GenericViewSet
 from common.permissions import QuestionWritePermission, QuestionGroupPermission, QuestionReadPermission, \
     QuestionGroupDeletePermission, Issuperuser
 from users.models import History, User, Comment
-from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
+from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
-    UserGroupSerializer, UserGroupSimpleSerializer,QuestionGroupSimpleSerializer
+    UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer
 from rest_framework import serializers
 
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, HistorySerializer
 from utils.yichat import ask
-
-
-# Create your views here.
-
-# class QuestionView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [IsAuthenticated, QuestionWritePermission]
 
 
 class QuestionWriteView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
@@ -183,7 +172,7 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         users = request.data.get('users')
         if question_group.is_all:
             return Response({"msg": "本题组对所有人可见"}, status=status.HTTP_400_BAD_REQUEST)
-        for user in users:#如果题组中本来就有这个人了那么报错
+        for user in users:  # 如果题组中本来就有这个人了那么报错
             if not User.objects.filter(id=user).exists():
                 return Response({f"error": f"用户{user}不存在"}, status=status.HTTP_400_BAD_REQUEST)
             if question_group.members.filter(id=user).exists():
@@ -254,6 +243,16 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         userSerializer = UserSerializer(User.objects.filter(id=data['author']).first())
         data['author'] = {key: userSerializer.data[key] for key in ['id', 'username', 'avatar', 'introduction']}
         return Response(data, status=status.HTTP_200_OK)
+
+    # 统计题组中我的通过的题目的数量，其中不能统计重复做过的题目,不能统计题目id相同的数量
+    def get_my_success_cnt(self, request, *args, **kwargs):
+        user = request.user
+        question_group = self.get_object()
+        historys = user.historys.filter(question__in=question_group.questions.all(), correct=True).values_list(
+            'question_id', flat=True).distinct()
+        cnt = len(historys)
+        return Response({"correct_cnt": cnt, "all_cnt": len(question_group.questions.all())}, status=status.HTTP_200_OK)
+
 
 class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
     queryset = Question.objects.all()
@@ -479,3 +478,80 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def delete(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+
+class FavoriteView(GenericViewSet, mixins.RetrieveModelMixin):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def favorite(self, request, *args, **kwargs):
+        user = request.user
+        question = request.data.get('question')
+        questiongroup = request.data.get('questiongroup')
+        if not question and not questiongroup:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if question:
+            if Favorite.objects.filter(author=user, question=question).exists():
+                return Response({"err": "已经收藏过了"}, status=status.HTTP_400_BAD_REQUEST)
+            favorite = Favorite.objects.create(author=user, question=Question.objects.get(id=question))
+            favorite.save()
+            return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
+        if questiongroup:
+            if Favorite.objects.filter(author=user, questiongroup=questiongroup).exists():
+                return Response({"err": "已经收藏过了"}, status=status.HTTP_400_BAD_REQUEST)
+            favorite = Favorite.objects.create(author=user, questiongroup=QuestionGroup.objects.get(id=questiongroup))
+            favorite.save()
+            return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
+        return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_favorite(self, request, *args, **kwargs):
+        user = request.GET.get('user')
+        type = request.GET.get('type')
+        if not user:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if not User.objects.filter(id=user).exists():
+            return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
+        if type == '0':
+            favorites = Favorite.objects.filter(author=user)
+            page = self.paginate_queryset(favorites)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+        elif type == '1':
+            favorites = Favorite.objects.filter(author=user, question__isnull=False)
+            page = self.paginate_queryset(favorites)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+        elif type == '2':
+            favorites = Favorite.objects.filter(author=user, questiongroup__isnull=False)
+            page = self.paginate_queryset(favorites)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        question = request.data.get('question')
+        questiongroup = request.data.get('questiongroup')
+        if not question and not questiongroup:
+            return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
+        if question:
+            if not Favorite.objects.filter(author=user, question=question).exists():
+                return Response({"err": "未收藏过"}, status=status.HTTP_400_BAD_REQUEST)
+            favorite = Favorite.objects.get(author=user, question=question)
+            favorite.delete()
+            return Response({"message": "删除成功"}, status=status.HTTP_200_OK)
+        if questiongroup:
+            if not Favorite.objects.filter(author=user, questiongroup=questiongroup).exists():
+                return Response({"err": "未收藏过"}, status=status.HTTP_400_BAD_REQUEST)
+            favorite = Favorite.objects.get(author=user, questiongroup=questiongroup)
+            favorite.delete()
+            return Response({"message": "删除成功"}, status=status.HTTP_200_OK)
+        return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
