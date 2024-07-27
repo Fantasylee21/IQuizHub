@@ -9,8 +9,8 @@
         >
             {{ loading ? '正在加载...' : '向AI提问' }}
         </el-button>
-        <el-card class="box-card" v-if="loading"></el-card>
-        <el-card class="box-card custom-scrollbar" v-else-if="data">
+        <el-card class="creator_card" v-if="loading"></el-card>
+        <el-card class="creator_card custom-scrollbar" v-else-if="data">
             <div class="text">
                 <p v-html="renderedData"></p>
             </div>
@@ -76,7 +76,7 @@ const renderData = () => {
     margin-bottom: 20px;
 }
 
-.box-card {
+.creator_card {
     width: 100%;
     max-width: 600px;
     border: 1px solid #ebeef5;

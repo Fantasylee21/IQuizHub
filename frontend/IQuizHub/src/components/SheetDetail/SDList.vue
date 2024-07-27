@@ -5,7 +5,7 @@
             </el-table-column>
             <el-table-column prop="create_time" label="创建时间">
             </el-table-column>
-            <el-table-column label="题单名称">
+            <el-table-column label="题目名称">
                 <template v-slot="scope">
                     <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{
                             scope.row.title
@@ -13,53 +13,33 @@
                     </el-link>
                 </template>
             </el-table-column>
-            <el-table-column prop="questionCnt" label="题目数">
-            </el-table-column>
-            <el-table-column prop="author" label="题单作者">
-            </el-table-column>
-            <el-table-column prop="content" label="简介">
-            </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="题目作者">
                 <template v-slot="scope">
-                    <el-button type="danger" @click="deleteRow(scope.row.id)" size="small">删除</el-button>
+                    <el-link :href="scope.row.url" type="info" underline>{{ scope.row.author }}</el-link>
+                </template>
+            </el-table-column>
+            <el-table-column label="题目类型">
+                <template v-slot="scope">
+                    <el-tag v-if="scope.row.type =='True/False' ">判断题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='single_choice' ">单选题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='multiple_choice' ">多选题</el-tag>
+                    <el-tag v-else-if="scope.row.type =='fill_blanks' ">填空题</el-tag>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination
-                @current-change="pageChange"
-                :current-page="currentPage"
-                :page-size="pageSize"
-                :total="total"
-                layout="prev, pager, next">
-        </el-pagination>
     </div>
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref, defineEmits} from 'vue'
+import {defineProps, ref, defineEmits, onMounted} from 'vue'
 import router from '@/router'
 
-const emit = defineEmits(['pageChange', 'deleteRow']);
 const props = defineProps({
-    tableData: Array,
-    total: Number
+    tableData: Array
 });
 
-const currentPage = ref(1);
-const pageSize = ref(20);
-
-
-const pageChange = (pageNew: number) => {
-    emit('pageChange', pageNew);
-    currentPage.value = pageNew;
-};
-
 const navigateToDetail = (id: number) => {
-    router.push(`/sheet-detail/${id}`);
-};
-
-const deleteRow = (deleteId: number) => {
-    emit('deleteRow', deleteId);
+    router.push(`/question-detail/${id}`);
 };
 
 

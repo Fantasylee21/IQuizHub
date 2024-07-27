@@ -1,24 +1,26 @@
-<template>
-    <div class="sheet-detail-header">
-
-        <div class="sd-header-container">
-            <el-breadcrumb separator="/" class="breadcrumb">
-                <el-breadcrumb-item :to="{ path: '/staging' }">staging</el-breadcrumb-item>
-                <el-breadcrumb-item>
-                    <a href="#">question-sheet</a>
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-            <h1>题单广场</h1>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
 
 </script>
 
+<template>
+    <div class="group-detail-header">
+        <div class="gd-header-container">
+            <el-breadcrumb separator="/" class="breadcrumb">
+                <el-breadcrumb-item :to="{ path: '/staging' }">staging</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/groupPage' }">group-page</el-breadcrumb-item>
+                <el-breadcrumb-item>
+                    <a href="#">sheet-detail</a>
+                </el-breadcrumb-item>
+            </el-breadcrumb>
+          <h1>群组详情</h1>
+        </div>
+
+    </div>
+</template>
+
 <style scoped>
-.sheet-detail-header {
+
+.group-detail-header {
     background-color: #f5f7fa;
     height: 100px;
     margin: 70px 20px 20px;
@@ -26,7 +28,7 @@
     box-shadow: #595959 0 0 2px;
 }
 
-.sd-header-container {
+.gd-header-container {
     width: 1200px;
     margin: 0 auto;
     display: flex;

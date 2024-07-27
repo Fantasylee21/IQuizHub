@@ -2,20 +2,20 @@
     <header class="header">
         <div class="header-info">
             <div class="header-content">
-                <div class="avatar">
+                <div class="creator_avatar">
                     <img :src="avatar" alt="avatar">
                 </div>
                 <div class="content">
                     <div class="content-title">
                         <span>早安</span>
                         <span>，</span>
-                        <span class="text-red">{{username}}</span>
+                        <span class="text-red">{{ username }}</span>
                         <span>，</span>
                         <span class="welcome-text">祝你开心每一天</span>
                         <span>！</span>
                     </div>
                     <div class="content-bottom text-self-gray">
-                        {{introduction}}
+                        {{ introduction }}
                     </div>
                 </div>
                 <div class="stats">
@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import { useProfileStore } from '@/stores/profile'
+import {useProfileStore} from '@/stores/profile'
 
 const profile = useProfileStore()
 const username = ref(profile.username);
@@ -82,18 +82,18 @@ for (let i = 0; i < history.length; i++) {
         display: flex;
     }
 
-    .avatar {
+    .creator_avatar {
         flex: 0 1 72px;
         transition: transform 0.3s;
     }
 
-    .avatar > img {
+    .creator_avatar > img {
         width: 72px;
         height: 72px;
         border-radius: 50%;
     }
 
-    .avatar:hover {
+    .creator_avatar:hover {
         transform: scale(1.1);
     }
 

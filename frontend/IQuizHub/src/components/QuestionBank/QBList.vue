@@ -7,7 +7,10 @@
             </el-table-column>
             <el-table-column label="题目名称">
                 <template v-slot="scope">
-                    <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{ scope.row.title }}</el-link>
+                    <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{
+                            scope.row.title
+                        }}
+                    </el-link>
                 </template>
             </el-table-column>
             <el-table-column label="题目作者">
@@ -40,12 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref,defineEmits } from 'vue'
+import {defineProps, ref, defineEmits} from 'vue'
 import router from '@/router'
+
 const emit = defineEmits(['pageChange', 'deleteRow']);
 const props = defineProps({
-  tableData: Array,
-  total: Number
+    tableData: Array,
+    total: Number
 });
 
 const currentPage = ref(1);
@@ -53,16 +57,16 @@ const pageSize = ref(20);
 
 
 const pageChange = (pageNew: number) => {
-     emit('pageChange', pageNew);
-     currentPage.value = pageNew;
+    emit('pageChange', pageNew);
+    currentPage.value = pageNew;
 };
 
 const navigateToDetail = (id: number) => {
-  router.push(`/question-detail/${id}`);
+    router.push(`/question-detail/${id}`);
 };
 
 const deleteRow = (deleteId: number) => {
-  emit('deleteRow', deleteId);
+    emit('deleteRow', deleteId);
 };
 
 

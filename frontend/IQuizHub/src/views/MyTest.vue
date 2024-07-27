@@ -1,11 +1,11 @@
 <template>
-    <QuestionEditor type="single_choice"/>
+    <SheetDetail/>
 </template>
 
 <script setup lang="ts">
 
 
-import QuestionEditor from "@/views/QuestionEditor.vue";
+import SheetDetail from "@/views/SheetDetail.vue";
 </script>
 
 <style scoped>

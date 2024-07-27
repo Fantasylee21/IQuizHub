@@ -20,8 +20,8 @@
 
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
-                <el-col :span="6">
-                    <span>题单类型</span>
+                <el-col :span="3">
+                    <span style="font-size: 18px">搜索题单类型</span>
                 </el-col>
                 <el-col :span="12">
                     <el-button-group>

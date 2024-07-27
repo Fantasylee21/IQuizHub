@@ -13,41 +13,15 @@
             </el-icon>
             <template #title>Toggle Collapse</template>
         </el-menu-item>
-        <el-sub-menu index="1">
-            <template #title>
-                <el-icon>
-                    <location/>
-                </el-icon>
-                <span>Navigator One</span>
-            </template>
-            <el-menu-item-group>
-                <template #title><span>Group One</span></template>
-                <el-menu-item index="1-1">item one</el-menu-item>
-                <el-menu-item index="1-2">item two</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-                <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-                <template #title><span>item four</span></template>
-                <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-sub-menu>
-        </el-sub-menu>
-        <el-menu-item index="/loginRegister">
-            <el-icon>
-                <icon-menu/>
-            </el-icon>
-            <template #title>Navigator Two</template>
-        </el-menu-item>
         <el-menu-item index="/staging">
             <el-icon>
-                <document/>
+                <setting/>
             </el-icon>
-            <template #title>Navigator Three</template>
+            <template #title>工作台</template>
         </el-menu-item>
         <el-menu-item index="/groupPage">
             <el-icon>
-                <Share />
+                <Share/>
             </el-icon>
             <template #title>群组界面</template>
         </el-menu-item>
@@ -63,17 +37,17 @@
             </el-icon>
             <template #title>题库</template>
         </el-menu-item>
-        <el-menu-item index="/userCenter">
+        <el-menu-item index="/question-editor">
             <el-icon>
-                <setting/>
+                <Edit/>
             </el-icon>
-            <template #title>个人中心</template>
+            <template #title>上传题目</template>
         </el-menu-item>
         <el-menu-item index="/test">
             <el-icon>
                 <setting/>
             </el-icon>
-            <template #title>Navigator Four</template>
+            <template #title>test</template>
         </el-menu-item>
     </el-menu>
 </template>
@@ -89,6 +63,7 @@ import {
 } from '@element-plus/icons-vue';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue';
 import {Grid} from '@element-plus/icons-vue';
+import {Edit, User} from "@element-plus/icons";
 
 const isCollapse = ref(true);
 const handleOpen = (key: string, keyPath: string[]) => {
