@@ -290,20 +290,6 @@ export default {
 		}
 	},
 
-	getCollects: async function (params: { id: string }) {
-		try {
-			const response = await api.get(`api/question/favorite/query/?&type=2&user=${params.id}`, {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				}
-			});
-			return response.data;
-		} catch (e) {
-			return null;
-		}
-	},
-
 	collect: async function (params: object) {
 		try {
 			const response = await api.post(`api/question/favorite/`, params, {
@@ -344,6 +330,43 @@ export default {
 		} catch (e) {
 			return null
 		}
+	},
+
+
+	getAllGroups: async function () {
+		try {
+			const response = await api.get(`/api/question/usergroup/detail/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	searchGroupDetail: async function (params: { title : string ,type: string}) {
+		return (await api.get(`api/question/usergroup/query/`, {
+			params: {
+				'title': params.title,
+				'type': params.type
+			},
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
+	},
+
+	getGroupDetail: async function (usergroup_id: number) {
+		return (await api.get(`api//question/usergroup/detail/${usergroup_id}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
 	},
 
 }
