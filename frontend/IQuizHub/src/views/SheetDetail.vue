@@ -14,7 +14,7 @@
                 <div class="info-statistic" style="display: flex">
                     <el-statistic title="题目总数" :value="sheetData?.questionCnt"
                                   style="margin-right: 20px"></el-statistic>
-                    <el-statistic title="收藏数" :value="77777"></el-statistic>
+                    <el-statistic title="收藏数" :value="sheetData?.favoriteCnt"></el-statistic>
                 </div>
 
             </div>
@@ -71,9 +71,10 @@
                                 </div>
                             </el-card>
                             <el-card class="detail-progress">
-                                <h3 style="margin-bottom: 20px">我通过的题目 5 / 15</h3>
+                                <h3 style="margin-bottom: 20px">我通过的题目 {{ sheetData?.passedCnt }} /
+                                    {{ sheetData?.favoriteCnt }}</h3>
                                 <el-progress
-                                        :percentage="33"
+                                        :percentage="(sheetData?.passedCnt / sheetData?.favoriteCnt * 100)"
                                         :stroke-width="15"
                                         striped
                                         striped-flow
@@ -97,9 +98,16 @@ import {onBeforeMount, ref} from "vue";
 import SDList from "@/components/SheetDetail/SDList.vue"
 import api from "@/api";
 import env from "@/utils/env";
+import {ElMessage} from "element-plus";
 
-const collect = () => {
-
+const collect = async () => {
+    const response = await api.collect({questiongroup: props.id});
+    if (response) {
+        console.log(response);
+        ElMessage.success('收藏成功')
+    } else {
+        ElMessage.error('收藏失败')
+    }
 }
 
 function formatDate(time: string) {
@@ -123,6 +131,8 @@ const sheetData = ref<null | {
     content: string,
     id: number,
     questionCnt: number,
+    favoriteCnt: number,
+    passedCnt: number,
     author: {
         id: number,
         username: string,

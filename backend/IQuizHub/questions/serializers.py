@@ -123,7 +123,7 @@ class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuestionGroup
-        fields = ['id', 'title', 'avatar']
+        fields = ['id', 'title', 'avatar', 'content']
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

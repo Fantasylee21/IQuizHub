@@ -1,7 +1,7 @@
 <template>
     <div class="single-question-container">
-        <div class="single-question-left" style="margin: 15px 5px;" ref="questionContent">
-            <el-tag type="info">判断题</el-tag>
+        <div class="single-question-left" ref="questionContent">
+            <el-tag type="info" style="margin: 15px 5px;">判断题</el-tag>
             <el-tag v-for="tag in question.tags" :key="tag.id">{{ tag.id }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">
@@ -28,6 +28,10 @@
                         style="margin-left: 10px; margin-top: 2px">回答错误
                 </el-tag>
             </div>
+            <el-divider></el-divider>
+            <div class="comment-list" v-show="is_read" style="margin-top: 30px">
+                <CommentList :id="props.question.id"/>
+            </div>
         </div>
         <div class="single-question-right">
             <el-collapse v-if="is_read">
@@ -45,6 +49,7 @@
 <script setup lang="ts">
 import {computed, defineProps, ref} from 'vue'
 import AiAssistant from './AiAssistant.vue'
+import CommentList from "@/components/GlobalComponents/Questions/CommentList.vue";
 import api from "@/api";
 
 interface QuestionData {

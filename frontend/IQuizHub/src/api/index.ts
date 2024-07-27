@@ -288,6 +288,62 @@ export default {
 		} catch (e) {
 			return null;
 		}
-	}
+	},
+
+	getCollects: async function (params: { id: string }) {
+		try {
+			const response = await api.get(`api/question/favorite/query/?&type=2&user=${params.id}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	collect: async function (params: object) {
+		try {
+			const response = await api.post(`api/question/favorite/`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	getComments: async function (params: { page: number, id: number }) {
+		try {
+			const response = await api.get(`users/comment/query/?page=${params.page}&question=${params.id}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null
+		}
+	},
+
+	postComment: async function (params: object) {
+		try {
+			const response = await api.post(`users/comment/upload/`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null
+		}
+	},
 
 }

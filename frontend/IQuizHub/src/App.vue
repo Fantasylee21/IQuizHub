@@ -48,7 +48,8 @@ onBeforeUnmount(() => {
     window.removeEventListener('mousemove', handleMouseMove);
 });
 
-router.push('/loginRegister');
+if (sessionStorage.getItem('preRoute')) router.push(sessionStorage.getItem('preRoute'))
+else router.push('/loginRegister')
 </script>
 
 <style scoped>

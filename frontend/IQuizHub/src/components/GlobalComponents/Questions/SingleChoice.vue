@@ -2,6 +2,7 @@
 import {computed, ref} from 'vue'
 import AiAssistant from './AiAssistant.vue'
 import api from "@/api";
+import CommentList from "@/components/GlobalComponents/Questions/CommentList.vue";
 
 interface QuestionData {
     type: string
@@ -78,6 +79,10 @@ const message = computed(() => {
                     </div>
                 </li>
             </ul>
+            <el-divider></el-divider>
+            <div class="comment-list" v-show="is_read" style="margin-top: 30px">
+                <CommentList :id="props.question.id"/>
+            </div>
         </div>
         <div class="single-question-right">
             <el-collapse v-if="is_read">
