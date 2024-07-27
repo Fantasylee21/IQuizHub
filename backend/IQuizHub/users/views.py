@@ -133,7 +133,6 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "无历史记录"}, status=status.HTTP_404_NOT_FOUND)
 
     def get_all_user(self, request, *args, **kwargs):
         users = User.objects.all()  # 这里需要添加圆括号

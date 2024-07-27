@@ -15,7 +15,8 @@ from common.permissions import QuestionWritePermission, QuestionGroupPermission,
 from users.models import History, User, Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
-    UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer
+    UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer, \
+    FavoriteGroupSimpleSerializer
 from rest_framework import serializers
 
 from users.serializers import UserSerializer, HistorySerializer
@@ -110,7 +111,6 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def query_questiongroup(self, request, *args, **kwargs):
         title = request.GET.get('title')
@@ -133,7 +133,6 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
             # 序列化数据，包括 question_count 字段
             serializer = QuestionGroupSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, permission_classes=[QuestionGroupDeletePermission])
     def destroy(self, request, *args, **kwargs):
@@ -305,15 +304,12 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
             serializer = QuestionSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
-
     def get_all_questions(self, request, *args, **kwargs):
         questions = Question.objects.all()
         page = self.paginate_queryset(questions)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_recommend_questions(self, request, *args, **kwargs):
         user = request.user
@@ -343,8 +339,6 @@ class QuestionReadView(GenericViewSet, mixins.RetrieveModelMixin):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.ListCreateAPIView):
@@ -424,7 +418,6 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
         if page is not None:
             serializer = UserGroupSimpleSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def query_usergroup(self, request, *args, **kwargs):
         title = request.GET.get('title')
@@ -448,7 +441,6 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
         if page is not None:
             serializer = UserGroupSimpleSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_usergroup(self, request, *args, **kwargs):
         usergroup = self.get_object()
@@ -520,25 +512,21 @@ class FavoriteView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
         if type == '0':
             favorites = Favorite.objects.filter(author=user)
-            page = self.paginate_queryset(favorites)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = FavoriteGroupSimpleSerializer(favorites, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         elif type == '1':
             favorites = Favorite.objects.filter(author=user, question__isnull=False)
             page = self.paginate_queryset(favorites)
             if page is not None:
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
         elif type == '2':
             favorites = Favorite.objects.filter(author=user, questiongroup__isnull=False)
             page = self.paginate_queryset(favorites)
             if page is not None:
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
 
