@@ -288,6 +288,34 @@ export default {
 		} catch (e) {
 			return null;
 		}
+	},
+
+	getCollects: async function (params: { id: string }) {
+		try {
+			const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data.results;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	collect: async function (params: object) {
+		try {
+			const response = await api.post(`api/question/favorite/`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
 	}
 
 }

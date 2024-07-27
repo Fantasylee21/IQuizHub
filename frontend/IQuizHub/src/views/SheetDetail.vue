@@ -97,8 +97,16 @@ import {onBeforeMount, ref} from "vue";
 import SDList from "@/components/SheetDetail/SDList.vue"
 import api from "@/api";
 import env from "@/utils/env";
+import {ElMessage} from "element-plus";
 
-const collect = () => {
+const collect = async () => {
+    const response = await api.collect({questiongroup: props.id});
+    if (response) {
+        console.log(response);
+        ElMessage.success('收藏成功')
+    } else {
+        ElMessage.error('收藏失败')
+    }
 
 }
 

@@ -5,11 +5,11 @@
         <ul class="custom-scrollbar"
             v-infinite-scroll="load"
             :infinite-scroll-disabled="disabled"
-            :infinite-scroll-distance="20"
+            :infinite-scroll-distance="profile.historys.length"
         >
             <li v-for="i in count" :key="i" class="scrollbar-demo-item">
-                {{formatDate(history[i].create_time)}}
-                {{getContent(i)}}
+                {{ formatDate(history[i].create_time) }}
+                {{ getContent(i) }}
             </li>
         </ul>
         <p v-if="loading" class="loading">Loading...</p>
@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
-import { useProfileStore } from '@/stores/profile'
+import {computed, onBeforeMount, ref} from 'vue';
+import {useProfileStore} from '@/stores/profile'
 
 const count = ref(10)
 const loading = ref(false)
@@ -27,6 +27,7 @@ const noMore = computed(() => count.value >= 20)
 const disabled = computed(() => loading.value || noMore.value)
 const profile = useProfileStore()
 const history = profile.historys;
+
 function formatDate(time: string) {
     const date = new Date(time);
     const year = date.getFullYear();
@@ -35,11 +36,11 @@ function formatDate(time: string) {
     return `${year}-${month}-${day}`;
 }
 
-function getContent(i : number) {
+function getContent(i: number) {
     if (history[i].correct === true) {
-        return '你做对了题目 '+ history[i].question
+        return '你做对了题目 ' + history[i].question
     } else {
-        return '你做错了题目 '+ history[i].question + '，看仔细了！！！'
+        return '你做错了题目 ' + history[i].question + '，看仔细了！！！'
     }
 }
 
@@ -47,7 +48,7 @@ function getContent(i : number) {
 const load = () => {
     loading.value = true
     setTimeout(() => {
-        count.value += 2
+        count.value += 5
         loading.value = false
     }, 1000)
 }

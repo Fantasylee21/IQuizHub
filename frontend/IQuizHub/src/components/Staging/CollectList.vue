@@ -21,7 +21,16 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onBeforeMount, ref} from 'vue';
+import api from "@/api";
+import {useProfileStore} from "@/stores/profile";
+
+const profile = useProfileStore()
+
+onBeforeMount(async () => {
+    const response = await api.getCollects({id: profile.id})
+    console.log(response)
+})
 
 const documents = ref([
     {title: 'Alipay', description: '这是题单的描述', image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'},
@@ -30,26 +39,8 @@ const documents = ref([
         description: '这是题单的描述，这是题单的描述，这是题单的描述，这是题单的描述',
         image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
     },
-    {
-        title: 'Ant Design',
-        description: '这是题单的描述，这是题单的描述',
-        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
-    },
-    {
-        title: 'Ant Design Pro',
-        description: '这是题单的描述，这是题单的描述',
-        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
-    },
-    {
-        title: 'Bootstrap',
-        description: '这是题单的描述，这是题单的描述',
-        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
-    },
-    {
-        title: 'React',
-        description: '这是题单的描述',
-        image: 'https://cdn.luogu.com.cn/upload/usericon/3.png'
-    },
+
+
 ]);
 
 const navigateToLink = () => {

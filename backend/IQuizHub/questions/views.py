@@ -520,11 +520,13 @@ class FavoriteView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
         if type == '0':
             favorites = Favorite.objects.filter(author=user)
-            page = self.paginate_queryset(favorites)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = self.get_serializer(favorites, many=True)
+            tmp = serializer.data
+            res = [
+                QuestionGroupSerializer(QuestionGroup.objects.filter(id=group['questiongroup']).first()).data
+                for group in tmp
+            ]
+            return Response(res, status=status.HTTP_200_OK)
         elif type == '1':
             favorites = Favorite.objects.filter(author=user, question__isnull=False)
             page = self.paginate_queryset(favorites)
