@@ -72,3 +72,4 @@ class History(models.Model):
         verbose_name = '历史记录表'
         verbose_name_plural = verbose_name
         # ordering = ['-create_time']
+

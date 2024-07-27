@@ -23,17 +23,20 @@
             </el-button>
             <div class="option-input">
                 <div class="option-list">
-                    <el-input
-                            v-for="(option, index) in options"
-                            :key="index"
-                            v-model="option.text"
-                            placeholder="请输入选项内容"
-                            class="option-item"
-                    >
-                        <template #append>
-                            <el-button type="danger" @click="removeOption(index)">删除</el-button>
-                        </template>
-                    </el-input>
+                    <div class="options"
+                         v-for="(option, index) in options"
+                         :key="index" style="display: flex; align-items: center">
+                        <p style="margin-right: 10px !important">{{ String.fromCharCode(65 + index) }}</p>
+                        <el-input
+                                v-model="option.text"
+                                placeholder="请输入选项内容"
+                                class="option-item"
+                        >
+                            <template #append>
+                                <el-button type="danger" @click="removeOption(index)">删除</el-button>
+                            </template>
+                        </el-input>
+                    </div>
                 </div>
             </div>
             <div class="type">

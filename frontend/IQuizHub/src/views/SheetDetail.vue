@@ -50,7 +50,8 @@
                                         </template>
                                         <div class="creator_profile">
                                             <div class="creator_avatar_description">
-                                                <el-avatar size="50" :src="sheetData?.author.avatar"
+                                                <el-avatar size="50"
+                                                           :src="env.backEnd + sheetData?.author.avatar.slice(1)"
                                                            style="float: left"/>
                                                 <p>{{ sheetData?.author.introduction }}</p>
                                             </div>
@@ -95,6 +96,7 @@
 import {onBeforeMount, ref} from "vue";
 import SDList from "@/components/SheetDetail/SDList.vue"
 import api from "@/api";
+import env from "@/utils/env";
 
 const collect = () => {
 

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from questions.serializers import QuestionSerializer
 from users.models import User, Comment, History
 
 
@@ -31,8 +30,7 @@ class UserSimpleSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.Serializer):
     # 返回发布者的id与名称与问题的id与名称
-    author = serializers.CharField(max_length=100)
-    author_id = serializers.IntegerField()
+    author = UserSimpleSerializer()
     question = serializers.CharField(max_length=100)
     question_id = serializers.IntegerField()
     comment = serializers.CharField(max_length=1000)

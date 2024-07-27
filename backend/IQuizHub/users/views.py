@@ -1,3 +1,4 @@
+import os
 import random
 import re
 
@@ -132,7 +133,6 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        return Response({"error": "无历史记录"}, status=status.HTTP_404_NOT_FOUND)
 
     def get_all_user(self, request, *args, **kwargs):
         users = User.objects.all()  # 这里需要添加圆括号
@@ -142,14 +142,12 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
 
 
 class FileView(APIView):
-
-    # 返回用户的图片
+    """获取文件的视图"""
     def get(self, request, name):
-        file_path = MEDIA_ROOT / name
-        if not file_path.exists():
-            return Response({"error": "图片不存在"}, status=status.HTTP_404_NOT_FOUND)
-
-        return FileResponse(open(file_path, 'rb'))
+        path = os.path.join(MEDIA_ROOT, name)
+        if os.path.isfile(path):
+            return FileResponse(open(path, 'rb'))
+        return Response({'error':"没有找到该文件"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CaptchaView(APIView):
@@ -192,6 +190,7 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         comment = Comment.objects.create(comment=comment, question_id=question, author_id=request.user.id)
         serializers = self.serializer(comment)
         return Response(serializers.data, status=status.HTTP_201_CREATED)
+
 
     def get_comment(self, request, *args, **kwargs):
         question = request.GET.get('question')

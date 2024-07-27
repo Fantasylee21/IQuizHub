@@ -24,6 +24,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include('users.urls')),
     path('ai/', include('ai.urls')),
-    re_path(r'file/image/avatar/(.+?)/', FileView.as_view(), name='图像获取'),
+    re_path(r'^files/(?P<name>.*)$', FileView.as_view(), name='serve-file'),  # 获取静态文件
     path("api/question/", include('questions.urls')),
 ]

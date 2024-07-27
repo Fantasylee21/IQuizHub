@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup
+from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
+from users.serializers import UserSimpleSerializer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -65,6 +66,9 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     questionCnt = serializers.SerializerMethodField()  # 添加这个方法字段
+    favoriteCnt = serializers.SerializerMethodField()  # 添加这个方法字段
+    passedCnt = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = QuestionGroup
@@ -73,6 +77,26 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
     def get_questionCnt(self, obj):
         # 计算与问题组关联的题目数量
         return Question.objects.filter(question_groups=obj).count()
+
+    def get_favoriteCnt(self, obj):
+        return Favorite.objects.filter(questiongroup=obj).count()
+
+    def get_passedCnt(self, obj):
+
+        request = self.context.get('request', None)
+        question_group = obj
+        user = request.user
+        historys = user.historys.filter(question__in=question_group.questions.all(), correct=True).values_list(
+            'question_id', flat=True).distinct()
+        cnt = len(historys)
+        return cnt
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request', None)
+        user = request.user
+        if user.is_anonymous:
+            return False
+        return Favorite.objects.filter(questiongroup=obj, author=user).exists()
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
@@ -99,4 +123,21 @@ class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuestionGroup
-        fields = [ 'id', 'title']
+        fields = ['id', 'title', 'avatar']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    author = UserSimpleSerializer()
+
+    class Meta:
+        model = Favorite
+        fields = ['id', 'create_time', 'author', 'question', 'questiongroup']
+
+
+class FavoriteGroupSimpleSerializer(serializers.ModelSerializer):
+    author = UserSimpleSerializer()
+    questiongroup = QuestionGroupSimpleSerializer()
+
+    class Meta:
+        model = Favorite
+        fields = ['id', 'create_time', 'author', 'question', 'questiongroup']

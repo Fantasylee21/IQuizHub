@@ -57,6 +57,7 @@ class QuestionGroup(models.Model):
     )
     content = models.TextField(verbose_name='问题组内容', default="作者很懒，什么都没有留下")
     is_all = models.BooleanField(verbose_name='是否所有人可见', default=False)
+    avatar = models.ImageField(verbose_name='题组头像', blank=True, null=True, upload_to='avatar', default=None)
 
     class Meta:
         db_table = 'question_groups'
@@ -137,5 +138,18 @@ class UserGroup(models.Model):
         return self.title
 
 
-if __name__ == '__main__':
-    questionGroup = QuestionGroup.objects.create(title='test', author=User.objects.get(pk=6))
+class Favorite(models.Model):
+    question = models.ForeignKey('questions.Question', on_delete=models.CASCADE, verbose_name='问题', null=True)
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='用户')
+    questiongroup = models.ForeignKey('questions.QuestionGroup', on_delete=models.CASCADE, verbose_name='问题组',
+                                      null=True)
+
+    class Meta:
+        db_table = 'favorite'
+        verbose_name = '收藏表'
+        verbose_name_plural = verbose_name
+        # ordering = ['-create_time']
+
+    def __str__(self):
+        return self.question.title

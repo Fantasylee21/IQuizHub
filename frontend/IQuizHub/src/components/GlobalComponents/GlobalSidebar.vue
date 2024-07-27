@@ -15,7 +15,7 @@
         </el-menu-item>
         <el-menu-item index="/staging">
             <el-icon>
-                <User/>
+                <setting/>
             </el-icon>
             <template #title>工作台</template>
         </el-menu-item>
@@ -36,12 +36,6 @@
                 <Grid/>
             </el-icon>
             <template #title>题库</template>
-        </el-menu-item>
-        <el-menu-item index="/userCenter">
-            <el-icon>
-                <setting/>
-            </el-icon>
-            <template #title>个人中心</template>
         </el-menu-item>
         <el-menu-item index="/question-editor">
             <el-icon>

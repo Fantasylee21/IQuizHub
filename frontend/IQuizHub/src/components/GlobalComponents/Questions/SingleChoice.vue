@@ -54,8 +54,8 @@ const message = computed(() => {
 <template>
     <div class="single-question-container">
         <div class="single-question-left" ref="questionContent">
-            <el-tag type="info">单选题</el-tag>
-            <el-tag v-for="tag in question.tags" :key="tag.id" style="margin: 15px 5px;">{{ tag.name }}</el-tag>
+            <el-tag type="info" style="margin: 15px 5px;">单选题</el-tag>
+            <el-tag v-for="tag in question.tags" :key="tag.id">{{ tag.name }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">
                 <p>{{ question.id }}.</p>
