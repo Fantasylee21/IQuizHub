@@ -493,16 +493,22 @@ class FavoriteView(GenericViewSet, mixins.RetrieveModelMixin):
             return Response({"error": "参数不全"}, status=status.HTTP_400_BAD_REQUEST)
         if question:
             if Favorite.objects.filter(author=user, question=question).exists():
-                return Response({"err": "已经收藏过了"}, status=status.HTTP_400_BAD_REQUEST)
-            favorite = Favorite.objects.create(author=user, question=Question.objects.get(id=question))
-            favorite.save()
-            return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
+                favorite = Favorite.objects.get(author=user, question=question)
+                favorite.delete()
+                return Response({"message": "删除成功"}, status=status.HTTP_200_OK)
+            else:
+                favorite = Favorite.objects.create(author=user, question=Question.objects.get(id=question))
+                favorite.save()
+                return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
         if questiongroup:
             if Favorite.objects.filter(author=user, questiongroup=questiongroup).exists():
-                return Response({"err": "已经收藏过了"}, status=status.HTTP_400_BAD_REQUEST)
-            favorite = Favorite.objects.create(author=user, questiongroup=QuestionGroup.objects.get(id=questiongroup))
-            favorite.save()
-            return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
+                favorite = Favorite.objects.get(author=user, questiongroup=questiongroup)
+                favorite.delete()
+                return Response({"message": "删除成功"}, status=status.HTTP_200_OK)
+            else:
+                favorite = Favorite.objects.create(author=user, questiongroup=QuestionGroup.objects.get(id=questiongroup))
+                favorite.save()
+                return Response({"message": "收藏成功"}, status=status.HTTP_200_OK)
         return Response({"error": "参数错误"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_favorite(self, request, *args, **kwargs):
