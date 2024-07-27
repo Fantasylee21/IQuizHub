@@ -68,14 +68,7 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
     questionCnt = serializers.SerializerMethodField()  # 添加这个方法字段
     favoriteCnt = serializers.SerializerMethodField()  # 添加这个方法字段
     passedCnt = serializers.SerializerMethodField()
-
-    # def get_my_success_cnt(self, request, *args, **kwargs):
-    #     user = request.user
-    #     question_group = self.get_object()
-    #     historys = user.historys.filter(question__in=question_group.questions.all(), correct=True).values_list(
-    #         'question_id', flat=True).distinct()
-    #     cnt = len(historys)
-    #     return Response({"correct_cnt": cnt, "all_cnt": len(question_group.questions.all())}, status=status.HTTP_200_OK)
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = QuestionGroup
@@ -97,6 +90,13 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
             'question_id', flat=True).distinct()
         cnt = len(historys)
         return cnt
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request', None)
+        user = request.user
+        if user.is_anonymous:
+            return False
+        return Favorite.objects.filter(questiongroup=obj, author=user).exists()
 
 
 class UserGroupSerializer(serializers.ModelSerializer):

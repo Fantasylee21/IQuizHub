@@ -195,6 +195,18 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
     def get_comment(self, request, *args, **kwargs):
         question = request.GET.get('question')
         user = request.GET.get('user')
+        usergroup = request.GET.get('usergroup')
+
+        if usergroup:
+            if not User.objects.filter(id=usergroup).exists():
+                return Response({"error": "用户组不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            comments = Comment.objects.filter(usergroup=usergroup)
+            page = self.paginate_queryset(comments)
+            if page is not None:
+                serializer = self.serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+
         if question and user:
             # print(question, user)
             if not Question.objects.filter(id=question).exists():

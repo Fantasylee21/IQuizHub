@@ -105,6 +105,16 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
     serializer_class = QuestionGroupSerializer
     permission_classes = [IsAuthenticated, QuestionGroupPermission]
 
+    def update_avatar(self, request, *args, **kwargs):
+        obj = self.get_object()
+        avatar = request.data.get('avatar')
+        if not avatar:
+            return Response({"error": "头像不能为空"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(obj, data={"avatar": avatar}, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"avatar": serializer.data['avatar']}, status=status.HTTP_200_OK)
+
     def get_all_question_groups(self, request, *args, **kwargs):
         question_groups = QuestionGroup.objects.all()
         page = self.paginate_queryset(question_groups)
