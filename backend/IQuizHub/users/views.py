@@ -192,6 +192,7 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         serializers = self.serializer(comment)
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
+
     def get_comment(self, request, *args, **kwargs):
         question = request.GET.get('question')
         user = request.GET.get('user')
