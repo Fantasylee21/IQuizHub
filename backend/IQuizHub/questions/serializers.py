@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from users.models import Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from users.serializers import UserSimpleSerializer
 
@@ -112,10 +114,14 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
 class UserGroupSimpleSerializer(serializers.ModelSerializer):
     author = UserSimpleSerializer()
+    cnt = serializers.SerializerMethodField()
 
     class Meta:
         model = UserGroup
         exclude = ['members']
+
+    def get_cnt(self, obj):
+        return Comment.objects.filter(usergroup=obj).count()
 
 
 class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
