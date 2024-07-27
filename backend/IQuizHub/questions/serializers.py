@@ -89,6 +89,7 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
         return Favorite.objects.filter(questiongroup=obj).count()
 
     def get_passedCnt(self, obj):
+
         request = self.context.get('request', None)
         question_group = obj
         user = request.user
