@@ -84,7 +84,6 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
         return Favorite.objects.filter(questiongroup=obj).count()
 
     def get_passedCnt(self, obj):
-
         request = self.context.get('request', None)
         question_group = obj
         user = request.user
@@ -122,6 +121,23 @@ class UserGroupSimpleSerializer(serializers.ModelSerializer):
 
     def get_cnt(self, obj):
         return Comment.objects.filter(usergroup=obj).count()
+
+
+class UserGroupAllSerializer(serializers.ModelSerializer):
+    author = UserSimpleSerializer()
+    count = serializers.SerializerMethodField()
+    members = UserSimpleSerializer(many=True, read_only=True)
+    memberCnt = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserGroup
+        fields = '__all__'
+
+    def get_count(self, obj):
+        return Comment.objects.filter(usergroup=obj).count()
+
+    def get_memberCnt(self, obj):
+        return obj.members.count()
 
 
 class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
