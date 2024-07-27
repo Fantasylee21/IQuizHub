@@ -57,6 +57,7 @@ class QuestionGroup(models.Model):
     )
     content = models.TextField(verbose_name='问题组内容', default="作者很懒，什么都没有留下")
     is_all = models.BooleanField(verbose_name='是否所有人可见', default=False)
+    avatar = models.ImageField(verbose_name='题组头像', blank=True, null=True, upload_to='avatar', default=None)
 
     class Meta:
         db_table = 'question_groups'
