@@ -147,6 +147,7 @@ class UserGroupAllSerializer(serializers.ModelSerializer):
         user = request.user
         return not user.is_anonymous and obj.members.filter(id=user.id).exists()
 
+
         # request = self.context.get('request', None)
         # user = request.user
         # if user.is_anonymous:
