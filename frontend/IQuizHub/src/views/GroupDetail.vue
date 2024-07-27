@@ -25,7 +25,7 @@
                         <div class="description-right">
                             <el-card class="detail-card">
                                 <div class="sheet-id">
-                                    <p>题单编号</p>
+                                    <p>群组编号</p>
                                     <p style="padding-right: 15px">{{ sheetData?.id }}</p>
                                 </div>
                                 <div class="sheet-creator">
@@ -121,8 +121,10 @@ const sheetData = ref<{
 });
 
 onBeforeMount(async () => {
+    console.log('usergroup_id:', props.id);
     try {
-        sheetData.value = await api.getSheetDetail(props.id);
+        sheetData.value = await api.getGroupDetail({usergroup_id: props.id});
+        console.log('sheetData:', sheetData.value);
         sheetData.value.create_time = formatDate(sheetData.value.create_time);
         sheetData.value.update_time = formatDate(sheetData.value.update_time);
     } catch (error) {

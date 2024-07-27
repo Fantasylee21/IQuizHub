@@ -360,8 +360,8 @@ export default {
 		})).data
 	},
 
-	getGroupDetail: async function (usergroup_id: number) {
-		return (await api.get(`api//question/usergroup/detail/${usergroup_id}/`, {
+	getGroupDetail: async function (params : { usergroup_id: string }) {
+		return (await api.get(`api/question/usergroup/detail/${params.usergroup_id}/`, {
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -369,4 +369,17 @@ export default {
 		})).data
 	},
 
+	createGroup: async function (params: { title: string, content: string, type: string }) {
+		try {
+			const response = await api.post(`api/question/usergroup/upload/`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	}
 }

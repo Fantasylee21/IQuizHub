@@ -43,14 +43,10 @@ const routes: Array<RouteRecordRaw> = [
 		component: QuestionBank,
 	},
 	{
-		path: '/test',
-		name: 'test',
-		component: GroupDetail,
-	},
-	{
 		path: '/groupPage',
 		name: 'GroupPage',
 		component: GroupPage,
+		props: true
 	},
 	{
 		path: '/question-detail/:id',
@@ -73,6 +69,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/groupDetail/:id',
 		name: 'GroupDetail',
 		component: GroupDetail,
+		props: true
 	}
 ]
 

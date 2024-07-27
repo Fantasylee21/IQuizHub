@@ -78,6 +78,29 @@ const search = () => {
 function openGroup() {
 
 }
+
+interface TableData {
+  title: string;
+  content: string;
+  id: number;
+  create_time: string;
+  update_time: string;
+  author: {
+    id: number;
+    username: string;
+    avatar: string;
+    introduction: string;
+  };
+  type: string;
+  count: number;
+}
+
+const tableData = ref<TableData[]>([]);
+
+defineProps({
+    tableData: Array
+})
+
 </script>
 
 <template>
@@ -111,23 +134,23 @@ function openGroup() {
       </div>
     </div>
     <div class="allBlock"
-         v-for="item in groupTable"
+         v-for="item in tableData"
          :key="item.id"
     >
       <div class="block" @click="openGroup">
         <el-container>
-          <el-aside width="100px">
-            <div class="picture">
-              <el-image :src="item.picture">
-              </el-image>
-            </div>
-          </el-aside>
+<!--          <el-aside width="100px">-->
+<!--            <div class="picture">-->
+<!--              <el-image :src="item.picture">-->
+<!--              </el-image>-->
+<!--            </div>-->
+<!--          </el-aside>-->
           <el-main>
             <div class="side">
               <div class="side1">
-                <h2>{{item.name}}</h2>
+                <h2>{{item.title}}</h2>
                 <div class="word">
-                  <p>{{item.creator}}</p>创建于{{item.date}}
+                  <p>{{item.author.name}}</p>创建于{{item.date}}
                 </div>
               </div>
               <div class="side2">
