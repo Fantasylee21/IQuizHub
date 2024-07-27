@@ -191,17 +191,30 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         serializers = self.serializer(comment)
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
+    # 获取评论按照时间顺序进行排序
 
     def get_comment(self, request, *args, **kwargs):
         question = request.GET.get('question')
         user = request.GET.get('user')
+        usergroup = request.GET.get('usergroup')
+
+        if usergroup:
+            if not User.objects.filter(id=usergroup).exists():
+                return Response({"error": "用户组不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            comments = Comment.objects.filter(usergroup_id=usergroup).order_by('-create_time')
+            page = self.paginate_queryset(comments)
+            if page is not None:
+                serializer = self.serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+
         if question and user:
             # print(question, user)
             if not Question.objects.filter(id=question).exists():
                 return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
             if not User.objects.filter(id=user).exists():
                 return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
-            comments = Comment.objects.filter(question_id=question, author_id=user)
+            comments = Comment.objects.filter(question_id=question, author_id=user).order_by('-create_time')
             page = self.paginate_queryset(comments)
             if page is not None:
                 serializer = self.serializer(page, many=True)
@@ -210,7 +223,7 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         if question:
             if not Question.objects.filter(id=question).exists():
                 return Response({"error": "问题不存在"}, status=status.HTTP_400_BAD_REQUEST)
-            comments = Comment.objects.filter(question_id=question)
+            comments = Comment.objects.filter(question_id=question).order_by('-create_time')
             page = self.paginate_queryset(comments)
             if page is not None:
                 serializer = self.serializer(page, many=True)
@@ -219,7 +232,7 @@ class CommentView(GenericViewSet, mixins.DestroyModelMixin):
         if user:
             if not User.objects.filter(id=user).exists():
                 return Response({"error": "用户不存在"}, status=status.HTTP_400_BAD_REQUEST)
-            comments = Comment.objects.filter(author_id=user)
+            comments = Comment.objects.filter(author_id=user).order_by('-create_time')
             page = self.paginate_queryset(comments)
             if page is not None:
                 serializer = self.serializer(page, many=True)

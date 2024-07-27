@@ -25,16 +25,17 @@ class UserSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'avatar']
+        fields = ['id', 'username', 'avatar', 'introduction']
 
 
-class CommentSerializer(serializers.Serializer):
+class CommentSerializer(serializers.ModelSerializer):
     # 返回发布者的id与名称与问题的id与名称
     author = UserSimpleSerializer()
     question = serializers.CharField(max_length=100)
     question_id = serializers.IntegerField()
     comment = serializers.CharField(max_length=1000)
     id = serializers.IntegerField()
+    usergroup = serializers.CharField(max_length=100)
 
     class Meta:
         model = Comment
