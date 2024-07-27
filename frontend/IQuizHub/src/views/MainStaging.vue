@@ -6,10 +6,10 @@
         <div class="staging-body">
             <div class="staging-left">
                 <CollectList/>
+
             </div>
             <div class="staging-right">
                 <TrendsList/>
-                <StagingChart/>
             </div>
         </div>
     </div>
@@ -19,7 +19,6 @@
 import StagingInformation from "@/components/Staging/StagingInformation.vue";
 import CollectList from "@/components/Staging/CollectList.vue";
 import TrendsList from "@/components/Staging/TrendsList.vue";
-import StagingChart from "@/components/Staging/StagingChart.vue";
 </script>
 
 <style scoped>

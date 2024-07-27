@@ -63,11 +63,16 @@
                 />
             </div>
             <el-button type="primary" style="margin-top: 10px" @click="upload">上传</el-button>
+            <div class="ocr">
+                <EditorOCR/>
+            </div>
+
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import EditorOCR from '@/components/Editor/EditorOCR.vue';
 import {ref, onMounted, computed, defineProps} from 'vue';
 import {
     // necessary extensions
@@ -215,5 +220,10 @@ const upload = async () => {
 
 .option-item .el-input {
     flex: 1;
+}
+
+.ocr {
+    margin-top: 50px;
+
 }
 </style>
