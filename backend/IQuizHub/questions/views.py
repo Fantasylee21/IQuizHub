@@ -463,7 +463,7 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
 
     def get_usergroup(self, request, *args, **kwargs):
         usergroup = self.get_object()
-        serializer = UserGroupAllSerializer(usergroup)
+        serializer = UserGroupAllSerializer(usergroup, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def add_member(self, request, *args, **kwargs):

@@ -128,6 +128,7 @@ class UserGroupAllSerializer(serializers.ModelSerializer):
     count = serializers.SerializerMethodField()
     members = UserSimpleSerializer(many=True, read_only=True)
     memberCnt = serializers.SerializerMethodField()
+    is_in = serializers.SerializerMethodField()
 
     class Meta:
         model = UserGroup
@@ -138,6 +139,19 @@ class UserGroupAllSerializer(serializers.ModelSerializer):
 
     def get_memberCnt(self, obj):
         return obj.members.count()
+
+    def get_is_in(self, obj):
+        request = self.context.get('request', None)
+        if request is None or not hasattr(request, 'user'):
+            return False  # 或者返回其他默认值
+        user = request.user
+        return not user.is_anonymous and obj.members.filter(id=user.id).exists()
+
+        # request = self.context.get('request', None)
+        # user = request.user
+        # if user.is_anonymous:
+        #     return False
+        # return Favorite.objects.filter(questiongroup=obj, author=user).exists()
 
 
 class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
