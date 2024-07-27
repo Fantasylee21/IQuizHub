@@ -21,4 +21,5 @@ from ai.views import AiViewSet
 
 urlpatterns = [
     path('ask/', AiViewSet.as_view({'post': 'ask'})),
+    path('ocr_pic/', AiViewSet.as_view({'post': 'ocr_pic'})),
 ]
