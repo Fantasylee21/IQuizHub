@@ -15,7 +15,8 @@ from common.permissions import QuestionWritePermission, QuestionGroupPermission,
 from users.models import History, User, Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
-    UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer
+    UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer, \
+    FavoriteGroupSimpleSerializer
 from rest_framework import serializers
 
 from users.serializers import UserSerializer, HistorySerializer
