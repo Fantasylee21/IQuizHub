@@ -19,6 +19,7 @@ urlpatterns = [
          name='向题组添加人物'),
     path('questiongroup/deletequestion/<int:pk>/', QuestionGroupView.as_view({'delete': 'delete_question'}),
          name='删除题目组'),
+    path('questiongroup/update/<int:pk>/', QuestionGroupView.as_view({'put': 'update'})),
     path('questiongroup/all/', QuestionGroupView.as_view({'get': 'get_all_question_groups'}), name='获取所有题目组'),
     path('questiongroup/querypass/<int:pk>/', QuestionGroupView.as_view({'get': 'get_my_success_cnt'})),
     path('questiongroup/put/<int:pk>/', QuestionGroupView.as_view({'put': 'update_avatar'}), name='更新题目组'),

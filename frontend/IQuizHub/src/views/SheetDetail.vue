@@ -1,6 +1,6 @@
 <template>
-    <div class="sheet-detail-header">
-        <div class="sd-header-container">
+    <div class="sheet-editor-header">
+        <div class="se-header-container">
             <el-breadcrumb separator="/" class="breadcrumb">
                 <el-breadcrumb-item :to="{ path: '/staging' }">staging</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{ path: '/question-sheet' }">question-sheet</el-breadcrumb-item>
@@ -167,7 +167,7 @@ const questionType = ref('官方题单')
 </script>
 
 <style scoped>
-.sheet-detail-header {
+.sheet-editor-header {
     background-color: #f5f7fa;
     height: 150px;
     margin: 70px 20px 20px;
@@ -175,7 +175,7 @@ const questionType = ref('官方题单')
     box-shadow: #595959 0 0 2px;
 }
 
-.sd-header-container {
+.se-header-container {
     width: 1200px;
     margin: 0 auto;
     display: flex;

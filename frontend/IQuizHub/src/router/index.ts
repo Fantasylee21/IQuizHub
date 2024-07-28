@@ -11,6 +11,8 @@ const QuestionDetail = () => import('@/views/QuestionDetail.vue')
 const QuestionEditor = () => import('@/views/QuestionEditor.vue')
 const SheetDetail = () => import('@/views/SheetDetail.vue')
 const GroupDetail = () => import('@/views/GroupDetail.vue')
+const SheetEditor = () => import('@/views/SheetEditor.vue')
+const MySheet = () => import('@/components/Staging/MySheet.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 
@@ -70,6 +72,17 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'GroupDetail',
 		component: GroupDetail,
 		props: true
+	},
+	{
+		path: '/sheet-editor/:id',
+		name: 'SheetEditor',
+		component: SheetEditor,
+		props: true
+	},
+	{
+		path: '/my-sheet',
+		name: 'MySheet',
+		component: MySheet
 	}
 ]
 

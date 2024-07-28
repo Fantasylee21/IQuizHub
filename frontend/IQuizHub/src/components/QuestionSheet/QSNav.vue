@@ -4,18 +4,23 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                     <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="search">
-                      <template #prepend >
-                        <div class="search-icon-container">
-                          <el-icon size="20px"><Search /></el-icon>
-                        </div>
-                      </template>
+                        <template #prepend>
+                            <div class="search-icon-container">
+                                <el-icon size="20px">
+                                    <Search/>
+                                </el-icon>
+                            </div>
+                        </template>
                     </el-input>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="10">
                     <el-button type="primary" @click="search">搜索</el-button>
                 </el-col>
                 <el-col :span="2">
                     <el-button type="success" @click="createQuestionSheet">创建题单</el-button>
+                </el-col>
+                <el-col :span="2">
+                    <el-button type="primary" @click="router.push('/my-sheet')">我创建的题单</el-button>
                 </el-col>
 
             </el-row>
@@ -47,9 +52,10 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue'
+import {defineEmits, ref} from 'vue'
 import {ElMessage} from 'element-plus';
-import { Search } from '@element-plus/icons'
+import {Search} from '@element-plus/icons'
+import router from "@/router/index.ts";
 
 const searchQuery = ref('');
 const selectedType = ref('all');
@@ -61,7 +67,7 @@ const props = defineProps({
 });
 
 const search = () => {
-    if (searchQuery.value ==='') {
+    if (searchQuery.value === '') {
         ElMessage.error('搜索关键词不能为空');
         return;
     }
@@ -101,10 +107,10 @@ const createQuestionSheet = () => {
 }
 
 .search-icon-container {
-  width: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 </style>

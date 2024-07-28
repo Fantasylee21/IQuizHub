@@ -107,7 +107,7 @@ class QuestionGroupView(GenericViewSet, mixins.DestroyModelMixin, mixins.UpdateM
 
     def update_avatar(self, request, *args, **kwargs):
         obj = self.get_object()
-        avatar = request.data.get('avatar')
+        avatar = request.FILES['avatar']
         if not avatar:
             return Response({"error": "头像不能为空"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(obj, data={"avatar": avatar}, partial=True)

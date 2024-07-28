@@ -438,6 +438,29 @@ export default {
 				'Content-Type': 'multipart/form-data',
 			},
 		})
+	},
+
+	updateSheetDetail: async function (params: object, id: string) {
+		return await api.put(`api/question/questiongroup/update/${id}/`, params, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})
+	},
+
+	getMySheets: async function () {
+		try {
+			const res = await api.get('users/questiongroup/detail/', {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			})
+			return res.data
+		} catch (e) {
+			return null
+		}
 	}
 
 }
