@@ -238,7 +238,7 @@ const joinGroup = async (id: number) => {
                                 <el-tag effect="light" round="round" :color="getTagColor(item.type)">&nbsp;</el-tag>
                                 {{ item.type }}
                                 <el-button type="primary" style="margin-left: 160px" @click="joinGroup(item.id)"
-                                           disabled="item.is_in">加入
+                                           :disabled="item.is_in">加入
                                 </el-button>
                                 <div class="word">
                                     <div class="comment">
