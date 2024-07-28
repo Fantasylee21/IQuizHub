@@ -289,23 +289,13 @@ export default {
 		}
 	},
 
-	getCollects: async function (params: { id: string }) {
-		try {
-			const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				}
-			});
-			return response.data;
-		} catch (e) {
-			return null;
-		}
-	},
-
 	collect: async function (params: object) {
 		try {
-			const response = await api.post(`api/question/favorite/`, params, {
+
+			//const response = await api.post(`api/question/favorite/`, params, {
+
+			const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
+
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -339,9 +329,91 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				}
 			});
-			return response;
+			return response.data;
 		} catch (e) {
 			return null
+		}
+	},
+
+
+	getAllGroups: async function () {
+		try {
+			const response = await api.get(`/api/question/usergroup/detail/`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	searchGroupDetail: async function (params: { title : string ,type: string}) {
+		return (await api.get(`api/question/usergroup/query/`, {
+			params: {
+				'title': params.title,
+				'type': params.type
+			},
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
+	},
+
+	getGroupDetail: async function (params : { usergroup_id: string }) {
+		return (await api.get(`api/question/usergroup/detail/${params.usergroup_id}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
+		})).data
+	},
+
+	createGroup: async function (params: { title: string, content: string, type: string }) {
+		try {
+			const response = await api.post(`api/question/usergroup/upload/`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	joinGroup: async function (params: { usergroup_id: string }) {
+		try {
+			const response = await api.post(`/api/question/usergroup/addmember/${params.usergroup_id}/`, {}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	uploadcomment: async function (params: { usergroup: number, comment: string }) {
+		try {
+			const response = await api.put(`api/question/usergroup/uploadcomment/`, {
+				usergroup: params.usergroup,
+				comment: params.comment
+			}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
 		}
 	},
 

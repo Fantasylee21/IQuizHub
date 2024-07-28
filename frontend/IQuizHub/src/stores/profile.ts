@@ -58,9 +58,6 @@ export const useProfileStore = defineStore('profile', {
 		},
 	},
 
-	addHistory(history: History) {
-      this.historys.push(history);
-	},
 
 	persist: {
 		key: 'profile-store',

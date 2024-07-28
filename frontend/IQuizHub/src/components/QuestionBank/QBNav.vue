@@ -2,21 +2,21 @@
     <el-container class="qs-nav-container">
         <el-header class="header">
             <el-row :gutter="20">
-                <el-col :span="5">
-                    <el-select
-                      v-model="difficultyValue"
-                      placeholder="题目难度"
-                      size="default"
-                      style="width: 200px"
-                    >
-                      <el-option
-                        v-for="item in difficulty"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                </el-col>
+<!--                <el-col :span="5">-->
+<!--                    <el-select-->
+<!--                      v-model="difficultyValue"-->
+<!--                      placeholder="题目难度"-->
+<!--                      size="default"-->
+<!--                      style="width: 200px"-->
+<!--                    >-->
+<!--                      <el-option-->
+<!--                        v-for="item in difficulty"-->
+<!--                        :key="item.value"-->
+<!--                        :label="item.label"-->
+<!--                        :value="item.value"-->
+<!--                      />-->
+<!--                    </el-select>-->
+<!--                </el-col>-->
                 <el-col :span="5">
                     <el-select
                     v-model="typeValue"

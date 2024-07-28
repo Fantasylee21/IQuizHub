@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ChatDotRound , Menu } from '@element-plus/icons'
+import { ChatDotRound, Menu, Search } from '@element-plus/icons'
 import router from '@/router'
 const groupTable = ref([
   {
@@ -70,13 +70,52 @@ function getTagColor (typeName : any) {
   const tag = tagInfo.value.find(tag => tag.name === typeName);
   return tag ? tag.color : 'danger';
 }
+const searchQuery = ref('');
+const search = () => {
+  console.log(searchQuery.value);
+}
 
 function openGroup() {
 
 }
+
+interface TableData {
+  title: string;
+  content: string;
+  id: number;
+  create_time: string;
+  update_time: string;
+  author: {
+    id: number;
+    username: string;
+    avatar: string;
+    introduction: string;
+  };
+  type: string;
+  count: number;
+}
+
+const tableData = ref<TableData[]>([]);
+
+defineProps({
+    tableData: Array
+})
+
 </script>
 
 <template>
+    <div class="searchDiv">
+          <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="search">
+            <template #prepend >
+              <div class="search-icon-container">
+                <el-icon size="20px"><Search /></el-icon>
+              </div>
+            </template>
+          </el-input>
+          <div>
+              <el-button type="primary" @click="search">搜索</el-button>
+          </div>
+      </div>
     <div class="top">
       <div class="moduleSelect">
         <div class="tagTitle">
@@ -95,23 +134,23 @@ function openGroup() {
       </div>
     </div>
     <div class="allBlock"
-         v-for="item in groupTable"
+         v-for="item in tableData"
          :key="item.id"
     >
       <div class="block" @click="openGroup">
         <el-container>
-          <el-aside width="100px">
-            <div class="picture">
-              <el-image :src="item.picture">
-              </el-image>
-            </div>
-          </el-aside>
+<!--          <el-aside width="100px">-->
+<!--            <div class="picture">-->
+<!--              <el-image :src="item.picture">-->
+<!--              </el-image>-->
+<!--            </div>-->
+<!--          </el-aside>-->
           <el-main>
             <div class="side">
               <div class="side1">
-                <h2>{{item.name}}</h2>
+                <h2>{{item.title}}</h2>
                 <div class="word">
-                  <p>{{item.creator}}</p>创建于{{item.date}}
+                  <p>{{item.author.name}}</p>创建于{{item.date}}
                 </div>
               </div>
               <div class="side2">
@@ -121,7 +160,7 @@ function openGroup() {
                   <div class="comment">
                     <el-icon size="13px"><ChatDotRound /></el-icon>{{item.commentCount}}
                   </div>
-                  <p>{{item.lastReplyUser}}</p>最后回复于{{item.lastReplyTime}}
+                  最后回复于{{item.lastReplyTime}}
                 </div>
               </div>
             </div>
@@ -237,6 +276,20 @@ p {
 
 .elb:hover {
   background-color: #254e0f;
+
+}
+
+.search-icon-container {
+  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchDiv {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
 }
 </style>
