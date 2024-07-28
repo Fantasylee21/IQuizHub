@@ -110,7 +110,6 @@ export default {
 
 	search: async function (params: { pageNumber: number, Tags: string[], keyword: string, type: string }) {
 		try {
-			console.log('tags----------------', params.Tags)
 			const res = (await api.get(`api/question/query/question/`, {
 				params: {
 					'page': params.pageNumber,
@@ -292,7 +291,11 @@ export default {
 
 	collect: async function (params: object) {
 		try {
-			const response = await api.post(`api/question/favorite/`, params, {
+
+			//const response = await api.post(`api/question/favorite/`, params, {
+
+			const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
+
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -341,7 +344,7 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				}
 			});
-			return response.data;
+			return response;
 		} catch (e) {
 			return null;
 		}
@@ -413,5 +416,14 @@ export default {
 			return null;
 		}
 	},
+
+	ocr: async function (params: object) {
+		return await api.post(`ai/ocr_pic/`, params, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+	}
 
 }

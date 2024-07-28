@@ -16,7 +16,7 @@ from users.models import History, User, Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
     UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer, \
-    FavoriteGroupSimpleSerializer
+    FavoriteGroupSimpleSerializer,UserGroupAllSerializer
 from rest_framework import serializers
 
 from users.serializers import UserSerializer, HistorySerializer
@@ -463,7 +463,7 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
 
     def get_usergroup(self, request, *args, **kwargs):
         usergroup = self.get_object()
-        serializer = self.get_serializer(usergroup)
+        serializer = UserGroupAllSerializer(usergroup, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def add_member(self, request, *args, **kwargs):
