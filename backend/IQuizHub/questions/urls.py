@@ -36,6 +36,7 @@ urlpatterns = [
     path('usergroup/upload/', UserGroupView.as_view({'post':'upload_userGroup'}), name='上传用户组'),
     path('usergroup/delete/<int:pk>/', UserGroupView.as_view({'delete': 'delete'}), name='删除用户组'),
     path('usergroup/detail/', UserGroupView.as_view({'get': 'get_all_usergroups'}), name='返回用户组'),
+    path('usergroup/detail/<int:pk>/', UserGroupView.as_view({'get': 'get_usergroups'}), name='返回用户组'),
     path('usergroup/query/', UserGroupView.as_view({'get': 'query_usergroup'}), name='查询用户组'),
     path('usergroup/addmember/<int:pk>/', UserGroupView.as_view({'post': 'add_member'}), name='添加成员'),
     path('usergroup/deletemember/<int:pk>/', UserGroupView.as_view({'delete': 'delete_users'}), name='删除成员'),

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from users.models import Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
-from users.serializers import UserSimpleSerializer
+from users.serializers import UserSimpleSerializer, CommentSerializer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -148,11 +148,39 @@ class UserGroupAllSerializer(serializers.ModelSerializer):
         return not user.is_anonymous and obj.members.filter(id=user.id).exists()
 
 
-        # request = self.context.get('request', None)
-        # user = request.user
-        # if user.is_anonymous:
-        #     return False
-        # return Favorite.objects.filter(questiongroup=obj, author=user).exists()
+class UserGroupAllSerializer1(serializers.ModelSerializer):
+    author = UserSimpleSerializer()
+    count = serializers.SerializerMethodField()
+    members = UserSimpleSerializer(many=True, read_only=True)
+    memberCnt = serializers.SerializerMethodField()
+    is_in = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserGroup
+        fields = '__all__'
+
+    def get_count(self, obj):
+        return Comment.objects.filter(usergroup=obj).count()
+
+    def get_memberCnt(self, obj):
+        return obj.members.count()
+
+    def get_is_in(self, obj):
+        request = self.context.get('request', None)
+        if request is None or not hasattr(request, 'user'):
+            return False  # 或者返回其他默认值
+        user = request.user
+        return not user.is_anonymous and obj.members.filter(id=user.id).exists()
+
+    def get_comments(self, obj):
+        comments = Comment.objects.filter(usergroup=obj)
+        page = self.context.get('page', 1)
+        page_size = self.context.get('page_size', 5)
+        start = (page - 1) * page_size
+        end = page * page_size
+        return CommentSerializer(comments[start:end], many=True).data
+
 
 
 class QuestionGroupSimpleSerializer(serializers.ModelSerializer):
