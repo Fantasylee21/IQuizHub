@@ -292,10 +292,24 @@ export default {
 	collect: async function (params: object) {
 		try {
 
-			//const response = await api.post(`api/question/favorite/`, params, {
+			const response = await api.post(`api/question/favorite/`, params, {
 
+				//const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
+
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	getCollects: async function (params: { id: string }) {
+		try {
 			const response = await api.get(`api/question/favorite/query/?&type=0&user=${params.id}`, {
-
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -344,13 +358,13 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				}
 			});
-			return response;
+			return response.data;
 		} catch (e) {
 			return null;
 		}
 	},
 
-	searchGroupDetail: async function (params: { title : string ,type: string}) {
+	searchGroupDetail: async function (params: { title: string, type: string }) {
 		return (await api.get(`api/question/usergroup/query/`, {
 			params: {
 				'title': params.title,
@@ -363,7 +377,7 @@ export default {
 		})).data
 	},
 
-	getGroupDetail: async function (params : { usergroup_id: string }) {
+	getGroupDetail: async function (params: { usergroup_id: string }) {
 		return (await api.get(`api/question/usergroup/detail/${params.usergroup_id}/`, {
 			headers: {
 				'Content-Type': 'application/json',
