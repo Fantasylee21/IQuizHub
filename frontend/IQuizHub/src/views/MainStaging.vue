@@ -9,7 +9,7 @@
 
             </div>
             <div class="staging-right">
-                <TrendsList/>
+                <!--                <TrendsList/>-->
             </div>
         </div>
     </div>
