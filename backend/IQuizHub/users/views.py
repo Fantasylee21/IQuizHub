@@ -134,12 +134,9 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
 
     def get_history(self, request, *args, **kwargs):
         user = self.get_object()
-        historys = user.historys.all()
-        # print(historys)
-        page = self.paginate_queryset(historys)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        historys = user.historys.all().order_by('-create_time')
+        serializer = HistorySerializer(historys, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_all_user(self, request, *args, **kwargs):
         users = User.objects.all()  # 这里需要添加圆括号

@@ -16,10 +16,10 @@ from users.models import History, User, Comment
 from questions.models import Question, QuestionGroup, Tag, Choice, UserGroup, Favorite
 from questions.serializers import QuestionSerializer, QuestionGroupSerializer, TagSerializer, ChoiceSerializer, \
     UserGroupSerializer, UserGroupSimpleSerializer, QuestionGroupSimpleSerializer, FavoriteSerializer, \
-    FavoriteGroupSimpleSerializer,UserGroupAllSerializer
+    FavoriteGroupSimpleSerializer, UserGroupAllSerializer, UserGroupAllSerializer1
 from rest_framework import serializers
 
-from users.serializers import UserSerializer, HistorySerializer
+from users.serializers import UserSerializer, HistorySerializer, CommentSerializer
 from utils.yichat import ask
 
 
@@ -381,6 +381,16 @@ class TagView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixi
 class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyModelMixin):
     queryset = UserGroup.objects.all()
     serializer_class = UserGroupSerializer
+
+    def get_usergroups(self, request, *args, **kwargs):
+        usergroup = self.get_object()
+        serializer = UserGroupAllSerializer(usergroup, context={'request': request})
+        comments = Comment.objects.filter(usergroup=usergroup)
+        page = self.paginate_queryset(comments)
+        if page is not None:
+            commentSerializer = CommentSerializer(page, many=True)
+            return self.get_paginated_response({"data": serializer.data, "comments": commentSerializer.data})
+            # return Response({"data":serializer.data,"comments":commentSerializer.data}, status=status.HTTP_200_OK)
 
     def upload_userGroup(self, request, *args, **kwargs):
         title = request.data.get('title')
