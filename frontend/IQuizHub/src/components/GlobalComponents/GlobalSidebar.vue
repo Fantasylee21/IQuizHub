@@ -43,12 +43,6 @@
             </el-icon>
             <template #title>上传题目</template>
         </el-menu-item>
-        <el-menu-item index="/test">
-            <el-icon>
-                <setting/>
-            </el-icon>
-            <template #title>test</template>
-        </el-menu-item>
     </el-menu>
 </template>
 

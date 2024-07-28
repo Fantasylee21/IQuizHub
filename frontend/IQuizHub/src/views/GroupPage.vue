@@ -65,6 +65,7 @@ interface TableData{
     };
     type: string;
     cnt: number;
+    is_in: boolean;
 }
 
 const tableData = ref<TableData[]>([]);
@@ -155,6 +156,17 @@ const navigateToDetail = (id: number) => {
     router.push(`/groupDetail/${id}`);
 };
 
+const joinGroup = async (id: number) => {
+  try {
+    const res = await api.joinGroup({usergroup_id: id});
+    if (res) {
+      ElMessage.success('加入成功');
+    }
+  } catch (e) {
+    console.error('Error joining group:', e);
+    ElMessage.error('加入失败');
+  }
+};
 
 </script>
 
@@ -212,7 +224,7 @@ const navigateToDetail = (id: number) => {
               </div>
               <div class="side2">
                 <el-tag effect="light" round="round" :color="getTagColor(item.type)">&nbsp;</el-tag> {{item.type}}
-                <el-button type="primary" style="margin-left: 160px">加入</el-button>
+                <el-button type="primary" style="margin-left: 160px" @click="joinGroup(item.id)" disabled="item.is_in">加入</el-button>
                 <div class="word">
                   <div class="comment">
                     <el-icon size="13px"><ChatDotRound /></el-icon>{{item.cnt}}

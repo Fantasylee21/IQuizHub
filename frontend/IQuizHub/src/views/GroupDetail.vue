@@ -104,6 +104,14 @@ const sheetData = ref<{
   };
   type: string;
   count: number;
+  members: {
+    id: number;
+    username: string;
+    avatar: string;
+    introduction: string;
+  }[];
+  memberCnt: number;
+
 }>({
   title: '',
   content: '',
@@ -117,7 +125,9 @@ const sheetData = ref<{
     introduction: ''
   },
   type: '',
-  count: 0
+  count: 0,
+  members: [],
+  memberCnt: 0
 });
 
 onBeforeMount(async () => {

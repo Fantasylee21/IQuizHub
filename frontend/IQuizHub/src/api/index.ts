@@ -381,5 +381,37 @@ export default {
 		} catch (e) {
 			return null;
 		}
-	}
+	},
+
+	joinGroup: async function (params: { usergroup_id: string }) {
+		try {
+			const response = await api.post(`/api/question/usergroup/addmember/${params.usergroup_id}/`, {}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
+	uploadcomment: async function (params: { usergroup: number, comment: string }) {
+		try {
+			const response = await api.put(`api/question/usergroup/uploadcomment/`, {
+				usergroup: params.usergroup,
+				comment: params.comment
+			}, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}
+			});
+			return response.data;
+		} catch (e) {
+			return null;
+		}
+	},
+
 }
