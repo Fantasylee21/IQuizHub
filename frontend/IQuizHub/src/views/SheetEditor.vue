@@ -21,17 +21,29 @@
             >
                 <el-avatar :size="100" :src="form.avatar" class="sheet-avatar"></el-avatar>
             </el-upload>
-            <el-form :model="form" label-width="auto" style="max-width: 600px">
-                <el-form-item label="题单名">
-                    <el-input v-model="form.title"></el-input>
-                </el-form-item>
-                <el-form-item label="题单描述" style="width: 1000px">
-                    <el-tiptap v-model:content="form.content" :extensions="extensions"/>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">Submit</el-button>
-                </el-form-item>
-            </el-form>
+            <el-tabs v-model="activeName" class="demo-tabs" style="margin-bottom: 20px; width: 100%">
+                <el-tab-pane label="基本信息" name="first">
+                    <el-form :model="form" label-width="auto">
+                        <el-form-item label="题单名" style="max-width: 600px">
+                            <el-input v-model="form.title"></el-input>
+                        </el-form-item>
+                        <el-form-item label="题单描述" style="width: 1000px">
+                            <el-tiptap v-model:content="form.content" :extensions="extensions"/>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">Submit</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="题目列表" name="second" style="width: 100%">
+                    <div class="upload" style="display: flex;">
+                        <el-input v-model="questionId" style="width: 200px; margin-right: 20px"
+                                  placeholder="要添加题目id"></el-input>
+                        <el-button type="primary" @click="handleUploadQuestion">添加题目</el-button>
+                    </div>
+                    <SEList :table-data="tableData"></SEList>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 
@@ -39,10 +51,13 @@
 
 
 <script setup lang="ts">
-import {computed, onBeforeMount, reactive} from 'vue'
+import {computed, onBeforeMount, reactive, ref} from 'vue'
 import env from "@/utils/env";
 import api from "@/api";
 
+const activeName = ref('first')
+const tableData = ref([])
+const questionId = ref('')
 const apiUrl = computed(() => {
     return env.backEnd + `api/question/questiongroup/put/${props.id}/`
 })
@@ -57,6 +72,7 @@ const handleAvatarSuccess = async (res: any) => {
     try {
         const response = await api.getSheetDetail(props.id)
         form.avatar = response.avatar
+        ElMessage.success('上传成功')
     } catch (error) {
         console.error("Failed to fetch sheet detail:", error);
     }
@@ -66,12 +82,26 @@ const props = defineProps<{
     id: string
 }>()
 
+
+const handleUploadQuestion = async () => {
+    try {
+        await api.addQuestionToGroup(questionId.value, props.id)
+        const response = await api.getSheetDetail(props.id)
+        tableData.value = response.questions
+        ElMessage.success('上传成功')
+    } catch (e) {
+        ElMessage.error('上传失败')
+    }
+
+}
+
 onBeforeMount(async () => {
     try {
         const response = await api.getSheetDetail(props.id)
         form.title = response.title
         form.content = response.content
         form.avatar = response.avatar
+        tableData.value = response.questions
     } catch (error) {
         console.error("Failed to fetch sheet detail:", error);
     }
@@ -118,6 +148,7 @@ import {
     FontFamily,
 } from 'element-tiptap-vue3-fixed';
 import {ElMessage} from "element-plus";
+import SEList from "@/components/SheetEditor/SEList.vue";
 
 const extensions = [
     Doc,
@@ -181,5 +212,12 @@ h1 {
 
 .sheet-avatar {
     margin-bottom: 20px;
+}
+
+.demo-tabs > .el-tabs__content {
+    padding: 32px;
+    color: #6b778c;
+    font-size: 32px;
+    font-weight: 600;
 }
 </style>

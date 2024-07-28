@@ -4,7 +4,11 @@
         <el-table :data="listData" style="width: 100%">
             <el-table-column prop="id" label="ID"></el-table-column>
             <el-table-column prop="title" label="Title"></el-table-column>
-            <el-table-column prop="content" label="Description"></el-table-column>
+            <el-table-column label="Description">
+                <template v-slot="scope">
+                    <div v-html="scope.row.content"></div>
+                </template>
+            </el-table-column>
             <el-table-column label="Operations">
                 <template #default="scope">
                     <el-button size="large" @click="handleEdit(scope.row.id)">

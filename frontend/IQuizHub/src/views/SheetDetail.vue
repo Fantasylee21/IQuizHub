@@ -10,7 +10,10 @@
             </el-breadcrumb>
             <h1>{{ sheetData?.title }}</h1>
             <div class="info-container">
-                <el-button type="primary" @click="collect">收藏题单</el-button>
+                <div class="collect-button">
+                    <el-button v-show="!is_collect" type="primary" @click="collect">收藏题单</el-button>
+                    <el-button v-show="is_collect" type="danger" @click="collect">取消收藏</el-button>
+                </div>
                 <div class="info-statistic" style="display: flex">
                     <el-statistic title="题目总数" :value="sheetData?.questionCnt"
                                   style="margin-right: 20px"></el-statistic>
@@ -104,9 +107,12 @@ const collect = async () => {
     const response = await api.collect({questiongroup: props.id});
     if (response) {
         console.log(response);
-        ElMessage.success('收藏成功')
+        if (is_collect.value)
+            ElMessage.success('取消成功')
+        else ElMessage.success('收藏成功')
+        is_collect.value = !is_collect.value
     } else {
-        ElMessage.error('收藏失败')
+        ElMessage.error('操作失败')
     }
 }
 
@@ -145,18 +151,23 @@ const sheetData = ref<null | {
         content: string,
         type: string,
         create_time: string
-    }[]
+    }[],
+    is_collect: boolean
 }>(null)
 onBeforeMount(async () => {
     try {
-        sheetData.value = await api.getSheetDetail(props.id);
+        const res = await api.getSheetDetail(props.id);
+        sheetData.value = res
         sheetData.value?.questions.forEach((item) => {
             item.create_time = formatDate(item.create_time);
         });
+        is_collect.value = res.is_collect
     } catch (error) {
         console.error("Failed to fetch sheet detail:", error);
     }
 })
+
+const is_collect = ref(false)
 
 const activeName = ref('first')
 

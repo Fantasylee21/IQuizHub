@@ -12,7 +12,7 @@ const QuestionEditor = () => import('@/views/QuestionEditor.vue')
 const SheetDetail = () => import('@/views/SheetDetail.vue')
 const GroupDetail = () => import('@/views/GroupDetail.vue')
 const SheetEditor = () => import('@/views/SheetEditor.vue')
-const MySheet = () => import('@/components/Staging/MySheet.vue')
+const MySheet = () => import('@/views/MySheet.vue')
 
 const MyTest = () => import('@/views/MyTest.vue')
 

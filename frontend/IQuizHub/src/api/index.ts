@@ -461,6 +461,19 @@ export default {
 		} catch (e) {
 			return null
 		}
-	}
+	},
+
+	addQuestionToGroup: async function (questionId: string, id: string) {
+		console.log(questionId)
+		return await api.post(`api/question/questiongroup/addquestion/${id}/`, {
+			"questions": questionId
+		}, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+
+	},
 
 }
