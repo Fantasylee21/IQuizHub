@@ -10,7 +10,7 @@
             </div>
             <div class="staging-right">
 
-                <TrendsList/>
+                <TrendsList :historys="historys"/>
                 <div class="chart" style="margin-top: 40px">
                     <LineChart :historys="historys"/>
                 </div>

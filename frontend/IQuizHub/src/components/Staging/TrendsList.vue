@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import {computed, onBeforeMount, onMounted, ref} from 'vue'
 import {useProfileStore} from '@/stores/profile'
 import api from '@/api'
 
@@ -29,29 +29,24 @@ const noMore = computed(() => count.value >= 10000)
 const disabled = computed(() => loading.value || noMore.value)
 
 interface History {
-  id: number;
-  create_time: string;
-  correct: boolean;
-  question: string;
+    id: number;
+    create_time: string;
+    correct: boolean;
+    question: string;
 }
 
-const history = ref<History[]>([]);
+const history = ref<any[]>([]);
 
-const getHistory = async () => {
-  try {
-    const profile = useProfileStore();
-    const id = profile.id;
-    const res = await api.getHistory({id});
-    history.value = res;
-    console.log('history:', history.value);
-  } catch (e) {
-    console.error('Error fetching history:', e);
-  }
-}
+const props = defineProps({
+    historys: Array
+})
 
-onMounted(() => {
-  getHistory();
-});
+onBeforeMount(() => {
+    if (props.historys) {
+        history.value = props.historys
+    }
+})
+
 
 function formatDate(time: string) {
     const date = new Date(time);
@@ -69,12 +64,12 @@ function getContent(i: number) {
     }
 }
 
-const getTime = (i :number) => {
-  if (history.value[i]) {
-    return formatDate(history.value[i].create_time);
-  } else {
-    return 'Invalid date';
-  }
+const getTime = (i: number) => {
+    if (history.value[i]) {
+        return formatDate(history.value[i].create_time);
+    } else {
+        return 'Invalid date';
+    }
 }
 
 

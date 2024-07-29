@@ -1,4 +1,4 @@
 const env = {
-	backEnd: 'http://localhost:8000/',
+	backEnd: 'http://59.110.158.32/api/',
 }
 export default env
