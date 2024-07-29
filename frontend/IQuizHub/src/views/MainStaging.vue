@@ -10,6 +10,9 @@
             </div>
             <div class="staging-right">
                 <TrendsList/>
+                <div class="chart" style="margin-top: 40px">
+                    <LineChart :historys="historys"/>
+                </div>
             </div>
         </div>
     </div>
@@ -19,6 +22,22 @@
 import StagingInformation from "@/components/Staging/StagingInformation.vue";
 import CollectList from "@/components/Staging/CollectList.vue";
 import TrendsList from "@/components/Staging/TrendsList.vue";
+import LineChart from "@/components/Staging/LineChart.vue";
+import {onBeforeMount, ref} from "vue";
+import api from "@/api";
+import {useProfileStore} from "@/stores/profile";
+
+const profile = useProfileStore()
+const historys = ref([]);
+
+onBeforeMount(async () => {
+    const res = await api.getNowUser({
+        id: profile.id
+    })
+    historys.value = res.historys
+    console.log('res->', res)
+    console.log('res.data.historys->', res.data.historys)
+})
 </script>
 
 <style scoped>
