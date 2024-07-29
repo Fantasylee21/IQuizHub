@@ -17,6 +17,7 @@
     "@tiptap/core": "^2.5.4",
     "@tiptap/vue-3": "^2.5.4",
     "axios": "^1.7.2",
+    "date-fns": "^3.6.0",
     "echarts": "^5.5.1",
     "element-plus": "^2.7.7",
     "element-tiptap": "^2.2.1",
