@@ -65,17 +65,15 @@ function formatDate(time: string) {
 
 function getContent(i: number) {
     if (history.value[i] && history.value[i].correct != undefined && history.value[i].correct === true) {
-        return 'You did ' + history.value[i].question + ' right!!!'
+        return 'You did ' + history.value[i].question + ' right !!! Congratulations!'
     } else {
-        return 'You did ' + history.value[i]?.question + ' wrong! , better luck next time!'
+        return 'You did ' + history.value[i]?.question + ' wrong ! better next time!'
     }
 }
 
 const getTime = (i: number) => {
     if (history.value[i]) {
         return formatDate(history.value[i].create_time);
-    } else {
-        return 'Invalid date';
     }
 }
 
