@@ -9,10 +9,12 @@
 
             </div>
             <div class="staging-right">
+
                 <TrendsList/>
                 <div class="chart" style="margin-top: 40px">
                     <LineChart :historys="historys"/>
                 </div>
+
             </div>
         </div>
     </div>

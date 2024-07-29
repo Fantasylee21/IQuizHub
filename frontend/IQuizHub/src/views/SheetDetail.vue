@@ -75,9 +75,9 @@
                             </el-card>
                             <el-card class="detail-progress">
                                 <h3 style="margin-bottom: 20px">我通过的题目 {{ sheetData?.passedCnt }} /
-                                    {{ sheetData?.favoriteCnt }}</h3>
+                                    {{ sheetData?.questionCnt }}</h3>
                                 <el-progress
-                                        :percentage="(sheetData?.passedCnt / sheetData?.favoriteCnt * 100)"
+                                        :percentage="(sheetData?.passedCnt / sheetData?.questionCnt * 100)"
                                         :stroke-width="15"
                                         striped
                                         striped-flow
