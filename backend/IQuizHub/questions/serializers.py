@@ -114,6 +114,7 @@ class UserGroupSerializer(serializers.ModelSerializer):
 class UserGroupSimpleSerializer(serializers.ModelSerializer):
     author = UserSimpleSerializer()
     cnt = serializers.SerializerMethodField()
+    is_in = serializers.SerializerMethodField()
 
     class Meta:
         model = UserGroup
@@ -121,6 +122,13 @@ class UserGroupSimpleSerializer(serializers.ModelSerializer):
 
     def get_cnt(self, obj):
         return Comment.objects.filter(usergroup=obj).count()
+
+    def get_is_in(self, obj):
+        request = self.context.get('request', None)
+        if request is None or not hasattr(request, 'user'):
+            return False
+        user = request.user
+        return not user.is_anonymous and obj.members.filter(id=user.id).exists()
 
 
 class UserGroupAllSerializer(serializers.ModelSerializer):
