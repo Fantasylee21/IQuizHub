@@ -126,7 +126,7 @@ class UserGroupSimpleSerializer(serializers.ModelSerializer):
     def get_is_in(self, obj):
         request = self.context.get('request', None)
         if request is None or not hasattr(request, 'user'):
-            return False  # 或者返回其他默认值
+            return False
         user = request.user
         return not user.is_anonymous and obj.members.filter(id=user.id).exists()
 
