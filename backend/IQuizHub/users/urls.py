@@ -25,6 +25,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='登录'),
     path("register/", RigisterView.as_view(), name='注册'),
     path("capatcha/", CaptchaView.as_view(), name='验证码'),
+    path("questiongroup/detail/",UserView.as_view({"get": 'get_questiongroup'}),name='获取全部题组'),
     path("token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
     path("token/verify/", TokenVerifyView.as_view(), name='token_verify'),
     path("users/<int:pk>/", UserReadView.as_view({'get': 'retrieve'}), name='用户详情'),
@@ -34,5 +35,6 @@ urlpatterns = [
     path("comment/upload/", CommentView.as_view({'post': 'upload_comment'}), name='评论'),
     path("comment/query/", CommentView.as_view({'get': 'get_comment'}), name='获取评论'),
     path("comment/delete/<int:pk>/", CommentView.as_view({'delete': 'delete'}), name='删除评论'),
+    path("history/<int:pk>/", UserReadView.as_view({'get': 'get_history'}), name='获取历史记录'),
     # path('history/<int:pk>/', UserReadView.as_view({'get': 'get_history'}), name='获取历史记录'),
 ]

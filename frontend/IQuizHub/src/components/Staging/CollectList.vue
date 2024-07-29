@@ -7,10 +7,11 @@
             <el-col :span="8" v-for="doc in documents" :key="doc.questiongroup.id" class="col">
                 <el-card class="document-card" @click="navigateToLink(doc.questiongroup.id)">
                     <div class="card-content">
-                        <img :src="doc.questiongroup.avatar" alt="document image" class="card-image"/>
+                        <img :src="env.backEnd + doc.questiongroup.avatar.slice(1)" alt="document image"
+                             class="card-image"/>
                         <div class="card-text">
                             <h3 class="card-title">{{ doc.questiongroup.title }}</h3>
-                            <p class="card-description">{{ doc.questiongroup.content }}</p>
+                            <p class="card-description" v-html="doc.questiongroup.content"></p>
                         </div>
                     </div>
                 </el-card>
@@ -23,6 +24,7 @@
 import {onBeforeMount, ref} from 'vue';
 import api from "@/api";
 import {useProfileStore} from "@/stores/profile";
+import env from "@/utils/env";
 
 const profile = useProfileStore()
 const documents = ref<any[]>([]);

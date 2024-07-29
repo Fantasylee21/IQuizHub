@@ -13,12 +13,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 
+from questions.serializers import QuestionGroupSimpleSerializer
 from users.serializers import UserSerializer, CommentSerializer, HistorySerializer, UserSimpleSerializer
 from IQuizHub.settings import MEDIA_ROOT
 from users.models import User, Captcha, Comment, History
 from common.permissions import UserPermission, CommentDeletePermission
 from common.aliyunapi import AliyunSMS
-from questions.models import Question
+from questions.models import Question, QuestionGroup
 
 
 class LoginView(TokenObtainPairView):
@@ -119,7 +120,13 @@ class UserView(GenericViewSet):
 
         return Response({"introduction": serializer.data['introduction']}, status=status.HTTP_200_OK)
 
+    def get_questiongroup(self, request, *args, **kwargs):
+        user = request.user
+        questiongroup = QuestionGroup.objects.filter(author=user)
+        serializer = QuestionGroupSimpleSerializer(questiongroup, many=True)
 
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -127,12 +134,9 @@ class UserReadView(GenericViewSet, mixins.RetrieveModelMixin):
 
     def get_history(self, request, *args, **kwargs):
         user = self.get_object()
-        historys = user.historys.all()
-        # print(historys)
-        page = self.paginate_queryset(historys)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        historys = user.historys.all().order_by('-create_time')
+        serializer = HistorySerializer(historys, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_all_user(self, request, *args, **kwargs):
         users = User.objects.all()  # 这里需要添加圆括号

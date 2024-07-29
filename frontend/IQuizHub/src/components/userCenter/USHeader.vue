@@ -1,7 +1,7 @@
 <template>
-    <div class="sheet-detail-header">
+    <div class="sheet-editor-header">
 
-        <div class="sd-header-container">
+        <div class="se-header-container">
             <el-breadcrumb separator="/" class="breadcrumb">
                 <el-breadcrumb-item :to="{ path: '/staging' }">staging</el-breadcrumb-item>
                 <el-breadcrumb-item>
@@ -18,7 +18,7 @@
 </script>
 
 <style scoped>
-.sheet-detail-header {
+.sheet-editor-header {
     background-color: #f5f7fa;
     height: 100px;
     margin: 70px 20px 20px;
@@ -26,7 +26,7 @@
     box-shadow: #595959 0 0 2px;
 }
 
-.sd-header-container {
+.se-header-container {
     width: 1200px;
     margin: 0 auto;
     display: flex;
