@@ -60,11 +60,11 @@
                         <div class="description-right">
                             <el-card class="detail-card">
                                 <div class="sheet-id">
-                                    <p>群组编号</p>
+                                    <p>Group Id</p>
                                     <p style="padding-right: 15px">{{ sheetData?.id }}</p>
                                 </div>
                                 <div class="sheet-creator">
-                                    <p>创建者</p>
+                                    <p>Creator</p>
                                     <el-popover
                                             placement="top-start"
                                             width="300"
