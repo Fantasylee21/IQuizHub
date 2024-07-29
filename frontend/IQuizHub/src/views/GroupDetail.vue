@@ -21,6 +21,41 @@
                                 <h2>群组简介</h2>
                                 <div v-html="sheetData?.content"></div>
                             </el-card>
+                            <el-card style="margin-top: 50px">
+                                    <div class="comment-header" style="display: flex; justify-content: space-between; align-items: center">
+                                      <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: bold">评论列表</h2>
+                                      <el-popover placement="right" :width="400" trigger="click">
+                                          <template #reference>
+                                              <el-button style="margin-right: 16px">发表评论</el-button>
+                                          </template>
+                                          <div class="comment-input">
+                                              <el-button type="primary" style="margin-bottom: 10px" @click="submitComment">发表</el-button>
+                                              <el-input
+                                                      v-model="userComment"
+                                                      :rows="2"
+                                                      type="textarea"
+                                                      placeholder="Please input"
+                                              />
+                                          </div>
+                                      </el-popover>
+                                  </div>
+                                  <div class="content-list">
+                                      <div v-for="(comment, index) in comments" :key="index" class="comment">
+                                          <img :src="comment.author.avatar" class="avatar"/>
+                                          <div class="comment-details">
+                                              <p class="commenter-name">{{ comment.author.username }}</p>
+                                              <p class="comment-content">{{ comment.comment }}</p>
+                                          </div>
+                                      </div>
+
+                                      <el-pagination
+                                              @current-change="handleCurrentChange"
+                                              :current-page="currentPage"
+                                              :page-size="pageSize"
+                                              :total="totalComments">
+                                      </el-pagination>
+                                  </div>
+                            </el-card>
                         </div>
                         <div class="description-right">
                             <el-card class="detail-card">
@@ -69,9 +104,10 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeMount, ref} from "vue";
+import { onMounted, ref } from 'vue'
 import api from "@/api";
 import env from "@/utils/env";
+import { ElMessage } from 'element-plus'
 
 
 function formatDate(time: string) {
@@ -130,19 +166,72 @@ const sheetData = ref<{
   memberCnt: 0
 });
 
-onBeforeMount(async () => {
-    console.log('usergroup_id:', props.id);
+// const comments = ref< {
+//   id: number,
+//   comment: string,
+//   author: {
+//     id: number,
+//     username: string,
+//     avatar: string,
+//     introduction: string,
+//   },
+// }>({
+//   id: 0,
+//   comment: '',
+//   author: {
+//     id: 0,
+//     username: '',
+//     avatar: '',
+//     introduction: '',
+//   }
+// });
+const comments = ref([]);
+
+const fetchComments = async () => {
     try {
-        sheetData.value = await api.getGroupDetail({usergroup_id: props.id});
-        console.log('sheetData:', sheetData.value);
+        const res = await api.getGroupDetail({page: currentPage.value.toString() ,usergroup_id: props.id});
+        sheetData.value = res.results.data;
+        comments.value = res.results.comments;
+        console.log('---comments:', comments.value);
+        console.log('-sheetData:', sheetData.value);
+        totalComments.value = res.results.data.count;
         sheetData.value.create_time = formatDate(sheetData.value.create_time);
         sheetData.value.update_time = formatDate(sheetData.value.update_time);
     } catch (error) {
         console.error("Failed to fetch sheet detail:", error);
     }
-})
+
+}
+
+onMounted(fetchComments);
 
 
+const totalComments = ref(0);
+const currentPage = ref(1);
+const pageSize = 20;
+
+const handleCurrentChange = (val: number) => {
+    currentPage.value = val;
+    fetchComments()
+};
+
+const userComment = ref('')
+
+const submitComment = () => {
+    if (userComment.value === '') {
+        ElMessage.error('评论内容不能为空')
+    } else {
+        api.uploadCommentsInGroup({
+            usergroup: props.id,
+            comment: userComment.value
+        }).then(() => {
+            ElMessage.success('评论成功')
+            userComment.value = ''
+            currentPage.value = 1
+            fetchComments()
+        })
+    }
+}
 </script>
 
 <style scoped>
@@ -244,6 +333,38 @@ h2 {
     margin-top: 10px;
 }
 
+
+.comment {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ebeef5;
+    border-radius: 5px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.commenter-name {
+    font-weight: bold;
+}
+
+.comment-content {
+    margin-top: 5px;
+}
+
+.el-pagination {
+    margin-top: 20px;
+}
 </style>
 
 

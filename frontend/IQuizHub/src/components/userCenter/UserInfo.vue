@@ -63,6 +63,8 @@ const submitUpload = () => {
 
 function myCreateGroup() {
     console.log('my create group');
+    //跳转对应网页
+    router.push('/groupPage')
 }
 
 function myGroup() {
@@ -120,16 +122,12 @@ const uploadAvatar = async (params: { file: File }) => {
                 </el-form-item>
                 <div class="groupInfo">
                     <hr class="divider"/>
-                    <h1 @click="myCreateGroup">我创建的群组
+                    <h1 @click="myCreateGroup">我的群组
                         <el-icon :size="18">
                             <Connection/>
                         </el-icon>
                     </h1>
-                    <h1 @click="myGroup">我加入的群组
-                        <el-icon :size="18">
-                            <HelpFilled/>
-                        </el-icon>
-                    </h1>
+
                 </div>
             </el-form>
         </div>
