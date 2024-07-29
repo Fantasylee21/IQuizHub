@@ -443,7 +443,7 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
         usergroups = UserGroup.objects.all()
         page = self.paginate_queryset(usergroups)
         if page is not None:
-            serializer = UserGroupSimpleSerializer(page, many=True)
+            serializer = UserGroupSimpleSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -467,7 +467,7 @@ class UserGroupView(GenericViewSet, mixins.RetrieveModelMixin, mixins.DestroyMod
             usergroups = usergroups.filter(title__contains=title)
         page = self.paginate_queryset(usergroups)
         if page is not None:
-            serializer = UserGroupSimpleSerializer(page, many=True)
+            serializer = UserGroupSimpleSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
         return Response({"error": "没有数据"}, status=status.HTTP_400_BAD_REQUEST)
 
