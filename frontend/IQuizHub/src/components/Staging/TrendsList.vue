@@ -9,7 +9,7 @@
             :infinite-scroll-distance="history.length"
         >
             <li v-for="i in count" :key="i" class="scrollbar-demo-item">
-                {{ history[i].create_time}}
+                {{ getTime(i) }}:
                 {{ getContent(i) }}
             </li>
         </ul>
@@ -19,20 +19,39 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeMount, ref} from 'vue';
+import { computed, onMounted, ref } from 'vue'
 import {useProfileStore} from '@/stores/profile'
+import api from '@/api'
 
 const count = ref(10)
 const loading = ref(false)
 const noMore = computed(() => count.value >= 10000)
 const disabled = computed(() => loading.value || noMore.value)
-const profile = useProfileStore()
-const history = profile.historys;
-console.log('history:', history);
 
-for (let i = 0; i < history.length; i++) {
-  history[i].create_time = formatDate(history[i].create_time);
+interface History {
+  id: number;
+  create_time: string;
+  correct: boolean;
+  question: string;
 }
+
+const history = ref<History[]>([]);
+
+const getHistory = async () => {
+  try {
+    const profile = useProfileStore();
+    const id = profile.id;
+    const res = await api.getHistory({id});
+    history.value = res;
+    console.log('history:', history.value);
+  } catch (e) {
+    console.error('Error fetching history:', e);
+  }
+}
+
+onMounted(() => {
+  getHistory();
+});
 
 function formatDate(time: string) {
     const date = new Date(time);
@@ -43,11 +62,19 @@ function formatDate(time: string) {
 }
 
 function getContent(i: number) {
-    if (history[i].correct === true) {
-        return '你做对了题目 ' + history[i].question
+    if (history.value[i].correct === true) {
+        return '你做对了题目 ' + history.value[i].question
     } else {
-        return '你做错了题目 ' + history[i].question + '，看仔细了！！！'
+        return '你做错了题目 ' + history.value[i].question + '，看仔细了！！！'
     }
+}
+
+const getTime = (i :number) => {
+  if (history.value[i]) {
+    return formatDate(history.value[i].create_time);
+  } else {
+    return 'Invalid date';
+  }
 }
 
 

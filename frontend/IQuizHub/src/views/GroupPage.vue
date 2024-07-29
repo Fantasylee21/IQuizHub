@@ -74,6 +74,7 @@ const tableData = ref<TableData[]>([]);
 const getAllGroups = async () => {
     try {
         const res = await api.getAllGroups();
+        console.log('-======res:', res)
         for (let i = 0; i < res.results.length; i++) {
             res.results[i].create_time = formatDate(res.results[i].create_time);
             res.results[i].update_time = formatDate(res.results[i].update_time);

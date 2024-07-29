@@ -1,19 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { List } from '@element-plus/icons'
 import { useProfileStore } from '@/stores/profile'
+import api from '@/api'
 
 const icon = ref({
   type: 'el-icon-chat-line-round',
   color: '#8eb0e4'
 });
-const profile = useProfileStore()
-const history = profile.historys;
-console.log('history:', history);
 
-for (let i = 0; i < history.length; i++) {
-  history[i].create_time = formatDate(history[i].create_time);
+const profile = useProfileStore();
+interface History {
+  id: number;
+  create_time: string;
+  correct: boolean;
+  question: string;
 }
+
+const history = ref<History[]>([]);
+
+const getHistory = async () => {
+  try {
+    const profile = useProfileStore();
+    const id = profile.id;
+    const res = await api.getHistory({id});
+    history.value = res;
+    console.log('history:', history.value);
+    for (let i = 0; i < history.value.length; i++) {
+      history.value[i].create_time = formatDate(history.value[i].create_time);
+    }
+  } catch (e) {
+    console.error('Error fetching history:', e);
+  }
+}
+
+onMounted(() => {
+  getHistory();
+});
 
 function formatDate(time: string) {
     const date = new Date(time);
