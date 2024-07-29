@@ -21,7 +21,7 @@
 .sheet-editor-header {
     background-color: #f5f7fa;
     height: 100px;
-    margin: 20px;
+    margin: 70px 20px 20px;
     border-radius: 20px;
     box-shadow: #595959 0 0 2px;
 }
