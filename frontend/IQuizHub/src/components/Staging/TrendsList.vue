@@ -6,10 +6,10 @@
         <ul class="custom-scrollbar"
             v-infinite-scroll="load"
             :infinite-scroll-disabled="disabled"
-            :infinite-scroll-distance="profile.historys.length"
+            :infinite-scroll-distance="history.length"
         >
             <li v-for="i in count" :key="i" class="scrollbar-demo-item">
-                {{ formatDate(history[i].create_time) }}
+                {{ history[i].create_time}}
                 {{ getContent(i) }}
             </li>
         </ul>
@@ -24,10 +24,15 @@ import {useProfileStore} from '@/stores/profile'
 
 const count = ref(10)
 const loading = ref(false)
-const noMore = computed(() => count.value >= 20)
+const noMore = computed(() => count.value >= 10000)
 const disabled = computed(() => loading.value || noMore.value)
 const profile = useProfileStore()
 const history = profile.historys;
+console.log('history:', history);
+
+for (let i = 0; i < history.length; i++) {
+  history[i].create_time = formatDate(history[i].create_time);
+}
 
 function formatDate(time: string) {
     const date = new Date(time);
