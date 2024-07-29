@@ -23,6 +23,7 @@ import {useRoute} from 'vue-router';
 import GlobalSidebar from "@/components/GlobalComponents/GlobalSidebar.vue";
 import GlobalMenu from "@/components/GlobalComponents/GlobalMenu.vue";
 import router from "@/router";
+import {useProfileStore} from "@/stores/profile";
 
 const isCollapse = ref(false);
 const route = useRoute();
@@ -47,9 +48,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('mousemove', handleMouseMove);
 });
-
-if (sessionStorage.getItem('preRoute')) router.push(sessionStorage.getItem('preRoute'))
-else router.push('/loginRegister')
+const profile = useProfileStore()
+if (sessionStorage.getItem('preRoute')) {
+    profile.id = localStorage.getItem('id')
+    router.push(sessionStorage.getItem('preRoute'))
+    profile.id = localStorage.getItem('id')
+} else router.push('/loginRegister')
 </script>
 
 <style scoped>

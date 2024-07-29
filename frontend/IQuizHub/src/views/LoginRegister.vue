@@ -118,6 +118,7 @@ const handleLogin = async () => {
     if (ret) {
         ElMessage.success('登录成功')
         profile.updateProfile(ret)
+        localStorage.setItem('id', profile.id)
         UtilMethods.jump('/staging')
     }
 }

@@ -25,7 +25,7 @@ import api from '@/api'
 
 const count = ref(10)
 const loading = ref(false)
-const noMore = computed(() => count.value >= 10000)
+const noMore = computed(() => count.value >= history.value.length)
 const disabled = computed(() => loading.value || noMore.value)
 
 interface History {
@@ -41,10 +41,17 @@ const props = defineProps({
     historys: Array
 })
 
+const profile = useProfileStore()
+
 onBeforeMount(() => {
     if (props.historys) {
         history.value = props.historys
+    } else {
+        api.getHistory({id: profile.id}).then((res) => {
+            history.value = res
+        })
     }
+    console.log(history.value.length)
 })
 
 
@@ -57,10 +64,10 @@ function formatDate(time: string) {
 }
 
 function getContent(i: number) {
-    if (history.value[i].correct === true) {
+    if (history.value[i] && history.value[i].correct != undefined && history.value[i].correct === true) {
         return '你做对了题目 ' + history.value[i].question
     } else {
-        return '你做错了题目 ' + history.value[i].question + '，看仔细了！！！'
+        return '你做错了题目 ' + history.value[i]?.question + '，看仔细了！！！'
     }
 }
 

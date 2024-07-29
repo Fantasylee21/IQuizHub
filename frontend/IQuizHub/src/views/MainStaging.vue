@@ -37,8 +37,6 @@ onBeforeMount(async () => {
         id: profile.id
     })
     historys.value = res.historys
-    console.log('res->', res)
-    console.log('res.data.historys->', res.data.historys)
 })
 </script>
 
