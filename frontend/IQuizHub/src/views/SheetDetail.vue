@@ -11,7 +11,7 @@
             <h1>{{ sheetData?.title }}</h1>
             <div class="info-container">
                 <div class="collect-button">
-                    <el-button v-show="!is_collect" type="primary" @click="collect">Collect question sheets</el-button>
+                    <el-button v-show="!is_collect" type="primary" @click="collect">Collect</el-button>
                     <el-button v-show="is_collect" type="danger" @click="collect">Cancel collect</el-button>
                 </div>
                 <div class="info-statistic" style="display: flex">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="题目列表" name="second">
+                <el-tab-pane label="Question List" name="second">
                     <div class="sheet-list">
                         <SDList :tableData="sheetData?.questions"/>
                     </div>
