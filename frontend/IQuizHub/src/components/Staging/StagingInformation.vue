@@ -7,11 +7,11 @@
                 </div>
                 <div class="content">
                     <div class="content-title">
-                        <span>早安</span>
+                        <span>Hello</span>
                         <span>，</span>
                         <span class="text-red">{{ username }}</span>
                         <span>，</span>
-                        <span class="welcome-text">祝你开心每一天</span>
+                        <span class="welcome-text">Wishing you happiness every day</span>
                         <span>！</span>
                     </div>
                     <div class="content-bottom text-self-gray">
@@ -21,13 +21,13 @@
                 <div class="stats">
                     <el-row style="width: 100%">
                         <el-col :span="8">
-                            <el-statistic title="做对题目数" :value="correctCnt"/>
+                            <el-statistic title="Correct" :value="correctCnt"/>
                         </el-col>
                         <el-col :span="8">
-                            <el-statistic title="做错题目数" :value="wrongCnt"/>
+                            <el-statistic title="Wrong" :value="wrongCnt"/>
                         </el-col>
                         <el-col :span="8">
-                            <el-statistic title="统计数据三" :value="correctCnt"/>
+                            <el-statistic title="All" :value="correctCnt + wrongCnt"/>
                         </el-col>
                     </el-row>
                 </div>
@@ -60,6 +60,11 @@ for (let i = 0; i < history.length; i++) {
 <style scoped>
 .text-self-gray {
     color: #595959;
+}
+
+.text-red {
+    color: #2d63c8;
+    font-size: larger;
 }
 
 .header {

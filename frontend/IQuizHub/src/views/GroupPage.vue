@@ -12,17 +12,17 @@ import router from '@/router'
 const tagInfo = ref([
     {
         id: '1',
-        name: '学术版',
+        name: 'Academic',
         color: '#e84444',
     },
     {
         id: 2,
-        name: '科研版',
+        name: 'Research',
         color: '#d6b663',
     },
     {
         id: 3,
-        name: '生活版',
+        name: 'Life',
         color: '#352806',
     }
 ]);
@@ -40,11 +40,11 @@ const searchGroupDetail = async () => {
     try {
         const res = await api.searchGroupDetail({title: searchQuery.value, type: selectedTagId.value.toString()});
         tableData.value = res.results;
-        ElMessage.success(`搜索关键词: ${searchQuery.value}`);
+        ElMessage.success(`Search keyword: ${searchQuery.value}`);
         console.log('res:', res)
     } catch (e) {
         console.error('Error fetching group detail:', e);
-        ElMessage.error('搜索关键词不能为空');
+        ElMessage.error('The search keyword cannot be empty');
     }
 }
 
@@ -164,11 +164,11 @@ const joinGroup = async (id: number) => {
     try {
         const res = await api.joinGroup({usergroup_id: id});
         if (res) {
-            ElMessage.success('加入成功');
+            ElMessage.success('Succeed');
         }
     } catch (e) {
         console.error('Error joining group:', e);
-        ElMessage.error('加入失败');
+        ElMessage.error('Failed');
     }
 };
 
@@ -178,7 +178,7 @@ const joinGroup = async (id: number) => {
     <GPHeader></GPHeader>
     <div class="GroupPage">
         <div class="searchDiv">
-            <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="searchGroupDetail">
+            <el-input v-model="searchQuery" placeholder="Search" @keyup.enter="searchGroupDetail">
                 <template #prepend>
                     <div class="search-icon-container">
                         <el-icon size="20px">
@@ -188,7 +188,7 @@ const joinGroup = async (id: number) => {
                 </template>
             </el-input>
             <div>
-                <el-button type="primary" @click="searchGroupDetail">搜索</el-button>
+                <el-button type="primary" @click="searchGroupDetail">Search</el-button>
             </div>
         </div>
         <div class="top">
@@ -197,7 +197,7 @@ const joinGroup = async (id: number) => {
                     <el-icon size="23">
                         <Menu/>
                     </el-icon>
-                    <h6 @click="selectedTagId = 0" style="cursor: pointer">全部模块</h6>
+                    <h6 @click="selectedTagId = 0" style="cursor: pointer">All</h6>
                 </div>
                 <div class="tagAll" v-for="item in tagInfo" :key="item.id" @click="selectedTagId = item.id"
                      :class="{ selected: item.id === selectedTagId }">
@@ -206,11 +206,11 @@ const joinGroup = async (id: number) => {
                 </div>
             </div>
             <div class="groupSelect">
-                <el-button type="success" style="margin-top: 20px" class="elb" @click="lgq = 0">全部群组</el-button>
-                <el-button type="info" style="margin-top: 20px" class="elb" @click="lgq = 1">我创建的群组</el-button>
-                <el-button type="primary" style="margin-top: 20px" class="elb" @click="lgq = 2">我加入的群组</el-button>
+                <el-button type="success" style="margin-top: 20px" class="elb" @click="lgq = 0">All Group</el-button>
+                <el-button type="info" style="margin-top: 20px" class="elb" @click="lgq = 1">Created by myself</el-button>
+                <el-button type="primary" style="margin-top: 20px" class="elb" @click="lgq = 2">Joined Group</el-button>
                 <el-button color="#666" style="margin-top: 20px" class="elb" @click="createGroupModalVisible = true">
-                    创建属于我的群组
+                    Create my Group
                 </el-button>
             </div>
         </div>
@@ -232,14 +232,14 @@ const joinGroup = async (id: number) => {
                             <div class="side1">
                                 <h2>{{ item.title }}</h2>
                                 <div class="word">
-                                    <p>{{ item.author.username }}</p>创建于{{ item.create_time }}
+                                    <p>{{ item.author.username }}</p> created in {{ item.create_time }}
                                 </div>
                             </div>
                             <div class="side2">
                                 <el-tag effect="light" round="round" :color="getTagColor(item.type)">&nbsp;</el-tag>
                                 {{ item.type }}
                                 <el-button type="primary" style="margin-left: 160px" @click="joinGroup(item.id)"
-                                           :disabled="item.is_in">加入
+                                           :disabled="item.is_in">Join
                                 </el-button>
                                 <div class="word">
                                     <div class="comment">
@@ -248,7 +248,7 @@ const joinGroup = async (id: number) => {
                                         </el-icon>
                                         {{ item.cnt }}
                                     </div>
-                                    最后回复于{{ item.update_time }}
+                                    last replied in {{ item.update_time }}
                                 </div>
                             </div>
                         </div>
@@ -256,25 +256,25 @@ const joinGroup = async (id: number) => {
                 </el-container>
             </div>
         </div>
-        <el-dialog v-model="createGroupModalVisible" width="500" title="创建我的群组" class="custom-dialog">
+        <el-dialog v-model="createGroupModalVisible" width="500" title="Create my group" class="custom-dialog">
             <el-form :model="form">
-                <el-form-item label="群组名称">
+                <el-form-item label="group name">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item label="群组简介">
+                <el-form-item label="description">
                     <el-input v-model="form.content"></el-input>
                 </el-form-item>
-                <el-form-item label="群组类型">
-                    <el-select v-model="form.type" placeholder="请选择">
-                        <el-option label="学术版" value="学术版"></el-option>
-                        <el-option label="科研版" value="科研版"></el-option>
-                        <el-option label="生活版" value="生活版"></el-option>
+                <el-form-item label="group type">
+                    <el-select v-model="form.type" placeholder="Select">
+                        <el-option label="Academic" value="Academic"></el-option>
+                        <el-option label="Research" value="Research"></el-option>
+                        <el-option label="Life" value="Life"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-          <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="submit">提交</el-button>
+          <el-button @click="close">cancel</el-button>
+          <el-button type="primary" @click="submit">submit</el-button>
         </span>
         </el-dialog>
     </div>

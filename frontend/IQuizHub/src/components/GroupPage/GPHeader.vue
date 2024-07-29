@@ -8,7 +8,7 @@
                     <a href="#">group-page</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <h1>群组界面</h1>
+            <h1>Group Page</h1>
         </div>
     </div>
 </template>

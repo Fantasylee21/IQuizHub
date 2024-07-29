@@ -17,31 +17,31 @@
             <el-icon>
                 <setting/>
             </el-icon>
-            <template #title>工作台</template>
+            <template #title>Workbench</template>
         </el-menu-item>
         <el-menu-item index="/groupPage">
             <el-icon>
                 <Share/>
             </el-icon>
-            <template #title>群组界面</template>
+            <template #title>Group Page</template>
         </el-menu-item>
         <el-menu-item index="/question-sheet">
             <el-icon>
                 <icon-menu/>
             </el-icon>
-            <template #title>题单广场</template>
+            <template #title>Question Sheet Square</template>
         </el-menu-item>
         <el-menu-item index="/questionBank">
             <el-icon>
                 <Grid/>
             </el-icon>
-            <template #title>题库</template>
+            <template #title>Question Bank</template>
         </el-menu-item>
         <el-menu-item index="/question-editor">
             <el-icon>
                 <Edit/>
             </el-icon>
-            <template #title>上传题目</template>
+            <template #title>Upload Question</template>
         </el-menu-item>
     </el-menu>
 </template>

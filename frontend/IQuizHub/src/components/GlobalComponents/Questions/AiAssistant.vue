@@ -7,7 +7,7 @@
                 class="load-button"
                 :disabled="isClicked"
         >
-            {{ loading ? '正在加载...' : '向AI提问' }}
+            {{ loading ? 'Loading...' : 'Ask Ai Assistant' }}
         </el-button>
         <el-card class="creator_card" v-if="loading"></el-card>
         <el-card class="creator_card custom-scrollbar" v-else-if="data">

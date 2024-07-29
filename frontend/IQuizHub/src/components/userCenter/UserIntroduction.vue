@@ -71,15 +71,15 @@ function cancelEdit() {
 
 <template>
       <div v-if="isEditing" class="content">
-        <h2>编辑个人简介 <el-icon :size="22"><Comment /></el-icon></h2>
+        <h2>Edit Your Description <el-icon :size="22"><Comment /></el-icon></h2>
         <textarea v-model="inputText" @input="updateText" ></textarea>
-        <p>字数限制：200字</p>
-        <el-button type="success" @click="saveEdit">保存<el-icon :size="20"><Finished /></el-icon></el-button>
-        <el-button type="danger" @click="cancelEdit">取消<el-icon :size="20"><Delete /></el-icon></el-button>
+        <p>Max: 200</p>
+        <el-button type="success" @click="saveEdit">save<el-icon :size="20"><Finished /></el-icon></el-button>
+        <el-button type="danger" @click="cancelEdit">cancel<el-icon :size="20"><Delete /></el-icon></el-button>
       </div>
     <!-- 当不处于编辑状态时显示简介文本 -->
       <div v-if="!isEditing" class="content">
-        <h2>个人简介  <el-button type="primary" @click="inputAreaAppear">编辑<el-icon :size="20"><Edit /></el-icon></el-button></h2>
+        <h2>Description  <el-button type="primary" @click="inputAreaAppear">Edit<el-icon :size="20"><Edit /></el-icon></el-button></h2>
         <p>{{ inputText }}</p>
       </div>
 </template>

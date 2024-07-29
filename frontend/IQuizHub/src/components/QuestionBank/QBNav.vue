@@ -20,7 +20,7 @@
                 <el-col :span="5">
                     <el-select
                     v-model="typeValue"
-                    placeholder="题目类型"
+                    placeholder="Question Type"
                     size="default"
                     style="width: 200px"
                   >
@@ -33,7 +33,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                    <el-input v-model="searchQuery" placeholder="请输入您想查找的内容或关键词" @keyup.enter="search">
+                    <el-input v-model="searchQuery" placeholder="Please enter the content or keywords" @keyup.enter="search">
                       <template #prepend >
                         <div class="search-icon-container">
                           <el-icon size="20px"><Search /></el-icon>
@@ -42,12 +42,12 @@
                     </el-input>
                 </el-col>
                 <el-col :span="4">
-                    <el-button type="primary" @click="search">搜索</el-button>
+                    <el-button type="primary" @click="search">Search</el-button>
                 </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="1.5" style="margin-top: 1px" >
-                    <span style="font-size: 19px">标签</span>
+                    <span style="font-size: 19px">label</span>
                 </el-col>
                 <el-col :span="12">
                     <div class="flex gap-2">
@@ -79,12 +79,12 @@
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="24">
-                    <span>共计 {{ total }} 条结果</span>
+                    <span> totally {{ total }} results</span>
                 </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="24">
-                    <p @click="cleanAll" class="cleanAll">清除所有筛选条件</p>
+                    <p @click="cleanAll" class="cleanAll">Clear all criteria</p>
                 </el-col>
             </el-row>
         </el-header>
@@ -104,10 +104,10 @@ const props = defineProps({
 });
 const search = async () => {
     if (searchQuery.value ==='') {
-        ElMessage.error('搜索关键词不能为空');
+        ElMessage.error('The search keyword cannot be empty');
         return;
     }
-    ElMessage.success(`搜索关键词: ${searchQuery.value}`);
+    ElMessage.success(`Search keywords: ${searchQuery.value}`);
     isSearch.value = true;
     emit('updateSearchQuery', searchQuery);
     emit('updateSearchTags', dynamicTags);
@@ -137,23 +137,23 @@ const difficulty = ref([
 const type = ref([
     {
       value: 'single_choice',
-      label: '单选题'
+      label: 'Single Choice'
     },
     {
       value: 'multiple_choice',
-      label: '多选题'
+      label: 'Multiple Choice'
     },
     {
       value: 'fill_in_the_blank',
-      label: '填空题'
+      label: 'Filling Blank'
     },
     {
       value: 'true_false',
-      label: '判断题'
+      label: 'True or False'
     },
     {
       value: 'all',
-      label: '全部'
+      label: 'All'
     },
   ]);
 const difficultyValue = ref('');
@@ -192,7 +192,7 @@ function cleanAll() {
   searchQuery.value = ''
   dynamicTags.value = []
   isSearch.value = false
-  ElMessage.success(`清除关键词和Tag`);
+  ElMessage.success(`Clear keywords and tags`);
   emit('updateSearchStatus', isSearch);
   emit('updateSearchQuery', searchQuery);
   emit('updateSearchTags', dynamicTags);

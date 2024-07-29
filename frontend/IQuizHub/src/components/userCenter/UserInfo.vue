@@ -82,7 +82,7 @@ const uploadAvatar = async (params: { file: File }) => {
             },
         });
         if (res.status === 200) {
-            ElMessage.success('上传成功');
+            ElMessage.success('upload successfully');
             console.log('res.data->', res.data)
             console.log('res.data.url->', res.data.url)
             // 刷新头像
@@ -96,10 +96,10 @@ const uploadAvatar = async (params: { file: File }) => {
             });
             router.push('userCenter')
         } else {
-            ElMessage.error('上传失败');
+            ElMessage.error('upload failed');
         }
     } catch (error) {
-        ElMessage.error('上传失败');
+        ElMessage.error('upload failed');
     }
 };
 
@@ -108,7 +108,7 @@ const uploadAvatar = async (params: { file: File }) => {
 <template>
     <div class="info-pic">
         <div class="info">
-            <h2>个人信息
+            <h2>User Info
                 <el-icon :size="22">
                     <UserFilled/>
                 </el-icon>
@@ -122,7 +122,7 @@ const uploadAvatar = async (params: { file: File }) => {
                 </el-form-item>
                 <div class="groupInfo">
                     <hr class="divider"/>
-                    <h1 @click="myCreateGroup">我的群组
+                    <h1 @click="myCreateGroup">My Group
                         <el-icon :size="18">
                             <Connection/>
                         </el-icon>
@@ -143,10 +143,10 @@ const uploadAvatar = async (params: { file: File }) => {
                     :http-request="uploadAvatar"
             >
                 <template #trigger>
-                    <el-button type="primary">选择头像</el-button>
+                    <el-button type="primary">Select</el-button>
                 </template>
                 <el-button class="ml-3" type="success" style="margin-left: 10px" @click="submitUpload">
-                    上传头像
+                    Upload
                 </el-button>
             </el-upload>
         </div>

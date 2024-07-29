@@ -3,29 +3,29 @@
         <div class="shell">
             <div class="container a-container" id="a-container">
                 <form @submit.prevent="handleSignup" class="form" id="a-form">
-                    <h2 class="form_title title">创建账号</h2>
+                    <h2 class="form_title title">Create Account</h2>
                     <input
                             type="text"
                             class="form_input"
-                            placeholder="用户名 (3-16位字母、数字或下划线)"
+                            placeholder="Username (3-16 letters, numbers, or underscores)"
                             v-model="signupForm.username"
                     />
                     <input
                             type="password"
                             class="form_input"
-                            placeholder="密码 (6-20位字母、数字或特殊字符)"
+                            placeholder="Password (6-20 letters, numbers, or characters)"
                             v-model="signupForm.password"
                     />
                     <input
                             type="text"
                             class="form_input"
-                            placeholder="手机号 (10-15位数字)"
+                            placeholder="Phone (valid phone number)"
                             v-model="signupForm.phone"
                     />
                     <input
                             type="email"
                             class="form_input"
-                            placeholder="邮箱 (有效的邮箱地址)"
+                            placeholder="Email (valid email address)"
                             v-model="signupForm.email"
                     />
                     <button class="form_button button submit">SIGN UP</button>
@@ -34,20 +34,20 @@
 
             <div class="container b-container" id="b-container">
                 <form @submit.prevent="handleLogin" class="form" id="b-form">
-                    <h2 class="form_title title">登入账号</h2>
+                    <h2 class="form_title title">Log In</h2>
                     <input
                             type="text"
                             class="form_input"
-                            placeholder="请输入用户名"
+                            placeholder="User Name"
                             v-model="loginForm.username"
                     />
                     <input
                             type="password"
                             class="form_input"
-                            placeholder="密码 (至少6位)"
+                            placeholder="Password"
                             v-model="loginForm.password"
                     />
-                    <a class="form_link">忘记密码？</a>
+                    <a class="form_link">Forgot password?</a>
                     <button class="form_button button submit">SIGN IN</button>
                 </form>
             </div>
@@ -62,7 +62,7 @@
                 >
                     <h2 class="switch_title title" style="letter-spacing: 0">Welcome Back！</h2>
                     <p class="switch_description description">
-                        已经有账号了嘛，去登入账号来进入奇妙世界吧！！！
+                        Do you already have an account? Go log in to your account and enter the wonderful world!!!
                     </p>
                     <button class="switch_button button switch-btn" @click="changeForm">
                         SIGN UP
@@ -76,7 +76,7 @@
                 >
                     <h2 class="switch_title title" style="letter-spacing: 0">Hello Markers！</h2>
                     <p class="switch_description description">
-                        去注册一个账号，成为尊贵的粉丝会员，让我们踏入奇妙的旅途！
+                        Register an account and become a proud fan member, let's embark on a wonderful journey!
                     </p>
                     <button class="switch_button button switch-btn" @click="changeForm">
                         SIGN IN
@@ -116,10 +116,12 @@ const handleSignup = async () => {
 const handleLogin = async () => {
     const ret = await api.login(loginForm.value)
     if (ret) {
-        ElMessage.success('登录成功')
+        ElMessage.success('successfully logged in!')
         profile.updateProfile(ret)
         localStorage.setItem('id', profile.id)
         UtilMethods.jump('/staging')
+    } else {
+        ElMessage.error('login failed!')
     }
 }
 
@@ -456,5 +458,13 @@ const changeForm = () => {
     50% {
         width: 500px;
     }
+}
+
+.form_title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 3;
+    color: #181818;
+    letter-spacing: 0px;
 }
 </style>

@@ -8,7 +8,7 @@
                     <a href="#">question-bank</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <h1>题库</h1>
+            <h1>Question Bank</h1>
         </div>
     </div>
 </template>

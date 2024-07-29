@@ -1,6 +1,6 @@
 <template>
     <div class="my-sheet-container">
-        <h1 style="font-size: 30px; font-weight: bold; margin-bottom: 20px">我创建的题单</h1>
+        <h1 style="font-size: 30px; font-weight: bold; margin-bottom: 20px">Created by myself</h1>
         <el-table :data="listData" style="width: 100%">
             <el-table-column prop="id" label="ID"></el-table-column>
             <el-table-column prop="title" label="Title"></el-table-column>

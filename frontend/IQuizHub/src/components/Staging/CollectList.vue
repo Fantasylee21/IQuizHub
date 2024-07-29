@@ -1,7 +1,7 @@
 <template>
     <div class="favorites-container">
         <div class="header">
-            <span>收藏的题单</span>
+            <span>Collected question sheets</span>
         </div>
         <el-row :gutter="20">
             <el-col :span="8" v-for="doc in documents" :key="doc.questiongroup.id" class="col">

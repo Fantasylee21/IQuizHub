@@ -1,5 +1,5 @@
 <template>
-    <p style="font-size: 20px; font-weight: bold; margin: 10px">做题记录</p>
+    <p style="font-size: 20px; font-weight: bold; margin: 10px">Record</p>
     <el-scrollbar
             height="400px"
     >
@@ -65,9 +65,9 @@ function formatDate(time: string) {
 
 function getContent(i: number) {
     if (history.value[i] && history.value[i].correct != undefined && history.value[i].correct === true) {
-        return '你做对了题目 ' + history.value[i].question
+        return 'You did ' + history.value[i].question + ' right!!!'
     } else {
-        return '你做错了题目 ' + history.value[i]?.question + '，看仔细了！！！'
+        return 'You did ' + history.value[i]?.question + ' wrong! , better luck next time!'
     }
 }
 

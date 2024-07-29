@@ -79,13 +79,13 @@ const username = profile.username;
 </script>
 
 <template>
-  <h2>活动记录 <el-icon size="22px"><List /></el-icon></h2>
+  <h2>Activity Record <el-icon size="22px"><List /></el-icon></h2>
   <div class="block" v-for="item in history" :key="item.id">
     <el-timeline >
         <el-timeline-item :timestamp="item.create_time" :color="icon.color" placement="top">
           <el-card shadow="always" class="card">
-            <p v-if="item.correct">{{username}} 做对了题目{{item.question}}</p>
-            <p v-else>{{username}} 做了题目{{item.question}},但是做错了</p>
+            <p v-if="item.correct">{{username}} did {{item.question}} correctly</p>
+            <p v-else>{{username}} did {{item.question}}, but is was wrong</p>
           </el-card>
         </el-timeline-item>
     </el-timeline>

@@ -1,11 +1,11 @@
 <template>
     <div class="table-container">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="id" label="编号">
+            <el-table-column prop="id" label="id">
             </el-table-column>
-            <el-table-column prop="create_time" label="创建时间">
+            <el-table-column prop="create_time" label="create time">
             </el-table-column>
-            <el-table-column label="题目名称">
+            <el-table-column label="name">
                 <template v-slot="scope">
                     <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{
                             scope.row.title
@@ -13,17 +13,17 @@
                     </el-link>
                 </template>
             </el-table-column>
-            <el-table-column label="题目作者">
+            <el-table-column label="author">
                 <template v-slot="scope">
                     <el-link :href="scope.row.url" type="info" underline>{{ scope.row.author }}</el-link>
                 </template>
             </el-table-column>
-            <el-table-column label="题目类型">
+            <el-table-column label="type">
                 <template v-slot="scope">
-                    <el-tag v-if="scope.row.type =='True/False' ">判断题</el-tag>
-                    <el-tag v-else-if="scope.row.type =='single_choice' ">单选题</el-tag>
-                    <el-tag v-else-if="scope.row.type =='multiple_choice' ">多选题</el-tag>
-                    <el-tag v-else-if="scope.row.type =='fill_blanks' ">填空题</el-tag>
+                    <el-tag v-if="scope.row.type =='True/False' ">True or False</el-tag>
+                    <el-tag v-else-if="scope.row.type =='single_choice' ">Signal Choice</el-tag>
+                    <el-tag v-else-if="scope.row.type =='multiple_choice' ">Multiple Choice</el-tag>
+                    <el-tag v-else-if="scope.row.type =='fill_blanks' ">Filling Blank</el-tag>
                 </template>
             </el-table-column>
         </el-table>

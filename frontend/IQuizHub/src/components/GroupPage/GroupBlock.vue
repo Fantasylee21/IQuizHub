@@ -51,17 +51,17 @@ const groupTable = ref([
 const tagInfo = ref([
   {
     id: 1,
-    name: '学术版',
+    name: 'Academic',
     color: '#e84444',
   },
   {
     id: 2,
-    name: '科研版',
+    name: 'Research',
     color: '#d6b663',
   },
   {
     id: 3,
-    name: '生活版',
+    name: 'Life',
     color: '#352806',
   }
 ]);
@@ -105,7 +105,7 @@ defineProps({
 
 <template>
     <div class="searchDiv">
-          <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="search">
+          <el-input v-model="searchQuery" placeholder="Search" @keyup.enter="search">
             <template #prepend >
               <div class="search-icon-container">
                 <el-icon size="20px"><Search /></el-icon>
@@ -113,24 +113,24 @@ defineProps({
             </template>
           </el-input>
           <div>
-              <el-button type="primary" @click="search">搜索</el-button>
+              <el-button type="primary" @click="search">Search</el-button>
           </div>
       </div>
     <div class="top">
       <div class="moduleSelect">
         <div class="tagTitle">
         <el-icon size="23"><Menu /></el-icon>
-        <h6 @click="selectedTagId = 0" style="cursor: pointer">全部模块</h6>
+        <h6 @click="selectedTagId = 0" style="cursor: pointer">All</h6>
         </div>
         <div class="tagAll" v-for="item in tagInfo" :key="item.id" @click="selectedTagId = item.id" :class="{ selected: item.id === selectedTagId }">
           <el-tag effect="light" round="round" :color="item.color">&nbsp;</el-tag> {{item.name}}
         </div>
       </div>
       <div class="groupSelect">
-        <el-button type="success" style="margin-top: 20px" class="elb">全部群组</el-button>
-        <el-button type="info" style="margin-top: 20px" class="elb">我创建的群组</el-button>
-        <el-button type="primary" style="margin-top: 20px" class="elb">我加入的群组</el-button>
-        <el-button color="#666" style="margin-top: 20px" class="elb">创建属于我的群组</el-button>
+        <el-button type="success" style="margin-top: 20px" class="elb">All Group</el-button>
+        <el-button type="info" style="margin-top: 20px" class="elb">Group Created by myself</el-button>
+        <el-button type="primary" style="margin-top: 20px" class="elb">Joined Group</el-button>
+        <el-button color="#666" style="margin-top: 20px" class="elb">Create My Group</el-button>
       </div>
     </div>
     <div class="allBlock"
@@ -150,17 +150,17 @@ defineProps({
               <div class="side1">
                 <h2>{{item.title}}</h2>
                 <div class="word">
-                  <p>{{item.author.name}}</p>创建于{{item.date}}
+                  <p>{{item.author.name}}</p> created in {{item.date}}
                 </div>
               </div>
               <div class="side2">
                 <el-tag effect="light" round="round" :color="getTagColor(item.Type)">&nbsp;</el-tag> {{item.Type}}
-                <el-button type="primary" style="margin-left: 160px">加入</el-button>
+                <el-button type="primary" style="margin-left: 160px">Join</el-button>
                 <div class="word">
                   <div class="comment">
                     <el-icon size="13px"><ChatDotRound /></el-icon>{{item.commentCount}}
                   </div>
-                  最后回复于{{item.lastReplyTime}}
+                  last replied in {{item.lastReplyTime}}
                 </div>
               </div>
             </div>

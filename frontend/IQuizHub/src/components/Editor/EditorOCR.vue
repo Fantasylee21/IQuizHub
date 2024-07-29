@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <p style="font-weight: bold; font-size: 20px; margin-bottom: 20px">OCR识别</p>
+        <p style="font-weight: bold; font-size: 20px; margin-bottom: 20px">OCR Recognition</p>
         <el-upload
                 class="upload-demo"
                 action="#"
@@ -8,7 +8,7 @@
                 :show-file-list="false"
                 accept="image/*"
         >
-            <el-button size="small" type="primary">点击上传图片</el-button>
+            <el-button size="small" type="primary">Click to upload image</el-button>
         </el-upload>
         <el-skeleton :loading="loading" animated style="margin-top: 20px">
             <template #default>
@@ -26,7 +26,7 @@
         </el-skeleton>
         <el-dialog
                 v-model="dialogVisible"
-                title="识别结果"
+                title="Identification results"
                 width="500"
                 draggable
         >
@@ -35,8 +35,8 @@
             </p>
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button @click="copyAllTexts">复制所有</el-button>
-                    <el-button @click="dialogVisible = false">关闭</el-button>
+                    <el-button @click="copyAllTexts">Copy all</el-button>
+                    <el-button @click="dialogVisible = false">Close</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -72,9 +72,9 @@ const handleFileUpload = (file) => {
             srcList.value.push(ocrImageUrl)
             texts.value = ocrTexts
             dialogVisible.value = true
-            ElMessage.success('ocr识别成功')
+            ElMessage.success('OCR recognition succeeded!')
         } catch (e) {
-            ElMessage.error('ocr识别失败，是不是没有文字内容呢？')
+            ElMessage.error('OCR recognition failed, is there no text content?')
         }
         loading.value = false
     };
@@ -91,13 +91,13 @@ function copyAllTexts() {
     // 尝试复制到剪贴板
     if (navigator.clipboard) {
         navigator.clipboard.writeText(allTexts).then(() => {
-            ElMessage.success('复制成功')
+            ElMessage.success('copy succeeded!')
         }).catch(() => {
-            ElMessage.error('复制失败')
+            ElMessage.error('copy failed!')
         });
     } else {
         // 对于不支持navigator.clipboard的浏览器
-        ElMessage.warning('复制失败')
+        ElMessage.warning('copy failed, please copy manually!')
     }
 }
 </script>

@@ -9,17 +9,18 @@
             <el-button type="primary" @click="insertText(' (  ) ')"
                        :disabled="type !== 'single_choice' && type !== 'multiple_choice'"
             >
-                插入选择框
+                Add selection box
             </el-button>
             <el-button type="primary" @click="insertText(' ____ ')" :disabled="type !== 'short_answer'">
-                插入填空线
+                Add blank line
             </el-button>
             <el-button
                     type="primary"
                     @click="addOption"
                     :disabled="optionNum >= 4 || type !== 'multiple_choice' && type !== 'single_choice'"
+                    style="margin-top: 20px"
             >
-                添加选项
+                Add options
             </el-button>
             <div class="option-input">
                 <div class="option-list">
@@ -29,11 +30,11 @@
                         <p style="margin-right: 10px !important">{{ String.fromCharCode(65 + index) }}</p>
                         <el-input
                                 v-model="option.text"
-                                placeholder="请输入选项内容"
+                                placeholder="Please input option"
                                 class="option-item"
                         >
                             <template #append>
-                                <el-button type="danger" @click="removeOption(index)">删除</el-button>
+                                <el-button type="danger" @click="removeOption(index)">Delete</el-button>
                             </template>
                         </el-input>
                     </div>
@@ -41,7 +42,7 @@
             </div>
             <div class="type">
                 <strong style="margin-top: 15px; align-items: center">type</strong>
-                <el-select v-model="type" placeholder="请选择题目类型" style="margin-top: 10px; margin-left: 20px">
+                <el-select v-model="type" placeholder="Please select type" style="margin-top: 10px; margin-left: 20px">
                     <el-option label="single_choice" value="single_choice"/>
                     <el-option label="True/False" value="True/False"/>
                 </el-select>
@@ -62,7 +63,7 @@
                         placeholder="Please input answer"
                 />
             </div>
-            <el-button type="primary" style="margin-top: 10px" @click="upload">上传</el-button>
+            <el-button type="primary" style="margin-top: 10px" @click="upload">Upload</el-button>
             <div class="ocr">
                 <EditorOCR/>
             </div>

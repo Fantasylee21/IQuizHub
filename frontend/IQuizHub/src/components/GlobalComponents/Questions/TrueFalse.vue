@@ -1,7 +1,7 @@
 <template>
     <div class="single-question-container">
         <div class="single-question-left" ref="questionContent">
-            <el-tag type="info" style="margin: 15px 5px;">判断题</el-tag>
+            <el-tag type="info" style="margin: 15px 5px;">True or False</el-tag>
             <el-tag v-for="tag in question.tags" :key="tag.id">{{ tag.id }}</el-tag>
             <h3>{{ question.title }}</h3>
             <div class="question-header">
@@ -15,17 +15,17 @@
                                 :disabled="is_read"
                 >
                     <el-radio-button value="0">
-                        错误
+                        Wrong!
                     </el-radio-button>
                     <el-radio-button value="1">
-                        正确
+                        Right!
                     </el-radio-button>
                 </el-radio-group>
                 <el-tag v-show="is_read && isCorrect === true" type="success"
-                        style="margin-left: 10px; margin-top: 2px">回答正确
+                        style="margin-left: 10px; margin-top: 2px">Right!
                 </el-tag>
                 <el-tag v-show="is_read && isCorrect === false" type="danger"
-                        style="margin-left: 10px; margin-top: 2px">回答错误
+                        style="margin-left: 10px; margin-top: 2px">Wrong!
                 </el-tag>
             </div>
             <el-divider></el-divider>
@@ -35,9 +35,9 @@
         </div>
         <div class="single-question-right">
             <el-collapse v-if="is_read">
-                <el-collapse-item title="答案">
-                    <div v-if="question.ans === '1'">正确</div>
-                    <div v-else-if="question.ans === '0'">错误</div>
+                <el-collapse-item title="Answer">
+                    <div v-if="question.ans === '1'">Right</div>
+                    <div v-else-if="question.ans === '0'">Wrong</div>
                     <div v-else v-html="question.ans"></div>
                 </el-collapse-item>
             </el-collapse>

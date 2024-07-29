@@ -8,7 +8,7 @@
                     <a href="#">sheet-detail</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-          <h1>群组详情</h1>
+          <h1>Group Detail</h1>
         </div>
     </div>
 
@@ -18,18 +18,18 @@
                     <div class="sheet-description">
                         <div class="description-left">
                             <el-card>
-                                <h2>群组简介</h2>
+                                <h2>Group Description</h2>
                                 <div v-html="sheetData?.content"></div>
                             </el-card>
                             <el-card style="margin-top: 50px">
                                     <div class="comment-header" style="display: flex; justify-content: space-between; align-items: center">
-                                      <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: bold">评论列表</h2>
+                                      <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: bold">Comment List</h2>
                                       <el-popover placement="right" :width="400" trigger="click">
                                           <template #reference>
-                                              <el-button style="margin-right: 16px">发表评论</el-button>
+                                              <el-button style="margin-right: 16px">Comment</el-button>
                                           </template>
                                           <div class="comment-input">
-                                              <el-button type="primary" style="margin-bottom: 10px" @click="submitComment">发表</el-button>
+                                              <el-button type="primary" style="margin-bottom: 10px" @click="submitComment">Issue</el-button>
                                               <el-input
                                                       v-model="userComment"
                                                       :rows="2"
@@ -83,16 +83,16 @@
                                             </div>
                                             <div class="creator_details">
                                                 <p style="margin-bottom: 10px">
-                                                    关注 <span>0</span> 粉丝 <span>32k</span> 排名 <span>19k</span>
+                                                    followers <span>0</span> fans <span>32k</span> rank <span>19k</span>
                                                 </p>
-                                                <el-button type="primary" size="small">关注</el-button>
-                                                <el-button size="small">私信</el-button>
+                                                <el-button type="primary" size="small">follow</el-button>
+                                                <el-button size="small">message</el-button>
                                             </div>
                                         </div>
                                     </el-popover>
                                 </div>
                                 <div class="sheet-type">
-                                    <p>上次发帖时间</p>
+                                    <p>last replied time</p>
                                     <p style="padding-right: 15px">{{ sheetData?.update_time }}</p>
                                 </div>
                             </el-card>

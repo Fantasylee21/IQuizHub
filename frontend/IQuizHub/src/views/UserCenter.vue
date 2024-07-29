@@ -13,7 +13,7 @@ const tabPosition = ref('top');
   <USHeader />
   <div id="us">
   <el-tabs :tab-position="tabPosition">
-    <el-tab-pane label="个人信息" class="tab-pane">
+    <el-tab-pane label="User Info" class="tab-pane">
         <div class="block">
           <UserInfo />
         </div>
@@ -24,11 +24,11 @@ const tabPosition = ref('top');
           <ActivityRecord />
         </div>
     </el-tab-pane>
-    <el-tab-pane label="题目记录" class="tab-pane">
-        <div class="block">
-          <ExerciseRecord />
-        </div>
-    </el-tab-pane>
+<!--    <el-tab-pane label="Question Record" class="tab-pane">-->
+<!--        <div class="block">-->
+<!--          <ExerciseRecord />-->
+<!--        </div>-->
+<!--    </el-tab-pane>-->
   </el-tabs>
   </div>
 </template>

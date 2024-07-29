@@ -18,21 +18,20 @@ function handleClick(tab: any) {
 <template>
   <div>
     <div class="search">
-    <h2>查找题单</h2>
+    <h2>Search Sheet</h2>
     <div>
-      <el-input placeholder="请输入题单名称" v-model="searchValue" clearable>
+      <el-input placeholder="enter the name of the questionnaire" v-model="searchValue" clearable>
           <template #prepend >
             <div class="search-icon-container">
               <el-icon size="23px"><Search /></el-icon>
             </div>
           </template>
       </el-input>
-      <el-button type="primary" @click="search">搜索</el-button>
-    <h3>题单类型</h3>
+      <el-button type="primary" @click="search">Search</el-button>
+    <h3>Sheet Type</h3>
       <div class="result">
-      <h4>共计:</h4>
       <p>{{record}}</p>
-      <h4>条结果</h4>
+      <h4> results</h4>
       </div>
     </div>
     </div>

@@ -11,13 +11,13 @@
             <h1>{{ sheetData?.title }}</h1>
             <div class="info-container">
                 <div class="collect-button">
-                    <el-button v-show="!is_collect" type="primary" @click="collect">收藏题单</el-button>
-                    <el-button v-show="is_collect" type="danger" @click="collect">取消收藏</el-button>
+                    <el-button v-show="!is_collect" type="primary" @click="collect">Collect question sheets</el-button>
+                    <el-button v-show="is_collect" type="danger" @click="collect">Cancel collect</el-button>
                 </div>
                 <div class="info-statistic" style="display: flex">
-                    <el-statistic title="题目总数" :value="sheetData?.questionCnt"
+                    <el-statistic title="All" :value="sheetData?.questionCnt"
                                   style="margin-right: 20px"></el-statistic>
-                    <el-statistic title="收藏数" :value="sheetData?.favoriteCnt"></el-statistic>
+                    <el-statistic title="Collections" :value="sheetData?.favoriteCnt"></el-statistic>
                 </div>
 
             </div>
@@ -26,22 +26,22 @@
     <div class="sheet-detail-container">
         <div class="sheet-detail-nav">
             <el-tabs v-model="activeName" class="demo-tabs">
-                <el-tab-pane label="题单简介" name="first">
+                <el-tab-pane label="Description" name="first">
                     <div class="sheet-description">
                         <div class="description-left">
                             <el-card>
-                                <h2>题单简介</h2>
+                                <h2>Sheet Description</h2>
                                 <div v-html="sheetData?.content"></div>
                             </el-card>
                         </div>
                         <div class="description-right">
                             <el-card class="detail-card">
                                 <div class="sheet-id">
-                                    <p>题单编号</p>
+                                    <p>Sheet id</p>
                                     <p style="padding-right: 15px">{{ sheetData?.id }}</p>
                                 </div>
                                 <div class="sheet-creator">
-                                    <p>创建者</p>
+                                    <p>Creator</p>
                                     <el-popover
                                             placement="top-start"
                                             width="300"
@@ -60,21 +60,21 @@
                                             </div>
                                             <div class="creator_details">
                                                 <p style="margin-bottom: 10px">
-                                                    关注 <span>0</span> 粉丝 <span>32k</span> 排名 <span>19k</span>
+                                                    followers <span>0</span> fans <span>32k</span> rank <span>19k</span>
                                                 </p>
-                                                <el-button type="primary" size="small">关注</el-button>
-                                                <el-button size="small">私信</el-button>
+                                                <el-button type="primary" size="small">follow</el-button>
+                                                <el-button size="small">message</el-button>
                                             </div>
                                         </div>
                                     </el-popover>
                                 </div>
                                 <div class="sheet-type">
-                                    <p>题单类型</p>
+                                    <p>Sheet type</p>
                                     <el-tag type="info" style="width: 60px; height: 32px">{{ questionType }}</el-tag>
                                 </div>
                             </el-card>
                             <el-card class="detail-progress">
-                                <h3 style="margin-bottom: 20px">我通过的题目 {{ sheetData?.passedCnt }} /
+                                <h3 style="margin-bottom: 20px">passed {{ sheetData?.passedCnt }} /
                                     {{ sheetData?.questionCnt }}</h3>
                                 <el-progress
                                         :percentage="(sheetData?.passedCnt / sheetData?.questionCnt * 100)"

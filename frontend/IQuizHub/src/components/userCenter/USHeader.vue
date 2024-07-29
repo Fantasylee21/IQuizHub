@@ -8,7 +8,7 @@
                     <a href="#">user-center</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <h1>用户中心</h1>
+            <h1>User Center</h1>
         </div>
     </div>
 </template>

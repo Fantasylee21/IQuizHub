@@ -22,12 +22,12 @@
                 <el-avatar :size="100" :src="form.avatar" class="sheet-avatar"></el-avatar>
             </el-upload>
             <el-tabs v-model="activeName" class="demo-tabs" style="margin-bottom: 20px; width: 100%">
-                <el-tab-pane label="基本信息" name="first">
+                <el-tab-pane label="Basic Info" name="first">
                     <el-form :model="form" label-width="auto">
-                        <el-form-item label="题单名" style="max-width: 600px">
+                        <el-form-item label="Name" style="max-width: 600px">
                             <el-input v-model="form.title"></el-input>
                         </el-form-item>
-                        <el-form-item label="题单描述" style="width: 1000px">
+                        <el-form-item label="Description" style="width: 1000px">
                             <el-tiptap v-model:content="form.content" :extensions="extensions"/>
                         </el-form-item>
                         <el-form-item>
@@ -35,11 +35,11 @@
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
-                <el-tab-pane label="题目列表" name="second" style="width: 100%">
+                <el-tab-pane label="List" name="second" style="width: 100%">
                     <div class="upload" style="display: flex;">
                         <el-input v-model="questionId" style="width: 200px; margin-right: 20px"
-                                  placeholder="要添加题目id"></el-input>
-                        <el-button type="primary" @click="handleUploadQuestion">添加题目</el-button>
+                                  placeholder="id"></el-input>
+                        <el-button type="primary" @click="handleUploadQuestion">Add</el-button>
                     </div>
                     <SEList :table-data="tableData"></SEList>
                 </el-tab-pane>
@@ -72,7 +72,7 @@ const handleAvatarSuccess = async (res: any) => {
     try {
         const response = await api.getSheetDetail(props.id)
         form.avatar = response.avatar
-        ElMessage.success('上传成功')
+        ElMessage.success('upload successfully')
     } catch (error) {
         console.error("Failed to fetch sheet detail:", error);
     }
@@ -88,9 +88,9 @@ const handleUploadQuestion = async () => {
         await api.addQuestionToGroup(questionId.value, props.id)
         const response = await api.getSheetDetail(props.id)
         tableData.value = response.questions
-        ElMessage.success('上传成功')
+        ElMessage.success('Successfully added')
     } catch (e) {
-        ElMessage.error('上传失败')
+        ElMessage.error('Failed to add')
     }
 
 }
@@ -121,12 +121,12 @@ const onSubmit = async () => {
     }, props.id)
     if (response) {
         ElMessage({
-            message: '更新成功',
+            message: 'Successfully updated',
             type: 'success',
             duration: 3000,
         })
     } else {
-        ElMessage.error('更新失败')
+        ElMessage.error('Failed to update')
     }
 }
 

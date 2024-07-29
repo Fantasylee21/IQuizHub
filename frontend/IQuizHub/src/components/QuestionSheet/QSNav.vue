@@ -3,7 +3,7 @@
         <el-header class="header">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <el-input v-model="searchQuery" placeholder="查找题单" @keyup.enter="search">
+                    <el-input v-model="searchQuery" placeholder="Search Question Sheet" @keyup.enter="search">
                         <template #prepend>
                             <div class="search-icon-container">
                                 <el-icon size="20px">
@@ -14,37 +14,37 @@
                     </el-input>
                 </el-col>
                 <el-col :span="10">
-                    <el-button type="primary" @click="search">搜索</el-button>
+                    <el-button type="primary" @click="search">Search</el-button>
                 </el-col>
                 <el-col :span="2">
-                    <el-button type="success" @click="createQuestionSheet">创建题单</el-button>
+                    <el-button type="success" @click="createQuestionSheet">Create</el-button>
                 </el-col>
                 <el-col :span="2">
-                    <el-button type="primary" @click="router.push('/my-sheet')">我创建的题单</el-button>
+                    <el-button type="primary" @click="router.push('/my-sheet')">Created by myself</el-button>
                 </el-col>
 
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="3">
-                    <span style="font-size: 18px">搜索题单类型</span>
+                    <span style="font-size: 18px">Search Type</span>
                 </el-col>
                 <el-col :span="12">
                     <el-button-group>
                         <el-button :type="selectedType === 'all' ? 'primary' : ''" @click="selectType('all')">
-                            全部题单
+                            All
                         </el-button>
                         <el-button :type="selectedType === 'official' ? 'primary' : ''" @click="selectType('official')">
-                            官方精选
+                            Official Selected
                         </el-button>
                         <el-button :type="selectedType === 'user' ? 'primary' : ''" @click="selectType('user')">
-                            用户分享
+                            User favors
                         </el-button>
                     </el-button-group>
                 </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px;">
                 <el-col :span="24">
-                    <span>共计 {{ total }} 条结果</span>
+                    <span>totally {{ total }} results</span>
                 </el-col>
             </el-row>
         </el-header>

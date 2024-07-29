@@ -3,10 +3,10 @@
         <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: bold">评论列表</h2>
         <el-popover placement="right" :width="400" trigger="click">
             <template #reference>
-                <el-button style="margin-right: 16px">发表评论</el-button>
+                <el-button style="margin-right: 16px">Leave a comment</el-button>
             </template>
             <div class="comment-input">
-                <el-button type="primary" style="margin-bottom: 10px" @click="submitComment">发表</el-button>
+                <el-button type="primary" style="margin-bottom: 10px" @click="submitComment">Issue</el-button>
                 <el-input
                         v-model="userComment"
                         :rows="2"
@@ -71,13 +71,13 @@ onMounted(fetchComments);
 
 const submitComment = () => {
     if (userComment.value === '') {
-        ElMessage.error('评论内容不能为空')
+        ElMessage.error('Comment content cannot be empty')
     } else {
         api.postComment({
             question: props.id,
             comment: userComment.value
         }).then(() => {
-            ElMessage.success('评论成功')
+            ElMessage.success('Comment successfully issued')
             userComment.value = ''
             currentPage.value = 1
             fetchComments()

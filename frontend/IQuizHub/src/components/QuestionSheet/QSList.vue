@@ -1,11 +1,11 @@
 <template>
     <div class="table-container">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="id" label="编号">
+            <el-table-column prop="id" label="id">
             </el-table-column>
-            <el-table-column prop="create_time" label="创建时间">
+            <el-table-column prop="create_time" label="create time">
             </el-table-column>
-            <el-table-column label="题单名称">
+            <el-table-column label="sheet name">
                 <template v-slot="scope">
                     <el-link @click.prevent="navigateToDetail(scope.row.id)" type="primary" underline>{{
                             scope.row.title
@@ -13,18 +13,18 @@
                     </el-link>
                 </template>
             </el-table-column>
-            <el-table-column prop="questionCnt" label="题目数">
+            <el-table-column prop="questionCnt" label="question count">
             </el-table-column>
-            <el-table-column prop="author" label="题单作者">
+            <el-table-column prop="author" label="author">
             </el-table-column>
-            <el-table-column label="简介">
+            <el-table-column label="description">
                 <template v-slot="scope">
                     <div v-html="scope.row.content"></div>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="operation">
                 <template v-slot="scope">
-                    <el-button type="danger" @click="deleteRow(scope.row.id)" size="small">删除</el-button>
+                    <el-button type="danger" @click="deleteRow(scope.row.id)" size="small">Delete</el-button>
                 </template>
             </el-table-column>
         </el-table>

@@ -7,24 +7,24 @@
              @createQuestionSheet="onCreateQuestionSheet" :total="total"></QSNav>
       <QSList :tableData="tableData" @page-change="pageChange" :total="total" @delete-row="deleteRow"></QSList>
 
-      <el-dialog v-model="isCreate" width="500" title="创建题单" class="custom-dialog">
+      <el-dialog v-model="isCreate" width="500" title="Create Question Sheet" class="custom-dialog">
         <el-form :model="form">
-          <el-form-item label="题单名称">
+          <el-form-item label="name">
             <el-input v-model="form.title"></el-input>
           </el-form-item>
-          <el-form-item label="题单简介">
+          <el-form-item label="description">
             <el-input v-model="form.content"></el-input>
           </el-form-item>
-          <el-form-item label="可见用户">
-            <el-select v-model="form.users" multiple placeholder="请选择" :disabled="form.is_all">
+          <el-form-item label="Visible users">
+            <el-select v-model="form.users" multiple placeholder="Select" :disabled="form.is_all">
               <el-option v-for="item in allUsers" :key="item.id" :label="item.username" :value="item.id"></el-option>
             </el-select>
-            <el-checkbox v-model="form.is_all">所有用户</el-checkbox>
+            <el-checkbox v-model="form.is_all">All</el-checkbox>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer" >
-          <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="submit">提交</el-button>
+          <el-button @click="close">cancel</el-button>
+          <el-button type="primary" @click="submit">submit</el-button>
         </span>
     </el-dialog>
     </div>
